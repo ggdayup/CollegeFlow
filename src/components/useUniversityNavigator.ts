@@ -164,10 +164,15 @@ export function useUniversityNavigator({
     const filtered = finalUnis.filter(u => {
       const query = uniSearchQuery.trim().toLowerCase();
       const matchesSearch = !query || 
-        u.nameEn.toLowerCase().includes(query) || 
-        u.nameZh.toLowerCase().includes(query) || 
-        u.shortNameEn.toLowerCase().includes(query) || 
-        u.shortNameZh.toLowerCase().includes(query);
+        (u.nameEn && u.nameEn.toLowerCase().includes(query)) || 
+        (u.nameZh && u.nameZh.toLowerCase().includes(query)) || 
+        (u.shortNameEn && u.shortNameEn.toLowerCase().includes(query)) || 
+        (u.shortNameZh && u.shortNameZh.toLowerCase().includes(query)) ||
+        (() => {
+          const words = (u.nameEn || '').toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/);
+          const acronym = words.filter(w => !['of', 'and', 'at', 'the', 'in'].includes(w)).map(w => w[0]).join('');
+          return acronym.includes(query);
+        })();
 
       let matchesType = true;
       if (uniTypeFilter !== 'all') {

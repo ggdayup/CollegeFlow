@@ -39,6 +39,10 @@ export const auth = betterAuth({
   database: pool,
   secret: process.env.BETTER_AUTH_SECRET || 'dev-secret-change-in-production',
   baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:38090',
+  trustedOrigins: [
+    process.env.FRONTEND_URL || 'http://localhost:38030',
+    'http://127.0.0.1:38030',
+  ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -65,18 +69,6 @@ export const auth = betterAuth({
         url,
         user.name || undefined,
       );
-    },
-  },
-  user: {
-    additionalFields: {
-      emailVerified: {
-        type: 'boolean',
-        input: false,
-      },
-      emailVerifiedAt: {
-        type: 'string',
-        input: false,
-      },
     },
   },
   session: {
@@ -1430,22 +1422,6 @@ app.get('/api/admin/ipeds/release-status', async (req, res) => {
 });
 
 // ============================================
-// Admin User Management Middleware
-// ============================================
-
-/** Middleware: require authenticated ADMIN user. */
-async function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
-  const session = await fetchSession(req);
-  if (!session?.email) return res.status(401).json({ error: 'Not authenticated' });
-  const user = await prisma.user.findUnique({
-    where: { email: session.email.toLowerCase() },
-    select: { role: true },
-  });
-  if (!user || user.role !== 'ADMIN') return res.status(403).json({ error: 'Admin access required' });
-  next();
-}
-
-// ============================================
 // Admin User Management Endpoints
 // ============================================
 
@@ -1583,9 +1559,12 @@ app.post('/api/admin/users/:id/reset-password', requireAdmin, async (req, res) =
     // Hash the new password
     const passwordHash = await bcrypt.hash(newPassword, 10);
 
-    // Update the Better Auth user table password directly
+    // Update the Better Auth credential account password directly.
     await prisma.$queryRawUnsafe(
-      `UPDATE "user" SET "password" = $1 WHERE "email" = $2`,
+      `UPDATE "account"
+       SET "password" = $1, "updatedAt" = NOW()
+       WHERE "providerId" = 'credential'
+         AND "userId" = (SELECT "id" FROM "user" WHERE "email" = $2)`,
       passwordHash,
       prismaUser.email.toLowerCase(),
     );

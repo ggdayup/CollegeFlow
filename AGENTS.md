@@ -7,6 +7,8 @@
 - Plane CLI: `node /Users/ggdayup/.agent/skills/plane-api/scripts/plane-api.js list-issues sheenvita 15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
 - For Plane create/update payloads containing HTML or nested JSON, write a temporary JSON file, pass its path to the CLI, then delete the temp file. The CLI wraps responses as `{ success, data }`; extract issue fields from `data`. Issue lists are paginated under `data.results`.
 - At task completion, transition the Plane issue to `Done` and include modified files, key decisions, and verification results in `description_html`.
+- 必须及时提取对话中的用户新需求，整理并以 PRD 文档的形式记录到 `docs/prd/` 目录中，确保项目的需求追踪机制完整。
+
 
 ## Project Roadmap
 - `src/App.tsx`: top-level React state composition, language/auth/search orchestration, and dashboard gating.

@@ -1,13 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-
-export interface UserSession {
-  id: string;
-  email: string;
-  name: string;
-  role: 'GUEST' | 'FREE' | 'PRO' | 'ADMIN';
-  subscriptionStatus: 'active' | 'trialing' | 'canceled' | 'none';
-  subscriptionEndsAt?: string;
-}
+import { useMemo } from 'react';
+import { type SessionUser } from './useSession';
 
 export interface Entitlements {
   canViewRadarChart: boolean;
@@ -19,7 +11,7 @@ export interface Entitlements {
 }
 
 const GUEST_ENTITLEMENTS: Entitlements = {
-  canViewRadarChart: false, // Locked state paywall gate
+  canViewRadarChart: false,
   canCreatePrerequisiteLinks: false,
   maxBookmarksCount: 2,
   showPremiumAdBlockers: false,
@@ -29,7 +21,7 @@ const GUEST_ENTITLEMENTS: Entitlements = {
 
 const FREE_ENTITLEMENTS: Entitlements = {
   canViewRadarChart: true,
-  canCreatePrerequisiteLinks: false, // Gated standard level
+  canCreatePrerequisiteLinks: false,
   maxBookmarksCount: 5,
   showPremiumAdBlockers: false,
   tierName: 'Free Account',
@@ -55,83 +47,29 @@ const ADMIN_ENTITLEMENTS: Entitlements = {
 };
 
 /**
- * React stateful hook to manage client session, mock login operations,
- * and serve structured billing-agnostic entitlements.
+ * Compute entitlements from a session user (or null for guest).
+ * No localStorage; all state comes from the BFF session.
  */
-export function useEntitlements() {
-  const [session, setSession] = useState<UserSession | null>(() => {
-    // Load session from localStorage if available
-    const saved = localStorage.getItem('college_major_session');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  });
+export function computeEntitlements(user: SessionUser | null): Entitlements {
+  if (!user) return GUEST_ENTITLEMENTS;
+  switch (user.role) {
+    case 'ADMIN': return ADMIN_ENTITLEMENTS;
+    case 'PRO': return PRO_ENTITLEMENTS;
+    case 'FREE': return FREE_ENTITLEMENTS;
+    default: return GUEST_ENTITLEMENTS;
+  }
+}
 
-  const isLoggedIn = session !== null && session.role !== 'GUEST';
+/**
+ * React hook: derives entitlements from a session user.
+ * Accepts `user` from useSession so caller controls fetch lifecycle.
+ */
+export function useEntitlements(user: SessionUser | null): {
+  entitlements: Entitlements;
+  isLoggedIn: boolean;
+} {
+  const entitlements = useMemo(() => computeEntitlements(user), [user]);
+  const isLoggedIn = user !== null && user.role !== 'GUEST';
 
-  const loginDemo = (role: 'FREE' | 'PRO' | 'ADMIN' = 'PRO') => {
-    const mockSession: UserSession = {
-      id: 'demo-user-id-123',
-      email: 'demo@college.edu',
-      name: 'Demo Student',
-      role,
-      subscriptionStatus: role === 'PRO' ? 'active' : 'none',
-      subscriptionEndsAt: role === 'PRO' ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() : undefined,
-    };
-    localStorage.setItem('college_major_session', JSON.stringify(mockSession));
-    setSession(mockSession);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('college_major_session');
-    setSession(null);
-  };
-
-  // Compute active entitlements based on user role
-  const entitlements: Entitlements = useMemo(() => {
-    if (!session) return GUEST_ENTITLEMENTS;
-    switch (session.role) {
-      case 'ADMIN':
-        return ADMIN_ENTITLEMENTS;
-      case 'PRO':
-        return PRO_ENTITLEMENTS;
-      case 'FREE':
-        return FREE_ENTITLEMENTS;
-      default:
-        return GUEST_ENTITLEMENTS;
-    }
-  }, [session]);
-
-  const setGuestMode = () => {
-    const guestSession: UserSession = {
-      id: 'guest-session-id',
-      email: 'guest@college.edu',
-      name: 'Guest Explorer',
-      role: 'GUEST',
-      subscriptionStatus: 'none',
-    };
-    localStorage.setItem('college_major_session', JSON.stringify(guestSession));
-    setSession(guestSession);
-  };
-
-  // Automatically initialize with Guest Mode if no active session
-  useEffect(() => {
-    if (!session) {
-      setGuestMode();
-    }
-  }, [session]);
-
-  return {
-    session,
-    isLoggedIn,
-    entitlements,
-    loginDemo,
-    logout,
-    setGuestMode
-  };
+  return { entitlements, isLoggedIn };
 }

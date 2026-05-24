@@ -1,0 +1,51 @@
+{
+  "cipCodes": 1748,
+  "externalIdentifiers": 0,
+  "generatedAt": "2026-05-24T13:42:36.593133+00:00",
+  "institutionMetrics": 17364,
+  "metricsByKey": {
+    "admission_rate_total": 1931,
+    "admissions_yield_total": 1931,
+    "bachelor_programs_offered_count": 2440,
+    "fall_enrollment_total": 5843,
+    "graduation_rate_150": 5219
+  },
+  "programFields": 81872,
+  "releaseKey": "ipeds-2024-25-provisional",
+  "samples": [
+    {
+      "metrics": 5,
+      "nameEn": "Alabama A & M University",
+      "programFields": 39,
+      "unitId": "100654"
+    },
+    {
+      "metrics": 5,
+      "nameEn": "University of California-Berkeley",
+      "programFields": 107,
+      "unitId": "110635"
+    },
+    {
+      "metrics": 5,
+      "nameEn": "Harvard University",
+      "programFields": 105,
+      "unitId": "166027"
+    },
+    {
+      "metrics": 5,
+      "nameEn": "Massachusetts Institute of Technology",
+      "programFields": 42,
+      "unitId": "166683"
+    },
+    {
+      "metrics": 5,
+      "nameEn": "University of Michigan-Ann Arbor",
+      "programFields": 137,
+      "unitId": "170976"
+    }
+  ],
+  "toolVersion": "ipeds-curated-projection-v1",
+  "warnings": {
+    "missingCipTitles": 0
+  }
+}

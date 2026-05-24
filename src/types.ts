@@ -56,3 +56,37 @@ export interface HighlightMajor {
   earningsVal: number;
   type: 'highest' | 'lowest';
 }
+
+// ============================================
+// User & Settings Types
+// ============================================
+
+export type UserTypeName = 'STUDENT' | 'TEACHER' | 'COUNSELOR' | 'PARENT' | 'OTHER';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  name: string;
+  userType: UserTypeName;
+  schoolName: string | null;
+  gradYear: number | null;
+  counselorSpecialty: string | null;
+  teacherSubject: string | null;
+  customNote: string | null;
+  subscriptionStatus: 'active' | 'trialing' | 'canceled' | 'none';
+  subscriptionEndsAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SavedItem {
+  id: string;
+  itemType: 'MAJOR' | 'UNIVERSITY';
+  itemId: string;
+  createdAt: string;
+  // Joined data
+  majorNameEn?: string;
+  majorNameZh?: string;
+  universityNameEn?: string;
+  universityNameZh?: string;
+}

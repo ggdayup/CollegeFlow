@@ -18,7 +18,6 @@ import {
   ChevronRight,
   ChevronLeft,
   Filter,
-  ExternalLink,
   BookOpen,
   ArrowRightLeft,
   DollarSign,
@@ -216,7 +215,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
             <span 
               key={rx} 
               className={`text-[9px] font-extrabold border ${badgeClass} px-2 py-0.5 rounded flex items-center gap-0.5 shadow-3xs hover:scale-[1.02] transition-transform`}
-              title={`${r.source.replace('_', ' ')} ${r.year} Ranking (Verified ID: ${r.verificationId})`}
+              title={`${r.source.replace('_', ' ')} ${r.year} Ranking`}
             >
               <span>🏆</span>
               <span>{r.source.replace('_', ' ')}: #{r.rankInteger}</span>
@@ -744,18 +743,15 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                 <strong className="text-slate-800 font-extrabold">#{activeUni.usNewsRank && activeUni.usNewsRank < 999 ? activeUni.usNewsRank : 'Unranked'}</strong>
               </div>
               <div className="space-y-1">
-                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? '权威 IPEDS ID' : 'IPEDS UNITID'}</span>
-                <strong className="text-slate-800 font-extrabold">{activeUni.scorecardUnitId || 'N/A'}</strong>
+                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? '院校数据覆盖' : 'Institution Coverage'}</span>
+                <strong className="text-slate-800 font-extrabold">
+                  {activeUni.scorecardUnitId ? (language === 'zh' ? '已覆盖' : 'Covered') : 'N/A'}
+                </strong>
               </div>
               <div className="space-y-1">
-                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? 'Wikidata 关联编目' : 'Wikidata Entity'}</span>
-                <strong className="text-blue-600 font-extrabold hover:underline">
-                  {activeUni.wikidataId ? (
-                    <a href={`https://www.wikidata.org/wiki/${activeUni.wikidataId}`} target="_blank" rel="noreferrer" className="flex items-center gap-0.5">
-                      <span>{activeUni.wikidataId}</span>
-                      <ExternalLink className="w-3 h-3 inline animate-pulse" />
-                    </a>
-                  ) : 'N/A'}
+                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? '资料验证状态' : 'Profile Verification'}</span>
+                <strong className="text-slate-800 font-extrabold">
+                  {activeUni.wikidataId ? (language === 'zh' ? '已核验' : 'Verified') : 'N/A'}
                 </strong>
               </div>
             </div>
@@ -1509,6 +1505,47 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
             </motion.div>
           </div>
         )}
+
+        {/* Authoritative bachelor programs; lineage stays available in admin surfaces. */}
+        {(() => {
+          const pf = (activeUni as any).ipedsProgramFields;
+          if (!pf || pf.length === 0) return null;
+          const ipedsPrograms = pf as Array<{
+            id: string; displayTitle: string;
+            degreeLevel: string; standardMajorId: string | null; standardMajorName: string | null;
+            standardMajorNameZh: string | null;
+          }>;
+          return (
+            <div className="mt-6 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs" id="ipeds-program-fields">
+              <div className="flex items-center gap-2 mb-3">
+                <Compass className="w-4 h-4 text-purple-600" />
+                <h4 className="text-sm font-bold text-slate-900">
+                  {language === 'zh' ? '本科专业目录' : 'Bachelor Programs'}
+                </h4>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  {ipedsPrograms.length} programs
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {ipedsPrograms.slice(0, 24).map(p => (
+                  <div key={p.id} className="border border-slate-100 rounded-lg p-2.5 text-xs hover:bg-slate-50 transition-colors">
+                    <div className="font-semibold text-slate-900">
+                      {p.standardMajorName || p.displayTitle}
+                    </div>
+                    {p.standardMajorName && p.displayTitle !== p.standardMajorName && (
+                      <div className="text-[10px] text-slate-400 italic">{p.displayTitle}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {ipedsPrograms.length > 24 && (
+                <div className="text-center mt-2 text-[10px] text-slate-400">
+                  Showing 24 of {ipedsPrograms.length} programs
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </AnimatePresence>
 
     </div>

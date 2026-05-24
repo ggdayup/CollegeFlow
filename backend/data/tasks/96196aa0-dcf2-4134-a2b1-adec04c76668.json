@@ -1,0 +1,6 @@
+{
+  "task_id": "96196aa0-dcf2-4134-a2b1-adec04c76668",
+  "state": "FAILED",
+  "progress": 100,
+  "message": "DOM pruning resulted in an empty text body. Unable to parse curriculum."
+}

@@ -1,0 +1,658 @@
+[
+  {
+    "name": "Princeton University",
+    "rank2025": 1
+  },
+  {
+    "name": "Massachusetts Institute of Technology",
+    "rank2025": 2
+  },
+  {
+    "name": "Harvard University",
+    "rank2025": 3
+  },
+  {
+    "name": "Stanford University",
+    "rank2025": 4
+  },
+  {
+    "name": "Yale University",
+    "rank2025": 5
+  },
+  {
+    "name": "Johns Hopkins University",
+    "rank2025": 6
+  },
+  {
+    "name": "California Institute of Technology",
+    "rank2025": 6
+  },
+  {
+    "name": "Duke University",
+    "rank2025": 6
+  },
+  {
+    "name": "Northwestern University",
+    "rank2025": 6
+  },
+  {
+    "name": "University of Pennsylvania",
+    "rank2025": 10
+  },
+  {
+    "name": "University of Chicago",
+    "rank2025": 11
+  },
+  {
+    "name": "Cornell University",
+    "rank2025": 11
+  },
+  {
+    "name": "Brown University",
+    "rank2025": 13
+  },
+  {
+    "name": "Columbia University",
+    "rank2025": 13
+  },
+  {
+    "name": "Dartmouth College",
+    "rank2025": 15
+  },
+  {
+    "name": "University of California-Los Angeles",
+    "rank2025": 15
+  },
+  {
+    "name": "University of California-Berkeley",
+    "rank2025": 17
+  },
+  {
+    "name": "Vanderbilt University",
+    "rank2025": 18
+  },
+  {
+    "name": "Rice University",
+    "rank2025": 18
+  },
+  {
+    "name": "University of Notre Dame",
+    "rank2025": 18
+  },
+  {
+    "name": "Washington University in St. Louis",
+    "rank2025": 21
+  },
+  {
+    "name": "Carnegie Mellon University",
+    "rank2025": 21
+  },
+  {
+    "name": "University of Michigan-Ann Arbor",
+    "rank2025": 21
+  },
+  {
+    "name": "Emory University",
+    "rank2025": 24
+  },
+  {
+    "name": "Georgetown University",
+    "rank2025": 24
+  },
+  {
+    "name": "University of Virginia",
+    "rank2025": 24
+  },
+  {
+    "name": "University of Southern California",
+    "rank2025": 27
+  },
+  {
+    "name": "University of North Carolina-Chapel Hill",
+    "rank2025": 27
+  },
+  {
+    "name": "University of California-San Diego",
+    "rank2025": 29
+  },
+  {
+    "name": "New York University",
+    "rank2025": 30
+  },
+  {
+    "name": "University of Florida",
+    "rank2025": 30
+  },
+  {
+    "name": "University of Texas-Austin",
+    "rank2025": 30
+  },
+  {
+    "name": "University of California-Irvine",
+    "rank2025": 33
+  },
+  {
+    "name": "University of California-Davis",
+    "rank2025": 33
+  },
+  {
+    "name": "University of Illinois-Urbana-Champaign",
+    "rank2025": 33
+  },
+  {
+    "name": "Georgia Institute of Technology",
+    "rank2025": 33
+  },
+  {
+    "name": "Tufts University",
+    "rank2025": 37
+  },
+  {
+    "name": "Boston College",
+    "rank2025": 37
+  },
+  {
+    "name": "University of California-Santa Barbara",
+    "rank2025": 39
+  },
+  {
+    "name": "University of Wisconsin-Madison",
+    "rank2025": 39
+  },
+  {
+    "name": "Boston University",
+    "rank2025": 41
+  },
+  {
+    "name": "Ohio State University-Columbus",
+    "rank2025": 41
+  },
+  {
+    "name": "Rutgers University-New Brunswick",
+    "rank2025": 41
+  },
+  {
+    "name": "University of Rochester",
+    "rank2025": 44
+  },
+  {
+    "name": "University of Maryland",
+    "rank2025": 44
+  },
+  {
+    "name": "Wake Forest University",
+    "rank2025": 46
+  },
+  {
+    "name": "University of Georgia",
+    "rank2025": 46
+  },
+  {
+    "name": "Lehigh University",
+    "rank2025": 46
+  },
+  {
+    "name": "Purdue University",
+    "rank2025": 46
+  },
+  {
+    "name": "University of Washington",
+    "rank2025": 46
+  },
+  {
+    "name": "Case Western Reserve University",
+    "rank2025": 51
+  },
+  {
+    "name": "Virginia Polytechnic Institute and State University",
+    "rank2025": 51
+  },
+  {
+    "name": "Texas A&M University-College Station",
+    "rank2025": 51
+  },
+  {
+    "name": "College of William and Mary",
+    "rank2025": 54
+  },
+  {
+    "name": "Northeastern University",
+    "rank2025": 54
+  },
+  {
+    "name": "Florida State University",
+    "rank2025": 54
+  },
+  {
+    "name": "University of Minnesota",
+    "rank2025": 54
+  },
+  {
+    "name": "Villanova University",
+    "rank2025": 58
+  },
+  {
+    "name": "University of Massachusetts-Amherst",
+    "rank2025": 58
+  },
+  {
+    "name": "North Carolina State University",
+    "rank2025": 58
+  },
+  {
+    "name": "Stony Brook University",
+    "rank2025": 58
+  },
+  {
+    "name": "University of California-Merced",
+    "rank2025": 58
+  },
+  {
+    "name": "Brandeis University",
+    "rank2025": 63
+  },
+  {
+    "name": "Tulane University",
+    "rank2025": 63
+  },
+  {
+    "name": "Santa Clara University",
+    "rank2025": 63
+  },
+  {
+    "name": "University of Miami",
+    "rank2025": 63
+  },
+  {
+    "name": "George Washington University",
+    "rank2025": 63
+  },
+  {
+    "name": "Pennsylvania State University-University Park",
+    "rank2025": 63
+  },
+  {
+    "name": "Michigan State University",
+    "rank2025": 63
+  },
+  {
+    "name": "Rensselaer Polytechnic Institute",
+    "rank2025": 70
+  },
+  {
+    "name": "University of Pittsburgh",
+    "rank2025": 70
+  },
+  {
+    "name": "University of Connecticut",
+    "rank2025": 70
+  },
+  {
+    "name": "Syracuse University",
+    "rank2025": 73
+  },
+  {
+    "name": "Indiana University-Bloomington",
+    "rank2025": 73
+  },
+  {
+    "name": "Binghamton University",
+    "rank2025": 73
+  },
+  {
+    "name": "Stevens Institute of Technology",
+    "rank2025": 76
+  },
+  {
+    "name": "Colorado School of Mines",
+    "rank2025": 76
+  },
+  {
+    "name": "University of California-Riverside",
+    "rank2025": 76
+  },
+  {
+    "name": "University of Buffalo",
+    "rank2025": 76
+  },
+  {
+    "name": "Pepperdine University",
+    "rank2025": 80
+  },
+  {
+    "name": "Clemson University",
+    "rank2025": 80
+  },
+  {
+    "name": "University of Illinois-Chicago",
+    "rank2025": 80
+  },
+  {
+    "name": "Rutgers University-Newark",
+    "rank2025": 80
+  },
+  {
+    "name": "University of California-Santa Cruz",
+    "rank2025": 84
+  },
+  {
+    "name": "New Jersey Institute of Technology",
+    "rank2025": 84
+  },
+  {
+    "name": "Worcester Polytechnic Institute",
+    "rank2025": 86
+  },
+  {
+    "name": "Marquette University",
+    "rank2025": 86
+  },
+  {
+    "name": "Howard University",
+    "rank2025": 86
+  },
+  {
+    "name": "University of Delaware",
+    "rank2025": 86
+  },
+  {
+    "name": "Drexel University",
+    "rank2025": 86
+  },
+  {
+    "name": "Fordham University",
+    "rank2025": 91
+  },
+  {
+    "name": "Southern Methodist University",
+    "rank2025": 91
+  },
+  {
+    "name": "American University",
+    "rank2025": 91
+  },
+  {
+    "name": "Baylor University",
+    "rank2025": 91
+  },
+  {
+    "name": "Loyola Marymount University",
+    "rank2025": 91
+  },
+  {
+    "name": "University of South Florida",
+    "rank2025": 91
+  },
+  {
+    "name": "Rochester Institute of Technology",
+    "rank2025": 91
+  },
+  {
+    "name": "Yeshiva University",
+    "rank2025": 98
+  },
+  {
+    "name": "Gonzaga University",
+    "rank2025": 98
+  },
+  {
+    "name": "University of Iowa",
+    "rank2025": 98
+  },
+  {
+    "name": "University of Colorado-Boulder",
+    "rank2025": 98
+  },
+  {
+    "name": "Temple University",
+    "rank2025": 98
+  },
+  {
+    "name": "Rutgers University-Camden",
+    "rank2025": 98
+  },
+  {
+    "name": "Texas Christian University",
+    "rank2025": 105
+  },
+  {
+    "name": "Auburn University",
+    "rank2025": 105
+  },
+  {
+    "name": "Saint Louis University",
+    "rank2025": 105
+  },
+  {
+    "name": "Illinois Institute of Technology",
+    "rank2025": 105
+  },
+  {
+    "name": "Brigham Young University",
+    "rank2025": 109
+  },
+  {
+    "name": "University of San Diego",
+    "rank2025": 109
+  },
+  {
+    "name": "University of Oregon",
+    "rank2025": 109
+  },
+  {
+    "name": "University of Arizona",
+    "rank2025": 109
+  },
+  {
+    "name": "University of San Francisco",
+    "rank2025": 109
+  },
+  {
+    "name": "University of Tennessee",
+    "rank2025": 109
+  },
+  {
+    "name": "University of Missouri",
+    "rank2025": 109
+  },
+  {
+    "name": "University of New Hampshire",
+    "rank2025": 109
+  },
+  {
+    "name": "George Mason University",
+    "rank2025": 109
+  },
+  {
+    "name": "California State University-Long Beach",
+    "rank2025": 109
+  },
+  {
+    "name": "University of Texas-Dallas",
+    "rank2025": 109
+  },
+  {
+    "name": "San Diego State University",
+    "rank2025": 109
+  },
+  {
+    "name": "SUNY College of Environmental Science and Forestry",
+    "rank2025": 115
+  },
+  {
+    "name": "Elon University",
+    "rank2025": 121
+  },
+  {
+    "name": "University of Denver",
+    "rank2025": 121
+  },
+  {
+    "name": "Creighton University",
+    "rank2025": 121
+  },
+  {
+    "name": "University of South Carolina",
+    "rank2025": 121
+  },
+  {
+    "name": "Arizona State University-Tempe",
+    "rank2025": 121
+  },
+  {
+    "name": "Chapman University",
+    "rank2025": 121
+  },
+  {
+    "name": "University of Vermont",
+    "rank2025": 121
+  },
+  {
+    "name": "Iowa State University",
+    "rank2025": 121
+  },
+  {
+    "name": "University of Central Florida",
+    "rank2025": 121
+  },
+  {
+    "name": "CUNY-City College",
+    "rank2025": 121
+  },
+  {
+    "name": "Clark University",
+    "rank2025": 132
+  },
+  {
+    "name": "Loyola University Chicago",
+    "rank2025": 132
+  },
+  {
+    "name": "Fairfield University",
+    "rank2025": 132
+  },
+  {
+    "name": "University of Oklahoma",
+    "rank2025": 132
+  },
+  {
+    "name": "University of Utah",
+    "rank2025": 136
+  },
+  {
+    "name": "Miami University",
+    "rank2025": 136
+  },
+  {
+    "name": "University of Dayton",
+    "rank2025": 136
+  },
+  {
+    "name": "Thomas Jefferson University",
+    "rank2025": 136
+  },
+  {
+    "name": "University of the Pacific",
+    "rank2025": 136
+  },
+  {
+    "name": "University of Maryland-Baltimore County",
+    "rank2025": 144
+  },
+  {
+    "name": "University of St. Thomas",
+    "rank2025": 148
+  },
+  {
+    "name": "Colorado State University",
+    "rank2025": 148
+  },
+  {
+    "name": "Michigan Technological University",
+    "rank2025": 148
+  },
+  {
+    "name": "University of Kansas",
+    "rank2025": 152
+  },
+  {
+    "name": "Clarkson University",
+    "rank2025": 152
+  },
+  {
+    "name": "Seattle University",
+    "rank2025": 152
+  },
+  {
+    "name": "University of Kentucky",
+    "rank2025": 152
+  },
+  {
+    "name": "University of Nebraska-Lincoln",
+    "rank2025": 152
+  },
+  {
+    "name": "University of Cincinnati",
+    "rank2025": 152
+  },
+  {
+    "name": "DePaul University",
+    "rank2025": 165
+  },
+  {
+    "name": "Seton Hall University",
+    "rank2025": 165
+  },
+  {
+    "name": "Simmons University",
+    "rank2025": 165
+  },
+  {
+    "name": "Duquesne University",
+    "rank2025": 165
+  },
+  {
+    "name": "Samford University",
+    "rank2025": 171
+  },
+  {
+    "name": "University of Alabama",
+    "rank2025": 171
+  },
+  {
+    "name": "Catholic University of America",
+    "rank2025": 171
+  },
+  {
+    "name": "University of Mississippi",
+    "rank2025": 171
+  },
+  {
+    "name": "Drake University",
+    "rank2025": 179
+  },
+  {
+    "name": "University of Tulsa",
+    "rank2025": 179
+  },
+  {
+    "name": "Quinnipiac University",
+    "rank2025": 179
+  },
+  {
+    "name": "Ohio University",
+    "rank2025": 179
+  },
+  {
+    "name": "University of Arkansas",
+    "rank2025": 189
+  },
+  {
+    "name": "Washington State University",
+    "rank2025": 189
+  },
+  {
+    "name": "University of La Verne",
+    "rank2025": 196
+  }
+]

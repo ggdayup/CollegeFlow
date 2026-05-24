@@ -1,0 +1,255 @@
+◇ injected env (2) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+🔍 Querying Rice University Majors and their Standard Mappings...
+Found 79 majors in the database for Rice University.
+
+
+🏫 School: School of Architecture (rice-architecture)
+  - Major: "Architectural Studies" [Code: rice-arch-studies]
+    └─ ✅ Mapped to: "Architectural engineering" (Score: 0.9429)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Architecture" [Code: rice-arch-ba]
+    └─ ✅ Mapped to: "Architecture" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+
+🏫 School: George R. Brown School of Engineering and Computing (rice-brown)
+  - Major: "Artificial Intelligence" [Code: rice-ai]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.3119)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Bioengineering" [Code: rice-bioeng]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.4745)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Chemical and Biomolecular Engineering" [Code: rice-chemeng]
+    └─ ✅ Mapped to: "Chemical engineering" (Score: 0.8886)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Civil and Environmental Engineering" [Code: rice-civileng]
+    └─ ✅ Mapped to: "Civil engineering" (Score: 0.9168)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Computational Applied Mathematics and Operations Research" [Code: rice-caam-cmor]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.8250)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Computer Science" [Code: rice-cs]
+    └─ ✅ Mapped to: "Computer science" (Score: 0.9996)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Data Science" [Code: rice-datasci]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7378)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Electrical and Computer Engineering" [Code: rice-ece]
+    └─ ✅ Mapped to: "Electrical engineering" (Score: 0.9282)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Energy and Water Sustainability" [Code: rice-energy-sust]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.5653)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Engineering Design" [Code: rice-eng-design]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7152)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Engineering Leadership" [Code: rice-eng-leadership]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7884)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Financial Computation and Modeling" [Code: rice-fin-model]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.5587)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Global Health Technologies" [Code: rice-global-health]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.6943)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Materials Science and NanoEngineering" [Code: rice-matsci]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.8488)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Mechanical Engineering" [Code: rice-mecheng]
+    └─ ✅ Mapped to: "Mechanical engineering" (Score: 0.9991)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Statistics" [Code: rice-stats-eng]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.8473)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+
+🏫 School: Virani Undergraduate School of Business (rice-business)
+  - Major: "Business" [Code: rice-biz-gen]
+    └─ ✅ Mapped to: "General business" (Score: 0.8989)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Entrepreneurship" [Code: rice-entrepreneurship]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.3939)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+
+🏫 School: School of Humanities and Arts (rice-humanities)
+  - Major: "African and African American Studies" [Code: rice-african-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.6690)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Ancient Mediterranean Civilizations" [Code: rice-ancient-med]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.3587)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Art" [Code: rice-art]
+    └─ ✅ Mapped to: "Art history and criticism" (Score: 0.9063)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Art History" [Code: rice-art-history]
+    └─ ✅ Mapped to: "Art history and criticism" (Score: 0.9522)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Asian Studies" [Code: rice-asian-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.6886)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Classical Civilizations" [Code: rice-class-civ]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.3820)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Classical Studies" [Code: rice-class-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.6790)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Creative Writing" [Code: rice-creative-writing]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.4095)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "English" [Code: rice-english]
+    └─ ✅ Mapped to: "English language and literature" (Score: 0.8640)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Environmental Studies" [Code: rice-env-studies]
+    └─ ✅ Mapped to: "Environmental science" (Score: 0.9751)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "European Studies" [Code: rice-euro-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7149)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "French Studies" [Code: rice-french-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7766)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "German Studies" [Code: rice-german-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7704)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Greek Language and Literature" [Code: rice-greek-lang]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7822)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "History" [Code: rice-history]
+    └─ ✅ Mapped to: "History" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Jewish Studies" [Code: rice-jewish-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.6524)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Languages and Intercultural Communication" [Code: rice-lang-inter]
+    └─ ✅ Mapped to: "Intercultural and international studies" (Score: 0.8596)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Latin American and Latinx Studies" [Code: rice-latin-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7290)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Latin Language and Literature" [Code: rice-latin-lang]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.8422)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Media Studies" [Code: rice-media-studies]
+    └─ ✅ Mapped to: "Communications and mass media" (Score: 0.9055)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Medical Humanities" [Code: rice-med-humanities]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.8336)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Medieval and Early Modern Studies" [Code: rice-medieval-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.6206)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Modern and Classical Languages, Literatures, and Cultures" [Code: rice-modern-class-lang]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7917)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Museums and Cultural Heritage" [Code: rice-museums-heritage]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7668)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Philosophy" [Code: rice-philosophy]
+    └─ ✅ Mapped to: "Philosophy and religious studies" (Score: 0.8859)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Politics, Law, and Social Thought" [Code: rice-pol-law-thought]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7628)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Religion" [Code: rice-religion]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.4982)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Science and Technology Studies" [Code: rice-sci-tech-studies]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7348)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Spanish and Portuguese" [Code: rice-spanish-port]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7388)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Study of Women, Gender and Sexuality" [Code: rice-women-gender]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.5315)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Theatre" [Code: rice-theatre]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.5293)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+
+🏫 School: Shepherd School of Music (rice-music)
+  - Major: "Music" [Code: rice-music-performance]
+    └─ ✅ Mapped to: "Music" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+
+🏫 School: Wiess School of Natural Sciences (rice-natural)
+  - Major: "Astronomy" [Code: rice-astronomy]
+    └─ ✅ Mapped to: "Astronomy and astrophysics" (Score: 0.9416)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Astrophysics" [Code: rice-astrophysics]
+    └─ ✅ Mapped to: "Astronomy and astrophysics" (Score: 0.9761)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Biosciences" [Code: rice-biosci]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.5025)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Chemical Physics" [Code: rice-chem-phys]
+    └─ ✅ Mapped to: "Chemical engineering" (Score: 0.8926)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Chemistry" [Code: rice-chemistry]
+    └─ ✅ Mapped to: "Chemistry" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Earth, Environmental and Planetary Sciences" [Code: rice-earth-planetary]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.8153)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Ecology and Evolutionary Biology" [Code: rice-ecology-biology]
+    └─ ✅ Mapped to: "Ecology" (Score: 0.9014)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Environmental Science" [Code: rice-env-science]
+    └─ ✅ Mapped to: "Environmental science" (Score: 0.9996)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Health Sciences" [Code: rice-health-sciences]
+    └─ ✅ Mapped to: "Miscellaneous health medical professions" (Score: 0.8569)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Kinesiology" [Code: rice-kinesiology]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.3797)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Mathematics" [Code: rice-math-natural]
+    └─ ✅ Mapped to: "Mathematics" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Neuroscience" [Code: rice-neuroscience]
+    └─ ✅ Mapped to: "Neuroscience" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Physics" [Code: rice-physics-natural]
+    └─ ✅ Mapped to: "Physics" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Sports Medicine and Exercise Physiology" [Code: rice-sports-med]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7731)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+
+🏫 School: School of Social Sciences (rice-social)
+  - Major: "Anthropology" [Code: rice-anthropology]
+    └─ ✅ Mapped to: "Anthropology and archaeology" (Score: 0.9103)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Cognitive Sciences" [Code: rice-cogsci-social]
+    └─ ✅ Mapped to: "Cognitive science and biopsychology" (Score: 0.9005)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Economics" [Code: rice-economics-social]
+    └─ ✅ Mapped to: "Economics" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Global Affairs" [Code: rice-global-affairs]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.5396)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Linguistics" [Code: rice-linguistics]
+    └─ ✅ Mapped to: "Linguistics and comparative language and literature" (Score: 0.9163)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Managerial Economics and Organizational Sciences" [Code: rice-managerial-econ]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.7705)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Mathematical Economic Analysis" [Code: rice-math-econ]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.4834)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Political Science" [Code: rice-polsci-social]
+    └─ ✅ Mapped to: "Political science and government" (Score: 0.9413)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Psychology" [Code: rice-psychology-social]
+    └─ ✅ Mapped to: "Psychology" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Social Policy Analysis" [Code: rice-social-policy]
+    └─ ✅ Mapped to: "Public policy" (Score: 0.8789)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Sociology" [Code: rice-sociology-social]
+    └─ ✅ Mapped to: "Sociology" (Score: 1.0000)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Sport Analytics" [Code: rice-sport-analytics]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.3817)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/
+  - Major: "Sport Management" [Code: rice-sport-management]
+    └─ ❌ Unmapped (<0.85 Gated) (Best Score: 0.6073)
+    └─ Source URL: https://ga.rice.edu/programs-study/departments-programs/

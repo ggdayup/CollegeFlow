@@ -29,3 +29,32 @@ This file preserves condensed historical context that is useful but too bulky fo
 
 - Scratch scripts under `scratch/` have been used for ingestion checks, ranking cleanup, Plane batch updates, and targeted file rewrites. Treat them as local utilities and verify behavior before reusing.
 - If a compaction or interrupted edit leaves JSX syntax damaged, inspect terminal errors and conversation logs if available, then restore the nearest missing conditional/container structure before broad refactors.
+
+## Null-Safe Decoupled Catalog Design (May 2026)
+
+- **Optional Relational Schema**: Enforcing strict program catalog authenticity required decoupling crawled custom university programs from standard national majors. Making `standardMajorId` nullable in `UniversityMajorAssociation` allows newly crawled custom registrar programs to exist natively in the database without being forced into incorrect or imagined standard major links.
+- **Strict Matcher Threshold Gating**: Standard major vector mappings must use a strict confidence threshold. Hybrid lexical-semantic scores below **0.85** are saved with `standardMajorId = NULL` and flagged as `isValidated = FALSE`. This strictly prevents weak matches from displaying incorrect or imagined relationships to users.
+- **BFF Null-Safety Blending**: The Express BFF blending layer must tolerantly map nullable `standardMajor` associations using optional chaining (e.g. `cm.standardMajor?.nameZh`), providing clean fallbacks to custom registrar program names and degree levels while omitting standard metrics when unmapped.
+- **Frontend Bento Empty States**: When a selected university has no schools or parsed majors mapped dynamically (uningested state), the React client should replace the split selector layout with a unified, glassmorphic "Catalog Sync Pending" card. This card displays the university's authentic database facts (ranks, cost, IPEDS/Wikidata entity links) and explains that catalog data is currently syncing with zero fabricated listings.
+
+## Official Catalog Source Traceability (May 2026)
+
+- **Source Traceability Field (`sourceUrl`)**: To prevent data fabrication and establish absolute verification traceability, every custom university major listing (`UniversityMajorAssociation` table) must store its exact official catalog reference URL.
+- **Seeding Pipeline Alignment**: Static curated premium university seeds (`src/data/universitiesData.ts` and `prisma/seed.ts`) must carry these official catalog URLs directly to populate the database reliably on startup.
+- **Crawled URL Capture**: When dynamic crawls are triggered, the crawler entrypoint URL must be saved in the database as `sourceUrl` upon task completion, ensuring that scraped programs automatically record their source catalog path.
+- **Unified BFF and Frontend Badging**: The Express BFF server must propagate `sourceUrl` to the client, allowing the frontend React Next.js components to render elegant **"Verify Catalog / 查阅官方大纲"** micro-badges that redirect users to authentic university registrar handbooks in new tabs.
+
+## Dynamic Catalog Program-Level URL Scraping & Matching (May 2026)
+
+- **Bachelors-First Key-Merging Strategy**: Solve this by merging all degree listings under the same normalized program key, and then filtering them using a robust Bachelor's filter (e.g. `deg.startswith("b")` to capture BA, BS, BSCS, BArch, BMus, etc., and exclude MME, MS, PhD). This preserves 100% program-level URL purity in the database.
+
+## Dynamic Catalog-First Crawler Discovery & School-Division Parsing (May 2026)
+
+- **Dynamic School Resolution & Table Grouping**: University registrar catalogs often group academic programs under decorative category rows (e.g., `<tr class="areaheader">` for school divisions). By statefully tracking `current_school`, we can dynamically extract these academic schools, automatically upsert them into the database, and map the discovered custom majors directly to their correct official school divisions.
+- **Double-Table Duplicate Bypass**: Some directories list programs twice: first alphabetically grouped under Degree Types (e.g., `Bachelor of Arts (BA)`, `Bachelor of Science (BS)`), and then alphabetically under School Divisions. We solved this duplication by initializing `current_school = None` and filtering out non-school headers with `is_real_school()` (skipping headers containing `Bachelor of`, `Artist Diploma`, `Minor`, etc.). This state-reset strategy elegantly discards the entire redundant first half of the table, isolating exactly the 81 authentic school-grouped undergraduate majors.
+- **BeautifulSoup Cell Label Decomposition**: Responsive catalog tables often put label tags inside individual table cells (e.g., `<span class="table-header-text">Program</span>`). To prevent column shifting bugs, copy each cell `td` and use `.decompose()` on the label span before calling `.get_text()`. This isolates the exact program text and URLs, making the parser completely immune to layout and DOM shifts.
+- **SentenceTransformers Vector Alignment**: pgvector semantic matching requires pre-seeded comparison reference vectors. By executing `python3 backend/matcher.py seed` to generate embeddings for all 152 standard national majors using SentenceTransformers, we activated the vector matching layer. This achieved near-perfect $1.0000$ and $0.9996$ coupling scores for newly crawled majors like `Computer Science`, `Chemistry`, `Mathematics`, and `Economics`.
+
+
+
+

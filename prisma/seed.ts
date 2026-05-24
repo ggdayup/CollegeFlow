@@ -154,6 +154,7 @@ async function main() {
             standardMajorId: mLink.nationalMajorId,
             mappingScore: 1.0,   // Standard static seeds are 100% manually mapped
             isValidated: true,   // Marked as audited since it comes from verified data
+            sourceUrl: mLink.sourceUrl || null,
           },
         });
       }

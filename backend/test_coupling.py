@@ -35,7 +35,8 @@ def run_integration_test():
         {"customName": "Honors Electrical & Computer Systems Engineering", "customCode": "TEST_EE_02"},
         {"customName": "Bilingual Business Communication & Global Media Studies", "customCode": "TEST_COMMS_03"},
         {"customName": "应用数学与计算科学 (Applied Math & Computing)", "customCode": "TEST_AM_04"},
-        {"customName": "临床医学与公共卫生管理 (Clinical Medicine & Health Administration)", "customCode": "TEST_MED_05"}
+        {"customName": "临床医学与公共卫生管理 (Clinical Medicine & Health Administration)", "customCode": "TEST_MED_05"},
+        {"customName": "Mundane Studies and Arcane Magic", "customCode": "TEST_NULL_06"}
     ]
 
     print("\nInserting test unvalidated custom programs...")
@@ -86,29 +87,35 @@ def run_integration_test():
                 '''
                 SELECT a."customName", a."customCode", a."mappingScore", a."isValidated", m."nameEn", m."nameZh"
                 FROM "UniversityMajorAssociation" a
-                JOIN "Major" m ON a."standardMajorId" = m."id"
+                LEFT JOIN "Major" m ON a."standardMajorId" = m."id"
                 WHERE a."id" = ANY(%s)
                 ''',
                 (inserted_ids,)
             )
             rows = cur.fetchall()
             
-            print("\n" + "="*90)
+            print("\n" + "="*95)
             print(f"{'CUSTOM NAME':<40} | {'MAPPED STANDARD MAJOR':<30} | {'SCORE':<8} | {'AUDITED':<7}")
-            print("="*90)
+            print("="*95)
+            null_count = 0
             for row in rows:
                 custom_name, code, score, audited, std_en, std_zh = row
-                print(f"{custom_name[:40]:<40} | {std_en[:30]:<30} | {score:.4f} | {str(audited):<7}")
-            print("="*90)
+                std_display = std_en if std_en else "NULL (Unmapped)"
+                print(f"{custom_name[:40]:<40} | {std_display[:30]:<30} | {score:.4f} | {str(audited):<7}")
+                if not std_en:
+                    null_count += 1
+            print("="*95)
             
             # Assertions
+            assert null_count >= 1, f"Error: Expected at least 1 program to be unmapped (< 0.85), got {null_count}"
             for row in rows:
-                score = row[2]
-                audited = row[3]
+                custom_name, code, score, audited, std_en, std_zh = row
                 assert score > 0.0, f"Error: Score should be greater than 0.0, got {score}"
                 assert audited is False, f"Error: Audited flag (isValidated) should be False, got {audited}"
+                if code == "TEST_NULL_06":
+                    assert std_en is None, f"Error: 'Mundane Studies and Arcane Magic' should have matched < 0.85 and saved standardMajorId = NULL, got: {std_en}"
             
-            print("\n✅ Verification Successful: All custom programs are auto-coupled with correct scores and audited flags!")
+            print("\n✅ Verification Successful: Unmappable program correctly saved with NULL standardMajorId, and highly similar majors coupled correctly!")
             
     except AssertionError as ae:
         print(f"\n❌ Assertion Failed: {ae}")

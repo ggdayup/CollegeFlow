@@ -289,21 +289,28 @@ def couple_custom_programs(w_lexical=0.4, w_semantic=0.6):
                     continue
                 
                 best_match = matches[0]
-                standard_major_id = best_match["id"]
                 score = best_match["hybrid_score"]
+                
+                if score >= 0.85:
+                    standard_major_id = best_match["id"]
+                    is_validated = False
+                    print(f"Coupled (>=0.85): '{custom_name}' -> '{best_match['nameEn']}' | score: {score:.4f}")
+                else:
+                    standard_major_id = None
+                    is_validated = False
+                    print(f"Unmapped (<0.85): '{custom_name}' | best guess score: {score:.4f} - saved with NULL standardMajorId")
 
                 cur.execute(
                     '''
                     UPDATE "UniversityMajorAssociation"
                     SET "standardMajorId" = %s,
                         "mappingScore" = %s,
-                        "isValidated" = FALSE
+                        "isValidated" = %s
                     WHERE "id" = %s
                     ''',
-                    (standard_major_id, score, prog_id)
+                    (standard_major_id, score, is_validated, prog_id)
                 )
                 coupled_count += 1
-                print(f"Coupled: '{custom_name}' -> '{best_match['nameEn']}' | score: {score:.4f}")
         conn.commit()
         print(f"✅ Successfully auto-coupled {coupled_count} school-specific custom programs.")
     except Exception as e:

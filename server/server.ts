@@ -86,23 +86,26 @@ app.get('/api/universities', async (req, res) => {
         // Map schools and associated custom majors from DB
         const mappedDbSchools = dbUni.schools.map((s) => {
           const majorsList = s.customMajors.map((cm) => {
-            const rankings = dbUni.majorRankings
-              .filter((r) => r.standardMajorId === cm.standardMajorId)
-              .map((r) => ({
-                source: r.source,
-                rankInteger: r.rankInteger,
-                year: r.year,
-                verificationId: r.verificationId
-              }));
+            const rankings = cm.standardMajorId
+              ? dbUni.majorRankings
+                  .filter((r) => r.standardMajorId === cm.standardMajorId)
+                  .map((r) => ({
+                    source: r.source,
+                    rankInteger: r.rankInteger,
+                    year: r.year,
+                    verificationId: r.verificationId
+                  }))
+              : [];
             return {
               id: cm.customCode || cm.id,
               nameEn: cm.customName,
-              nameZh: cm.standardMajor.nameZh || cm.customName,
-              nameZht: cm.standardMajor.nameZht || cm.standardMajor.nameZh || cm.customName,
+              nameZh: cm.standardMajor?.nameZh || cm.customName,
+              nameZht: cm.standardMajor?.nameZht || cm.standardMajor?.nameZh || cm.customName,
               nationalMajorId: cm.standardMajorId,
-              broadFieldId: cm.standardMajor.broadFieldId,
+              broadFieldId: cm.standardMajor?.broadFieldId || undefined,
               degreeLevel: cm.degreeLevel,
-              rankings: rankings.length > 0 ? rankings : undefined
+              rankings: rankings.length > 0 ? rankings : undefined,
+              sourceUrl: cm.sourceUrl || undefined
             };
           });
 
@@ -168,6 +171,7 @@ app.get('/api/universities', async (req, res) => {
                   nationalMajorId: dbMajor.nationalMajorId,
                   degreeLevel: dbMajor.degreeLevel || 'BACHELOR',
                   rankings: dbMajor.rankings,
+                  sourceUrl: dbMajor.sourceUrl,
                 });
               }
 
@@ -205,6 +209,7 @@ app.get('/api/universities', async (req, res) => {
                 nationalMajorId: dbMajor.nationalMajorId,
                 degreeLevel: dbMajor.degreeLevel || 'BACHELOR',
                 rankings: dbMajor.rankings,
+                sourceUrl: dbMajor.sourceUrl,
               });
             }
 
@@ -251,6 +256,8 @@ app.get('/api/universities', async (req, res) => {
           averageCost: dbUni.averageCost || undefined,
           gradRate: dbUni.gradRate || undefined,
           medianSalary: dbUni.medianSalary || undefined,
+          wikidataId: dbUni.wikidataId || undefined,
+          scorecardUnitId: dbUni.scorecardUnitId || undefined,
           majorRankings: dbUni.majorRankings.map((r) => ({
             standardMajorId: r.standardMajorId,
             rankInteger: r.rankInteger,
@@ -278,22 +285,25 @@ app.get('/api/universities', async (req, res) => {
       // Map schools and associated custom majors from DB
       const mappedSchools = dbUni.schools.map((s) => {
         const majorsList = s.customMajors.map((cm) => {
-          const rankings = dbUni.majorRankings
-            .filter((r) => r.standardMajorId === cm.standardMajorId)
-            .map((r) => ({
-              source: r.source,
-              rankInteger: r.rankInteger,
-              year: r.year,
-              verificationId: r.verificationId
-            }));
+          const rankings = cm.standardMajorId
+            ? dbUni.majorRankings
+                .filter((r) => r.standardMajorId === cm.standardMajorId)
+                .map((r) => ({
+                  source: r.source,
+                  rankInteger: r.rankInteger,
+                  year: r.year,
+                  verificationId: r.verificationId
+                }))
+            : [];
           return {
             id: cm.customCode || cm.id,
             nameEn: cm.customName,
-            nameZh: cm.standardMajor.nameZh || cm.customName,
-            nameZht: cm.standardMajor.nameZht || cm.standardMajor.nameZh || cm.customName,
+            nameZh: cm.standardMajor?.nameZh || cm.customName,
+            nameZht: cm.standardMajor?.nameZht || cm.standardMajor?.nameZh || cm.customName,
             nationalMajorId: cm.standardMajorId,
             degreeLevel: cm.degreeLevel,
-            rankings: rankings.length > 0 ? rankings : undefined
+            rankings: rankings.length > 0 ? rankings : undefined,
+            sourceUrl: cm.sourceUrl || undefined
           };
         });
 
@@ -343,6 +353,8 @@ app.get('/api/universities', async (req, res) => {
         averageCost: dbUni.averageCost || undefined,
         gradRate: dbUni.gradRate || undefined,
         medianSalary: dbUni.medianSalary || undefined,
+        wikidataId: dbUni.wikidataId || undefined,
+        scorecardUnitId: dbUni.scorecardUnitId || undefined,
         majorRankings: dbUni.majorRankings.map((r) => ({
           standardMajorId: r.standardMajorId,
           rankInteger: r.rankInteger,

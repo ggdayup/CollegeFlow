@@ -699,9 +699,84 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
       </div>
 
       {/* 3. Main interactive directory container */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        {/* Left Side: School Selector Pane representing 7 or 14 Schools */}
+      {activeUni.schools.length === 0 ? (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/40 border border-slate-200/80 backdrop-blur-md p-8 rounded-3xl text-center space-y-6 shadow-lg max-w-4xl mx-auto border-dashed relative overflow-hidden"
+          id="catalog-sync-pending-panel"
+        >
+          {/* Decorative glowing gradient circle background */}
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="space-y-3 max-w-md mx-auto">
+            {/* Spinning/pulsing compass or gear micro-animation */}
+            <div className="w-16 h-16 bg-gradient-to-tr from-amber-500/20 to-blue-500/20 text-slate-700 mx-auto rounded-full flex items-center justify-center border border-slate-200/50 shadow-sm relative">
+              <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-ping absolute" />
+              <Compass className="w-8 h-8 text-blue-600 animate-spin" style={{ animationDuration: '8s' }} />
+            </div>
+
+            <h3 className="text-lg font-black text-slate-900 tracking-tight">
+              {language === 'zh' ? '课程大纲对齐中 · Catalog Sync Pending' : 'Catalog Sync Pending / 课程大纲对齐中'}
+            </h3>
+            
+            <p className="text-xs text-slate-505 text-slate-500 leading-relaxed">
+              {language === 'zh'
+                ? `本系统严格遵循 100% 专业真实性原则，拒绝任何人工编造、假冒或推测性专业目录。`
+                : `We strictly adhere to a 100% program authenticity rule. We reject any fabricated, simulated, or imagined college major mappings.`}
+            </p>
+          </div>
+
+          <div className="bg-slate-50/80 border border-slate-200/60 p-5 rounded-2xl max-w-2xl mx-auto space-y-4 text-left">
+            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest block font-mono border-b border-slate-200 pb-2 flex items-center gap-1.5">
+              <Info className="w-4 h-4 text-blue-500" />
+              <span>{language === 'zh' ? '当前学府对齐审计数据 (AUDIT MATRIX)' : 'UNIVERSITY AUDIT MATRIX'}</span>
+            </h4>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
+              <div className="space-y-1">
+                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? '国际 QS 排名' : 'QS World Rank'}</span>
+                <strong className="text-slate-800 font-extrabold">#{activeUni.qsRank && activeUni.qsRank < 999 ? activeUni.qsRank : 'Unranked'}</strong>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? '全美 US News' : 'US News Rank'}</span>
+                <strong className="text-slate-800 font-extrabold">#{activeUni.usNewsRank && activeUni.usNewsRank < 999 ? activeUni.usNewsRank : 'Unranked'}</strong>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? '权威 IPEDS ID' : 'IPEDS UNITID'}</span>
+                <strong className="text-slate-800 font-extrabold">{activeUni.scorecardUnitId || 'N/A'}</strong>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] text-slate-400 block">{language === 'zh' ? 'Wikidata 关联编目' : 'Wikidata Entity'}</span>
+                <strong className="text-blue-600 font-extrabold hover:underline">
+                  {activeUni.wikidataId ? (
+                    <a href={`https://www.wikidata.org/wiki/${activeUni.wikidataId}`} target="_blank" rel="noreferrer" className="flex items-center gap-0.5">
+                      <span>{activeUni.wikidataId}</span>
+                      <ExternalLink className="w-3 h-3 inline animate-pulse" />
+                    </a>
+                  ) : 'N/A'}
+                </strong>
+              </div>
+            </div>
+
+            <div className="border-t border-slate-200/60 pt-3 text-[11px] text-slate-500 leading-normal space-y-1.5">
+              <p>
+                {language === 'zh'
+                  ? `⚙️ 官方爬虫及 Gemini 提取清洗管道已针对 ${getUniversityName(activeUni)} 立项。我们将通过 Scrapy 实时读取学校注册处 (Registrar Office) 真实发布的本科专业与课程大纲文档，严密校验后入库激活。`
+                  : `⚙️ Official Scrapy and Gemini parser pipeline has been scheduled for ${getUniversityName(activeUni)}. We will scrape official Registrar directories, parse real-world curriculum details, and activate verified programs only.`}
+              </p>
+              <p className="text-[10px] italic text-slate-400">
+                {language === 'zh'
+                  ? `提示：数据库暂不可用时，本系统已在后台加载 Premium Curated 高校的完整硬编目录作为备份，确保核心搜索可用。`
+                  : `Note: When dynamic DB catalog is offline, the system safely serves authentic curated hard-coded definitions for premium entities.`}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Left Side: School Selector Pane representing 7 or 14 Schools */}
         <div className="col-span-1 lg:col-span-4 space-y-4">
           <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
             
@@ -1102,14 +1177,29 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                                       {renderMajorDemands(m.nationalMajorId)}
                                     </div>
 
-                                    {m.nationalMajorId && (
-                                      <button
-                                        onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
-                                        className="mt-4 w-full bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 rounded-xl border border-slate-200 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                                      >
-                                        <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold" />
-                                        <span>{language === 'zh' ? '🧮 联动全美行业薪资回报' : 'Link National Career Data'}</span>
-                                      </button>
+                                    {(m.sourceUrl || m.nationalMajorId) && (
+                                      <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                                        {m.sourceUrl && (
+                                          <a
+                                            href={m.sourceUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 bg-blue-50/50 hover:bg-blue-100/70 text-blue-700 py-2 px-3 rounded-xl border border-blue-100 text-[10px] font-extrabold flex items-center justify-center gap-1.5 transition-all duration-300 hover:shadow-xs active:scale-[0.98]"
+                                          >
+                                            <BookOpen className="w-3.5 h-3.5 text-blue-600 shrink-0 animate-pulse" />
+                                            <span>{language === 'zh' ? '查阅官方大纲' : language === 'zht' ? '查閱官方大綱' : 'Verify Catalog'}</span>
+                                          </a>
+                                        )}
+                                        {m.nationalMajorId && (
+                                          <button
+                                            onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
+                                            className="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 px-3 rounded-xl border border-slate-200 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors active:scale-[0.98]"
+                                          >
+                                            <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold shrink-0" />
+                                            <span>{language === 'zh' ? '联动薪资回报' : language === 'zht' ? '連動薪資回報' : 'Career ROI'}</span>
+                                          </button>
+                                        )}
+                                      </div>
                                     )}
                                   </div>
                                 ))}
@@ -1167,14 +1257,29 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                               {renderMajorDemands(m.nationalMajorId)}
                             </div>
 
-                            {m.nationalMajorId && (
-                              <button
-                                onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
-                                className="mt-4 w-full bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 rounded-xl border border-slate-205 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                              >
-                                <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold animate-pulse" />
-                                <span>{language === 'zh' ? '🧮 联动全美行业薪资回报' : 'Link National Career Data'}</span>
-                              </button>
+                            {(m.sourceUrl || m.nationalMajorId) && (
+                              <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                                {m.sourceUrl && (
+                                  <a
+                                    href={m.sourceUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-1 bg-blue-50/50 hover:bg-blue-100/70 text-blue-700 py-2 px-3 rounded-xl border border-blue-100 text-[10px] font-extrabold flex items-center justify-center gap-1.5 transition-all duration-300 hover:shadow-xs active:scale-[0.98]"
+                                  >
+                                    <BookOpen className="w-3.5 h-3.5 text-blue-600 shrink-0 animate-pulse" />
+                                    <span>{language === 'zh' ? '查阅官方大纲' : language === 'zht' ? '查閱官方大綱' : 'Verify Catalog'}</span>
+                                  </a>
+                                )}
+                                {m.nationalMajorId && (
+                                  <button
+                                    onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
+                                    className="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 px-3 rounded-xl border border-slate-200 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors active:scale-[0.98]"
+                                  >
+                                    <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold shrink-0" />
+                                    <span>{language === 'zh' ? '联动薪资回报' : language === 'zht' ? '連動薪資回報' : 'Career ROI'}</span>
+                                  </button>
+                                )}
+                              </div>
                             )}
                           </div>
                         ))}
@@ -1210,6 +1315,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
           </div>
         </div>
       </div>
+      )}
 
       {/* Linked National Major Detailed Showcase Modal Overlay */}
       <AnimatePresence>

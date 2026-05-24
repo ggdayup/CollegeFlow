@@ -63,7 +63,18 @@ function generateCustomMajorName(majorName: string, type: 'TECH' | 'ART' | 'BUSI
   return `Department of Academic Studies - Bachelor of Arts in ${majorName}`;
 }
 
+/**
+ * ⚠️ DEPRECATED & DEACTIVATED - DO NOT RUN
+ * Reason: This script heuristically simulates and fabricates university-major associations.
+ * To enforce strict data authenticity (no imagined majors), all university program directories
+ * must reside in curated static premium lists (universitiesData.ts) or be crawled directly from real registrar pages.
+ */
+
 async function main() {
+  throw new Error(
+    "⚠️ expand_university_majors.ts is DEACTIVATED to prevent programmatic major fabrication. " +
+    "University majors must come from authentic sources only."
+  );
   console.log('🏁 Starting University Real Majors Intelligent Enrichment Engine...\n');
 
   // 1. Fetch majors and universities

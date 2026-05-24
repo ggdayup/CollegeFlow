@@ -179,7 +179,18 @@ function getRouteForMajor(
   return { schoolId: `${uniId}-cas`, schoolNameEn: 'College of Liberal Arts & Sciences', schoolNameZh: '文理学院', schoolCode: 'CAS' };
 }
 
+/**
+ * ⚠️ DEPRECATED & DEACTIVATED - DO NOT RUN
+ * Reason: This script heuristically simulates and fabricates university-school-major associations.
+ * To enforce strict data authenticity (no imagined majors), all university program and school directories
+ * must reside in curated static premium lists (universitiesData.ts) or be crawled directly from real registrar pages.
+ */
+
 async function main() {
+  throw new Error(
+    "⚠️ enrich_university_schools.ts is DEACTIVATED to prevent programmatic school/major fabrication. " +
+    "University programs must come from authentic sources only."
+  );
   console.log('🏁 Starting Database School-Major Association Enrichment Pipeline...\n');
 
   // Load all standard majors & universities

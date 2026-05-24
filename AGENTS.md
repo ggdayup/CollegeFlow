@@ -31,6 +31,17 @@
 - Rankings can contain ties. Preserve tied ranks from authentic sources; only null out non-matching records when purifying ranking sync output.
 - When mapping official university programs to standard majors, map to verified national major IDs/CIP-aligned entries and keep the official program name intact.
 
+## Absolutely Forbidden
+- Do not invent, infer, or "fill in" any university, program, ranking, admissions, salary, school, or source data without authoritative provenance.
+- Do not write fake citations, fake audit IDs, fake verification flags, placeholder rankings, or guessed IPEDS/Wikidata/QS identifiers into code, seed data, database records, screenshots, or UI copy.
+- Do not add outbound UI links or redirects to external ranking/university sites as a validation shortcut; verification must remain in-platform.
+- Do not start implementation, planning, or cleanup work without a corresponding Plane issue moved to `In Progress`.
+- Do not bypass Prisma 7 driver-adapter setup by instantiating `new PrismaClient()` without the required adapter in runtime or standalone database scripts.
+- Do not change configured service ports to dodge conflicts. Free the configured port and restart the intended service instead.
+- Do not edit generated, dependency, cache, or environment directories such as `node_modules/`, `dist/`, `backend/venv/`, `.git/`, or `.DS_Store` unless the user explicitly asks.
+- Do not commit secrets, API keys, private user data, raw personal data, or credentials into `AGENTS.md`, `memory/`, source files, seed files, or Plane updates.
+- Do not delete or revert user changes, scratch investigations, migrations, seed data, or dirty working-tree files unless the user explicitly requests that exact cleanup.
+
 ## Architecture Understanding
 - The app blends static curated frontend data with dynamic PostgreSQL records. `server/server.ts` queries Prisma, then merges DB universities, schools, majors, metrics, and rankings with static premium university metadata.
 - `vite.config.ts` mounts frontend dev on port `38030` and proxies `/api` to the BFF target on `38090`. Keep configured ports stable; resolve conflicts by freeing the configured port, not by inventing random alternatives.

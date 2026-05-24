@@ -139,6 +139,27 @@ def run_pipeline(task_id: str, url: str, association_id: str, celery_task=None):
     with open(result_file, "w") as f:
         json.dump(parsed_curriculum, f, indent=2, ensure_ascii=False)
 
+    # Update the UniversityMajorAssociation record with the sourceUrl in the database
+    try:
+        from matcher import get_connection
+        conn = get_connection(register=False)
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    '''
+                    UPDATE "UniversityMajorAssociation"
+                    SET "sourceUrl" = %s
+                    WHERE "id" = %s
+                    ''',
+                    (url, association_id)
+                )
+            conn.commit()
+            print(f"📊 Saved sourceUrl = '{url}' for association ID = '{association_id}' to the database.")
+        finally:
+            conn.close()
+    except Exception as db_err:
+        print(f"⚠️ Failed to update sourceUrl in database for association {association_id}: {db_err}")
+
     # 5. Update State: COMPLETED
     success_msg = f"Successfully parsed curriculum and saved to data/curriculums/{association_id}.json"
     update_local_task_status(task_id, "COMPLETED", 100, success_msg, result=parsed_curriculum)

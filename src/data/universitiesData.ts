@@ -15,6 +15,7 @@ export interface MajorLink {
   notesEn?: string;
   notesZh?: string;
   rankings?: MajorRankingItem[];
+  sourceUrl?: string; // Reference verification URL to absolute official catalog handbook
 }
 
 export interface SchoolCategory {
@@ -78,6 +79,8 @@ export interface University {
     source: string;
     verificationId: string;
   }[];
+  wikidataId?: string;
+  scorecardUnitId?: string;
 }
 
 export const universities: University[] = [
@@ -119,46 +122,46 @@ export const universities: University[] = [
         descriptionEn: 'Harvard College is the dedicated undergraduate portal, ensuring a close-knit learning community inside a massive research university.',
         descriptionZh: '哈佛学院是哈佛大学招收本科生的唯一门户，强调基于深厚人文精神、定量社会科学以及基础科学的学术根底培养。',
         majors: [
-          { id: 'harv-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140' },
-          { id: 'harv-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79' },
-          { id: 'harv-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152' },
-          { id: 'harv-stats', nameEn: 'Statistics', nameZh: '统计学与数据科学', nationalMajorId: '141' },
-          { id: 'harv-afamer', nameEn: 'African and African American Studies', nameZh: '非裔与非裔美国人研究', nationalMajorId: '58' },
-          { id: 'harv-anthro', nameEn: 'Anthropology', nameZh: '人类学', nationalMajorId: '77' },
-          { id: 'harv-artfilm', nameEn: 'Art, Film, and Visual Studies', nameZh: '艺术、电影与视觉研究', nationalMajorId: '53' },
-          { id: 'harv-astro', nameEn: 'Astrophysics', nameZh: '天体物理学', nationalMajorId: '143' },
-          { id: 'harv-chemphys', nameEn: 'Chemistry and Physics', nameZh: '化学与物理学复合', nationalMajorId: '151' },
-          { id: 'harv-chem', nameEn: 'Chemistry', nameZh: '化学', nationalMajorId: '145' },
-          { id: 'harv-classics', nameEn: 'Classics', nameZh: '古典学', nationalMajorId: '58' },
-          { id: 'harv-complit', nameEn: 'Comparative Literature', nameZh: '比较文学', nationalMajorId: '67' },
-          { id: 'harv-eas', nameEn: 'East Asian Studies', nameZh: '东亚研究', nationalMajorId: '58' },
-          { id: 'harv-eng', nameEn: 'English', nameZh: '英语语言与文学', nationalMajorId: '61' },
-          { id: 'harv-folklore', nameEn: 'Folklore and Mythology', nameZh: '民俗与神话学', nationalMajorId: '58' },
-          { id: 'harv-german', nameEn: 'Germanic Languages and Literatures', nameZh: '德语语言与文学', nationalMajorId: '62' },
-          { id: 'harv-govt', nameEn: 'Government', nameZh: '政府学 (政治学)', nationalMajorId: '85' },
-          { id: 'harv-history', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63' },
-          { id: 'harv-histlit', nameEn: 'History and Literature', nameZh: '历史与文学', nationalMajorId: '64' },
-          { id: 'harv-histsci', nameEn: 'History of Science', nameZh: '科学史', nationalMajorId: '64' },
-          { id: 'harv-ling', nameEn: 'Linguistics', nameZh: '语言学', nationalMajorId: '67' },
-          { id: 'harv-music', nameEn: 'Music', nameZh: '音乐学', nationalMajorId: '55' },
-          { id: 'harv-nes', nameEn: 'Near Eastern Languages and Civilizations', nameZh: '近东语言与文明', nationalMajorId: '58' },
-          { id: 'harv-neuro', nameEn: 'Neuroscience', nameZh: '神经科学', nationalMajorId: '132' },
-          { id: 'harv-phil', nameEn: 'Philosophy', nameZh: '哲学', nationalMajorId: '69' },
-          { id: 'harv-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152' },
-          { id: 'harv-psych', nameEn: 'Psychology', nameZh: '心理学', nationalMajorId: '75' },
-          { id: 'harv-romance', nameEn: 'Romance Languages and Literatures', nameZh: '罗曼语语言与文学', nationalMajorId: '62' },
-          { id: 'harv-ruseuras', nameEn: 'Russian and Eurasian Studies', nameZh: '俄罗斯与欧亚研究', nationalMajorId: '58' },
-          { id: 'harv-socstudies', nameEn: 'Social Studies', nameZh: '社会研究', nationalMajorId: '82' },
-          { id: 'harv-soc', nameEn: 'Sociology', nameZh: '社会学', nationalMajorId: '87' },
-          { id: 'harv-southasian', nameEn: 'South Asian Studies', nameZh: '南亚研究', nationalMajorId: '58' },
-          { id: 'harv-theater', nameEn: 'Theater, Dance, and Media', nameZh: '戏剧、舞蹈与媒体', nationalMajorId: '52' },
-          { id: 'harv-wgs', nameEn: 'Studies of Women, Gender, and Sexuality', nameZh: '妇女、性别与性取向研究', nationalMajorId: '82' },
-          { id: 'harv-ib', nameEn: 'Integrative Biology', nameZh: '整合生物学', nationalMajorId: '124' },
-          { id: 'harv-mcb', nameEn: 'Molecular and Cellular Biology', nameZh: '分子与细胞生物学', nationalMajorId: '131' },
-          { id: 'harv-cpb', nameEn: 'Chemical and Physical Biology', nameZh: '化学与物理生物学', nationalMajorId: '123' },
-          { id: 'harv-hdrb', nameEn: 'Human Developmental and Regenerative Biology', nameZh: '人类发育与再生生物学', nationalMajorId: '130' },
-          { id: 'harv-heb', nameEn: 'Human Evolutionary Biology', nameZh: '人类进化生物学', nationalMajorId: '130' },
-          { id: 'harv-eps', nameEn: 'Earth and Planetary Sciences', nameZh: '地球与行星科学', nationalMajorId: '146' }
+{ id: 'harv-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-stats', nameEn: 'Statistics', nameZh: '统计学与数据科学', nationalMajorId: '141', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-afamer', nameEn: 'African and African American Studies', nameZh: '非裔与非裔美国人研究', nationalMajorId: '58', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-anthro', nameEn: 'Anthropology', nameZh: '人类学', nationalMajorId: '77', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-artfilm', nameEn: 'Art, Film, and Visual Studies', nameZh: '艺术、电影与视觉研究', nationalMajorId: '53', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-astro', nameEn: 'Astrophysics', nameZh: '天体物理学', nationalMajorId: '143', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-chemphys', nameEn: 'Chemistry and Physics', nameZh: '化学与物理学复合', nationalMajorId: '151', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-chem', nameEn: 'Chemistry', nameZh: '化学', nationalMajorId: '145', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-classics', nameEn: 'Classics', nameZh: '古典学', nationalMajorId: '58', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-complit', nameEn: 'Comparative Literature', nameZh: '比较文学', nationalMajorId: '67', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-eas', nameEn: 'East Asian Studies', nameZh: '东亚研究', nationalMajorId: '58', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-eng', nameEn: 'English', nameZh: '英语语言与文学', nationalMajorId: '61', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-folklore', nameEn: 'Folklore and Mythology', nameZh: '民俗与神话学', nationalMajorId: '58', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-german', nameEn: 'Germanic Languages and Literatures', nameZh: '德语语言与文学', nationalMajorId: '62', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-govt', nameEn: 'Government', nameZh: '政府学 (政治学)', nationalMajorId: '85', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-history', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-histlit', nameEn: 'History and Literature', nameZh: '历史与文学', nationalMajorId: '64', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-histsci', nameEn: 'History of Science', nameZh: '科学史', nationalMajorId: '64', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-ling', nameEn: 'Linguistics', nameZh: '语言学', nationalMajorId: '67', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-music', nameEn: 'Music', nameZh: '音乐学', nationalMajorId: '55', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-nes', nameEn: 'Near Eastern Languages and Civilizations', nameZh: '近东语言与文明', nationalMajorId: '58', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-neuro', nameEn: 'Neuroscience', nameZh: '神经科学', nationalMajorId: '132', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-phil', nameEn: 'Philosophy', nameZh: '哲学', nationalMajorId: '69', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-psych', nameEn: 'Psychology', nameZh: '心理学', nationalMajorId: '75', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-romance', nameEn: 'Romance Languages and Literatures', nameZh: '罗曼语语言与文学', nationalMajorId: '62', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-ruseuras', nameEn: 'Russian and Eurasian Studies', nameZh: '俄罗斯与欧亚研究', nationalMajorId: '58', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-socstudies', nameEn: 'Social Studies', nameZh: '社会研究', nationalMajorId: '82', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-soc', nameEn: 'Sociology', nameZh: '社会学', nationalMajorId: '87', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-southasian', nameEn: 'South Asian Studies', nameZh: '南亚研究', nationalMajorId: '58', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-theater', nameEn: 'Theater, Dance, and Media', nameZh: '戏剧、舞蹈与媒体', nationalMajorId: '52', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-wgs', nameEn: 'Studies of Women, Gender, and Sexuality', nameZh: '妇女、性别与性取向研究', nationalMajorId: '82', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-ib', nameEn: 'Integrative Biology', nameZh: '整合生物学', nationalMajorId: '124', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-mcb', nameEn: 'Molecular and Cellular Biology', nameZh: '分子与细胞生物学', nationalMajorId: '131', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-cpb', nameEn: 'Chemical and Physical Biology', nameZh: '化学与物理生物学', nationalMajorId: '123', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-hdrb', nameEn: 'Human Developmental and Regenerative Biology', nameZh: '人类发育与再生生物学', nationalMajorId: '130', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-heb', nameEn: 'Human Evolutionary Biology', nameZh: '人类进化生物学', nationalMajorId: '130', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-eps', nameEn: 'Earth and Planetary Sciences', nameZh: '地球与行星科学', nationalMajorId: '146', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' }
         ]
       },
       {
@@ -173,13 +176,13 @@ export const universities: University[] = [
         descriptionEn: 'SEAS provides interdisciplinary, hands-on engineering programs. Undergraduates enjoy full access to modern campus facilities and industry collaborations.',
         descriptionZh: '保尔森工学院打破了传统工程生院的隔阂，提倡计算与物理应用、生物医药工程的跨界融合，配备了全球首屈一指的数字化实验室。',
         majors: [
-          { id: 'harv-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'harv-am', nameEn: 'Applied Mathematics', nameZh: '应用数学', nationalMajorId: '135' },
-          { id: 'harv-bme', nameEn: 'Biomedical Engineering', nameZh: '生物医学工程', nationalMajorId: '101' },
-          { id: 'harv-ee', nameEn: 'Electrical Engineering', nameZh: '电子工程', nationalMajorId: '104' },
-          { id: 'harv-me', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114' },
-          { id: 'harv-es', nameEn: 'Engineering Sciences', nameZh: '工程科学', nationalMajorId: '109' },
-          { id: 'harv-envsci', nameEn: 'Environmental Science and Public Policy', nameZh: '环境科学与公共政策', nationalMajorId: '127' }
+{ id: 'harv-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-am', nameEn: 'Applied Mathematics', nameZh: '应用数学', nationalMajorId: '135', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-bme', nameEn: 'Biomedical Engineering', nameZh: '生物医学工程', nationalMajorId: '101', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-ee', nameEn: 'Electrical Engineering', nameZh: '电子工程', nationalMajorId: '104', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-me', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-es', nameEn: 'Engineering Sciences', nameZh: '工程科学', nationalMajorId: '109', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' },
+{ id: 'harv-envsci', nameEn: 'Environmental Science and Public Policy', nameZh: '环境科学与公共政策', nationalMajorId: '127', sourceUrl: 'https://handbook.fas.harvard.edu/book/fields-concentration' }
         ]
       }
     ]
@@ -222,9 +225,9 @@ export const universities: University[] = [
         descriptionEn: 'Home of Computer Science (Course 6), Mechanical (Course 2), and aerospace (Course 16) sciences. Extremely intense and highly rewarding.',
         descriptionZh: '涵盖大名鼎鼎的课程6（计算机与电子工程系）。这里的代码编写、芯片封装、先进机器人学培养标准冠绝全球。',
         majors: [
-          { id: 'mit-cs', nameEn: 'Computer Science (Course 6-3)', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'mit-ee', nameEn: 'Electrical Engineering (Course 6-1)', nameZh: '电机工程', nationalMajorId: '104' },
-          { id: 'mit-aero', nameEn: 'Aerospace Engineering (Course 16)', nameZh: '航空航天工程', nationalMajorId: '98' }
+{ id: 'mit-cs', nameEn: 'Computer Science (Course 6-3)', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://catalog.mit.edu/schools/' },
+{ id: 'mit-ee', nameEn: 'Electrical Engineering (Course 6-1)', nameZh: '电机工程', nationalMajorId: '104', sourceUrl: 'https://catalog.mit.edu/schools/' },
+{ id: 'mit-aero', nameEn: 'Aerospace Engineering (Course 16)', nameZh: '航空航天工程', nationalMajorId: '98', sourceUrl: 'https://catalog.mit.edu/schools/' }
         ]
       },
       {
@@ -239,8 +242,8 @@ export const universities: University[] = [
         descriptionEn: 'The School of Science hosts historical labs where multiple particle discoveries and basic physical mechanisms are cataloged.',
         descriptionZh: '汇聚多位诺贝尔奖得主，其本科高维拓扑、纯数、纳米物理训练是全球顶尖学者与科学领衔人才的培育基地。',
         majors: [
-          { id: 'mit-math', nameEn: 'Mathematics (Course 18)', nameZh: '纯数学/应用数学', nationalMajorId: '140' },
-          { id: 'mit-physics', nameEn: 'Physics (Course 8)', nameZh: '理论物理与实验物理', nationalMajorId: '152' }
+{ id: 'mit-math', nameEn: 'Mathematics (Course 18)', nameZh: '纯数学/应用数学', nationalMajorId: '140', sourceUrl: 'https://catalog.mit.edu/schools/' },
+{ id: 'mit-physics', nameEn: 'Physics (Course 8)', nameZh: '理论物理与实验物理', nationalMajorId: '152', sourceUrl: 'https://catalog.mit.edu/schools/' }
         ]
       }
     ]
@@ -283,9 +286,9 @@ export const universities: University[] = [
         descriptionEn: 'Pioneered computing research. Host to legendary CS pathways and cross-disciplinary symbol processing labs.',
         descriptionZh: '这里的计算机（CS）方向学生在就读期间即直接参与大量人工智能新模型的开发、自动驾驶演进、机器人智能控制的商业孵化。',
         majors: [
-          { id: 'stan-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'stan-ee', nameEn: 'Electrical Engineering', nameZh: '电子工程', nationalMajorId: '104' },
-          { id: 'stan-ms', nameEn: 'Management Science & Engineering (MS&E)', nameZh: '管理科学与工程', nationalMajorId: '105' }
+{ id: 'stan-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://bulletin.stanford.edu/programs' },
+{ id: 'stan-ee', nameEn: 'Electrical Engineering', nameZh: '电子工程', nationalMajorId: '104', sourceUrl: 'https://bulletin.stanford.edu/programs' },
+{ id: 'stan-ms', nameEn: 'Management Science & Engineering (MS&E)', nameZh: '管理科学与工程', nationalMajorId: '105', sourceUrl: 'https://bulletin.stanford.edu/programs' }
         ]
       },
       {
@@ -300,8 +303,8 @@ export const universities: University[] = [
         descriptionEn: 'Hosts top-flight statistics and applied mathematics majors that feed both modern data sciences and major wall street quant houses.',
         descriptionZh: '提供极其优质的宏观经济学、量化金融分析、数理统计机制，为学生的大规模数据架构和政策分析奠定牢不可破的基础。',
         majors: [
-          { id: 'stan-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79' },
-          { id: 'stan-stats', nameEn: 'Mathematical & Computational Science', nameZh: '数学与计算科学', nationalMajorId: '141' }
+{ id: 'stan-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79', sourceUrl: 'https://bulletin.stanford.edu/programs' },
+{ id: 'stan-stats', nameEn: 'Mathematical & Computational Science', nameZh: '数学与计算科学', nationalMajorId: '141', sourceUrl: 'https://bulletin.stanford.edu/programs' }
         ]
       }
     ]
@@ -344,9 +347,9 @@ export const universities: University[] = [
         descriptionEn: 'Consistently ranks top 2 in world engineer indexes. EECS grads are sought after globally for their strong programming, hardware layout, and quantitative logic.',
         descriptionZh: '涵盖全美顶流的EECS（电气工程与计算机科学）和工业设计方向，其训练强度极大，毕业生成为各大芯片厂与互联网巨头争抢的对象。',
         majors: [
-          { id: 'ucb-eecs', nameEn: 'Electrical Engineering & Computer Sciences (EECS)', nameZh: '电子工程与计算机科学 (EECS直申)', nationalMajorId: '138' },
-          { id: 'ucb-chem', nameEn: 'Chemical Engineering', nameZh: '化学工程', nationalMajorId: '102' },
-          { id: 'ucb-mech', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114' }
+{ id: 'ucb-eecs', nameEn: 'Electrical Engineering & Computer Sciences (EECS)', nameZh: '电子工程与计算机科学 (EECS直申)', nationalMajorId: '138', sourceUrl: 'https://guide.berkeley.edu/undergraduate/degree-programs/' },
+{ id: 'ucb-chem', nameEn: 'Chemical Engineering', nameZh: '化学工程', nationalMajorId: '102', sourceUrl: 'https://guide.berkeley.edu/undergraduate/degree-programs/' },
+{ id: 'ucb-mech', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114', sourceUrl: 'https://guide.berkeley.edu/undergraduate/degree-programs/' }
         ]
       },
       {
@@ -361,9 +364,9 @@ export const universities: University[] = [
         descriptionEn: 'Provides liberal education. Undergraduates in L&S declare computer science (via BA tracks), economics, and statistics through custom qualification GPAs.',
         descriptionZh: '涵盖基础物理、核磁共振开发史、计量微观经济学系。鼓励学生自由选课，掌握最坚实的基础理路底气。',
         majors: [
-          { id: 'ucb-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140' },
-          { id: 'ucb-econ', nameEn: 'Economics', nameZh: '计量经济学', nationalMajorId: '79' },
-          { id: 'ucb-physics', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152' }
+{ id: 'ucb-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140', sourceUrl: 'https://guide.berkeley.edu/undergraduate/degree-programs/' },
+{ id: 'ucb-econ', nameEn: 'Economics', nameZh: '计量经济学', nationalMajorId: '79', sourceUrl: 'https://guide.berkeley.edu/undergraduate/degree-programs/' },
+{ id: 'ucb-physics', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152', sourceUrl: 'https://guide.berkeley.edu/undergraduate/degree-programs/' }
         ]
       }
     ]
@@ -406,9 +409,9 @@ export const universities: University[] = [
         descriptionEn: 'Provides high teacher-student ratio. Undergraduates participate in Junior Projects and customized seminars starting freshman year.',
         descriptionZh: '涵盖了大名鼎鼎的纯数学、物理、地缘公共事务等标志科系。普林斯顿数学系曾诞生多位菲尔兹奖得主，其本科讨论班水平极高。',
         majors: [
-          { id: 'prin-math', nameEn: 'Mathematics', nameZh: '高等数学 (Math)', nationalMajorId: '140' },
-          { id: 'prin-econ', nameEn: 'Economics', nameZh: '学术经济学 (Econ)', nationalMajorId: '79' },
-          { id: 'prin-pub', nameEn: 'Public & International Affairs', nameZh: '公共与国际事务 (SPIA)', nationalMajorId: '83' }
+{ id: 'prin-math', nameEn: 'Mathematics', nameZh: '高等数学 (Math)', nationalMajorId: '140', sourceUrl: 'https://ua.princeton.edu/fields-study' },
+{ id: 'prin-econ', nameEn: 'Economics', nameZh: '学术经济学 (Econ)', nationalMajorId: '79', sourceUrl: 'https://ua.princeton.edu/fields-study' },
+{ id: 'prin-pub', nameEn: 'Public & International Affairs', nameZh: '公共与国际事务 (SPIA)', nationalMajorId: '83', sourceUrl: 'https://ua.princeton.edu/fields-study' }
         ]
       },
       {
@@ -423,8 +426,8 @@ export const universities: University[] = [
         descriptionEn: 'Emphasizes theoretical principles over narrow manual techniques, designing software and computing systems that last generations.',
         descriptionZh: '重点推荐其计算机（CS）方向、电气工程、运筹学与金融工程（ORFE），后者是华尔街顶级高频交易和多因子量化风投的核心生源地。',
         majors: [
-          { id: 'prin-cs', nameEn: 'Computer Science (BSE)', nameZh: '计算机科学 (BSE工学)', nationalMajorId: '138' },
-          { id: 'prin-orfe', nameEn: 'Operations Research & Financial Engineering', nameZh: '运筹学与金融工程 (ORFE)', nationalMajorId: '141' }
+{ id: 'prin-cs', nameEn: 'Computer Science (BSE)', nameZh: '计算机科学 (BSE工学)', nationalMajorId: '138', sourceUrl: 'https://ua.princeton.edu/fields-study' },
+{ id: 'prin-orfe', nameEn: 'Operations Research & Financial Engineering', nameZh: '运筹学与金融工程 (ORFE)', nationalMajorId: '141', sourceUrl: 'https://ua.princeton.edu/fields-study' }
         ]
       }
     ]
@@ -467,9 +470,9 @@ export const universities: University[] = [
         descriptionEn: 'Teaches elite written communications, analytical ethics, and macro socioeconomic dynamics. The starting block for global leaders.',
         descriptionZh: '这里的历史系、英语写作、地缘政治哲学研究曾塑造了多代国际地标政治人物与领衔评论学者，强调对社会运行大趋势的洞若观火。',
         majors: [
-          { id: 'yale-hist', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63' },
-          { id: 'yale-polisci', nameEn: 'Political Science', nameZh: '政治科学', nationalMajorId: '85' },
-          { id: 'yale-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79' }
+{ id: 'yale-hist', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63', sourceUrl: 'https://catalog.yale.edu/ycps/subjects-of-instruction/' },
+{ id: 'yale-polisci', nameEn: 'Political Science', nameZh: '政治科学', nationalMajorId: '85', sourceUrl: 'https://catalog.yale.edu/ycps/subjects-of-instruction/' },
+{ id: 'yale-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79', sourceUrl: 'https://catalog.yale.edu/ycps/subjects-of-instruction/' }
         ]
       },
       {
@@ -484,8 +487,8 @@ export const universities: University[] = [
         descriptionEn: 'Provides direct entry to highly specialized coding, network system analysis, and advanced materials engineering labs without large crowds.',
         descriptionZh: '不片面追求产业流水线，强调将前沿计算机技术（计算机科学、智能软硬件）应用在跨学科人文、金融量化等宏观决策场景中。',
         majors: [
-          { id: 'yale-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'yale-bme', nameEn: 'Biomedical Engineering', nameZh: '生物医学工程', nationalMajorId: '101' }
+{ id: 'yale-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://catalog.yale.edu/ycps/subjects-of-instruction/' },
+{ id: 'yale-bme', nameEn: 'Biomedical Engineering', nameZh: '生物医学工程', nationalMajorId: '101', sourceUrl: 'https://catalog.yale.edu/ycps/subjects-of-instruction/' }
         ]
       }
     ]
@@ -528,9 +531,9 @@ export const universities: University[] = [
         descriptionEn: 'Offers a single Bachelor of Science in Economics with 18 optional concentrations ranging from finance and insurance to behavioral analytics.',
         descriptionZh: '本科生名义上授予计量经济学士（BSE），内部划分出金融、商业分析、组织管理、地产金融等超细分专业通道，拥有庞大的资本校友圈。',
         majors: [
-          { id: 'whar-finance', nameEn: 'Finance (Concentration)', nameZh: '金融学', nationalMajorId: '4' },
-          { id: 'whar-ba', nameEn: 'Business Analytics', nameZh: '商业分析', nationalMajorId: '3' },
-          { id: 'whar-mgmt', nameEn: 'Management & Entrepreneurship', nameZh: '创业与企业治理', nationalMajorId: '4' }
+{ id: 'whar-finance', nameEn: 'Finance (Concentration)', nameZh: '金融学', nationalMajorId: '4', sourceUrl: 'https://catalog.upenn.edu/programs/' },
+{ id: 'whar-ba', nameEn: 'Business Analytics', nameZh: '商业分析', nationalMajorId: '3', sourceUrl: 'https://catalog.upenn.edu/programs/' },
+{ id: 'whar-mgmt', nameEn: 'Management & Entrepreneurship', nameZh: '创业与企业治理', nationalMajorId: '4', sourceUrl: 'https://catalog.upenn.edu/programs/' }
         ]
       },
       {
@@ -545,8 +548,8 @@ export const universities: University[] = [
         descriptionEn: 'Birthplace of the first digital general-purpose computer (ENIAC). Blends perfectly with healthcare and financial tech resources.',
         descriptionZh: '计算机技术先锋。这里的算法和数智技术完全与沃顿的资本流、宾大医学院的临床研究实时打通，极其实用。',
         majors: [
-          { id: 'penn-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'penn-net', nameEn: 'Networked & Social Systems Engineering (NETS)', nameZh: '网络与社会系统工程 (NETS)', nationalMajorId: '104' }
+{ id: 'penn-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://catalog.upenn.edu/programs/' },
+{ id: 'penn-net', nameEn: 'Networked & Social Systems Engineering (NETS)', nameZh: '网络与社会系统工程 (NETS)', nationalMajorId: '104', sourceUrl: 'https://catalog.upenn.edu/programs/' }
         ]
       }
     ]
@@ -589,8 +592,8 @@ export const universities: University[] = [
         descriptionEn: 'Provides unparalleled education in quantum strings, pure calculus, astrophysics, and basic particle structures.',
         descriptionZh: '在这里，纯数理论与前沿天文物理是神圣的核心，学生能在大一阶段直接触碰各种引力波探测、微小粒子跃迁的底层机理。',
         majors: [
-          { id: 'cal-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152' },
-          { id: 'cal-math', nameEn: 'Mathematics', nameZh: '纯数与应用数学', nationalMajorId: '140' }
+{ id: 'cal-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152', sourceUrl: 'https://catalog.caltech.edu/current/academic-divisions/' },
+{ id: 'cal-math', nameEn: 'Mathematics', nameZh: '纯数与应用数学', nationalMajorId: '140', sourceUrl: 'https://catalog.caltech.edu/current/academic-divisions/' }
         ]
       },
       {
@@ -605,8 +608,8 @@ export const universities: University[] = [
         descriptionEn: 'Prepares hyper-creative engineers to crack grand challenges in digital security, solar tech, and planetary aviation control.',
         descriptionZh: '这里的计算机方向（CS）高度偏重于深层离散数学和机器学习算法底层结构，并非普通的软件工程，意在奠定未来50年的技术底座。',
         majors: [
-          { id: 'cal-cs', nameEn: 'Computer Science', nameZh: '计算与信息科学', nationalMajorId: '138' },
-          { id: 'cal-aero', nameEn: 'Aerospace & Propulsion', nameZh: '航空航天与推进学', nationalMajorId: '98' }
+{ id: 'cal-cs', nameEn: 'Computer Science', nameZh: '计算与信息科学', nationalMajorId: '138', sourceUrl: 'https://catalog.caltech.edu/current/academic-divisions/' },
+{ id: 'cal-aero', nameEn: 'Aerospace & Propulsion', nameZh: '航空航天与推进学', nationalMajorId: '98', sourceUrl: 'https://catalog.caltech.edu/current/academic-divisions/' }
         ]
       }
     ]
@@ -649,9 +652,9 @@ export const universities: University[] = [
         descriptionEn: 'Forces analytical thinking. Here, math, econ, and social sciences are explored alongside massive historical library systems.',
         descriptionZh: '主司计量经济学、纯数学、统计学与人文学科探讨。在这里，世界前沿的经济博弈论与传统的博雅文史修养完美并轨。',
         majors: [
-          { id: 'col-econ', nameEn: 'Economics', nameZh: '计量经济学', nationalMajorId: '79' },
-          { id: 'col-math', nameEn: 'Mathematics', nameZh: '高等数学', nationalMajorId: '140' },
-          { id: 'col-polisci', nameEn: 'Political Science', nameZh: '政治学', nationalMajorId: '85' }
+{ id: 'col-econ', nameEn: 'Economics', nameZh: '计量经济学', nationalMajorId: '79', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' },
+{ id: 'col-math', nameEn: 'Mathematics', nameZh: '高等数学', nationalMajorId: '140', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' },
+{ id: 'col-polisci', nameEn: 'Political Science', nameZh: '政治学', nationalMajorId: '85', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' }
         ]
       },
       {
@@ -666,8 +669,8 @@ export const universities: University[] = [
         descriptionEn: 'Provides exceptional options to study computing and operations research within immediate reach of global investment corporations.',
         descriptionZh: '重点推荐计算机（CS）方向与运筹学：金融工程（OR:FE）。学生在学习复杂图论算法和衍生品估值的同时，可以直接在旁边华尔街进行实践。',
         majors: [
-          { id: 'col-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'col-orfe', nameEn: 'Operations Research: Financial Engineering', nameZh: '运筹学：金融工程', nationalMajorId: '141' }
+{ id: 'col-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' },
+{ id: 'col-orfe', nameEn: 'Operations Research: Financial Engineering', nameZh: '运筹学：金融工程', nationalMajorId: '141', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' }
         ]
       }
     ]
@@ -710,9 +713,9 @@ export const universities: University[] = [
         descriptionEn: 'Houses the world-champion Econ program, preparing students with strong analytical tools to define major market trends.',
         descriptionZh: '提供在学术界和高密量化大厂享有无限盛誉的经济学项目。这里的基本考核和思辨挑战度极高。',
         majors: [
-          { id: 'uchic-econ', nameEn: 'Economics (with Quantitative Track)', nameZh: '计量经济学 (Econ)', nationalMajorId: '79' },
-          { id: 'uchic-math', nameEn: 'Mathematics', nameZh: '纯数与分析数学', nationalMajorId: '140' },
-          { id: 'uchic-physics', nameEn: 'Physics', nameZh: '理论物理学', nationalMajorId: '152' }
+{ id: 'uchic-econ', nameEn: 'Economics (with Quantitative Track)', nameZh: '计量经济学 (Econ)', nationalMajorId: '79', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' },
+{ id: 'uchic-math', nameEn: 'Mathematics', nameZh: '纯数与分析数学', nationalMajorId: '140', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' },
+{ id: 'uchic-physics', nameEn: 'Physics', nameZh: '理论物理学', nationalMajorId: '152', sourceUrl: 'https://bulletin.columbia.edu/columbia-college/departments-instruction/' }
         ]
       }
     ]
@@ -755,10 +758,10 @@ export const universities: University[] = [
         descriptionEn: 'Offers a liberal arts-based curriculum across over 75 majors with top-tier research projects.',
         descriptionZh: '作为密大体系的绝对核心，文理学院提供极高质量的高密度课程，在认知脑科学、微观经济核算、物理实验等方向拥有诺奖级支持。',
         majors: [
-          { id: 'lsa-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140' },
-          { id: 'lsa-econ', nameEn: 'Economics', nameZh: '资本与微观经济学', nationalMajorId: '79' },
-          { id: 'lsa-data-science', nameEn: 'Data Science (BS)', nameZh: '数据科学', nationalMajorId: '141' },
-          { id: 'lsa-stats', nameEn: 'Statistics', nameZh: '统计学', nationalMajorId: '141' }
+{ id: 'lsa-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' },
+{ id: 'lsa-econ', nameEn: 'Economics', nameZh: '资本与微观经济学', nationalMajorId: '79', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' },
+{ id: 'lsa-data-science', nameEn: 'Data Science (BS)', nameZh: '数据科学', nationalMajorId: '141', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' },
+{ id: 'lsa-stats', nameEn: 'Statistics', nameZh: '统计学', nationalMajorId: '141', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' }
         ]
       },
       {
@@ -773,9 +776,9 @@ export const universities: University[] = [
         descriptionEn: 'Equipped with multiple heavy labs. Fosters advanced machine computations, deep aerospace structures, and robotic control networks.',
         descriptionZh: '在这里，计算机（CS）方向、电气工程、材料学都直接对接北美五大湖区工业以及加利福尼亚的超级科技巨头，实操训练在业界赫赫有名。',
         majors: [
-          { id: 'coe-cs', nameEn: 'Computer Science (BSE)', nameZh: '计算机科学 (工学版)', nationalMajorId: '138' },
-          { id: 'coe-ce', nameEn: 'Computer Engineering', nameZh: '计算机工程', nationalMajorId: '137' },
-          { id: 'coe-ee', nameEn: 'Electrical Engineering', nameZh: '电子电气工程', nationalMajorId: '104' }
+{ id: 'coe-cs', nameEn: 'Computer Science (BSE)', nameZh: '计算机科学 (工学版)', nationalMajorId: '138', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' },
+{ id: 'coe-ce', nameEn: 'Computer Engineering', nameZh: '计算机工程', nationalMajorId: '137', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' },
+{ id: 'coe-ee', nameEn: 'Electrical Engineering', nameZh: '电子电气工程', nationalMajorId: '104', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' }
         ]
       },
       {
@@ -790,7 +793,7 @@ export const universities: University[] = [
         descriptionEn: 'Uses modern lab portfolios. Undergraduates do not choose narrow concentrations but learn macro business strategy with high corporate placement.',
         descriptionZh: '罗斯商学院强调整体企业领导力与量化决策训练，是华尔街各大投行、私募及麦肯锡等宏观咨询机构的超级直达通道。',
         majors: [
-          { id: 'ross-bba', nameEn: 'Bachelor of Business Administration (BBA)', nameZh: '工商管理学士 (BBA)', nationalMajorId: '4' }
+{ id: 'ross-bba', nameEn: 'Bachelor of Business Administration (BBA)', nameZh: '工商管理学士 (BBA)', nationalMajorId: '4', sourceUrl: 'https://lsa.umich.edu/lsa/academics/departments-programs.html' }
         ]
       }
     ]
@@ -833,9 +836,9 @@ export const universities: University[] = [
         descriptionEn: 'Offers fast tracks in Computer Science, Bioengineering, and materials processing, deeply allied with world-class medical centers.',
         descriptionZh: '在信息工程（CS）、纳米材料及生物医学工程方面实力坚固，教授带领本科生亲自动手搭建各种临床仿真或先进机械系统。',
         majors: [
-          { id: 'rice-cs', nameEn: 'Computer Science (BS)', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'rice-bme', nameEn: 'Bioengineering', nameZh: '生物力学与生物工程', nationalMajorId: '101' },
-          { id: 'rice-ece', nameEn: 'Electrical and Computer Engineering', nameZh: '电子与计算机工程', nationalMajorId: '104' }
+{ id: 'rice-cs', nameEn: 'Computer Science (BS)', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://ga.rice.edu/programs-study/departments-programs/engineering/computer-science/computer-science-bscs/' },
+{ id: 'rice-bme', nameEn: 'Bioengineering', nameZh: '生物力学与生物工程', nationalMajorId: '101', sourceUrl: 'https://ga.rice.edu/programs-study/departments-programs/engineering/bioengineering/bioengineering-bsbe/' },
+{ id: 'rice-ece', nameEn: 'Electrical and Computer Engineering', nameZh: '电子与计算机工程', nationalMajorId: '104', sourceUrl: 'https://ga.rice.edu/programs-study/departments-programs/engineering/electrical-computer-engineering/electrical-computer-engineering-bsece/' }
         ]
       },
       {
@@ -848,9 +851,9 @@ export const universities: University[] = [
          tagEn: 'Fast Growing',
         tagZh: '南方金融资本新星',
         descriptionEn: 'Virani provides sharp insights on capital layout, macro risk valuation, and investment strategy with first-tier finance resources.',
-        descriptionZh: '凭借莱斯的声誉声光，该商院本科迅速吸引了大量顶级投行、战略咨询和德州能源财团来校直接包揽管培生名额。',
+        descriptionZh: '凭借莱斯的声誉声光，该商院本科迅速吸引了大量顶级投行、战略咨询 and 德州能源财团来校直接包揽管培生名额。',
         majors: [
-          { id: 'rice-business-ba', nameEn: 'Business (BA)', nameZh: '莱斯商科', nationalMajorId: '4' }
+{ id: 'rice-business-ba', nameEn: 'Business (BA)', nameZh: '莱斯商科', nationalMajorId: '4', sourceUrl: 'https://ga.rice.edu/programs-study/departments-programs/business/business/business-finance-ba/' }
         ]
       }
     ]
@@ -894,8 +897,8 @@ export const universities: University[] = [
         descriptionEn: 'Pioneering artificial intelligence models, massive parallel data pipelines, and advanced microchips with global citations.',
         descriptionZh: '在计算机算法（CS）、自动化理论、人工智能网络建模方向声望极隆，本科校友活跃于全球主流学术前哨与顶配高新企业。',
         majors: [
-          { id: 'tsing-cs', nameEn: 'Computer Science and Technology', nameZh: '计算机科学与技术', nationalMajorId: '138' },
-          { id: 'tsing-ee', nameEn: 'Electronic Information Engineering', nameZh: '电子信息工程', nationalMajorId: '104' }
+{ id: 'tsing-cs', nameEn: 'Computer Science and Technology', nameZh: '计算机科学与技术', nationalMajorId: '138', sourceUrl: 'https://www.tsinghua.edu.cn/en/Academics/Schools_Departments.htm' },
+{ id: 'tsing-ee', nameEn: 'Electronic Information Engineering', nameZh: '电子信息工程', nationalMajorId: '104', sourceUrl: 'https://www.tsinghua.edu.cn/en/Academics/Schools_Departments.htm' }
         ]
       },
       {
@@ -910,9 +913,9 @@ export const universities: University[] = [
         descriptionEn: 'Provides state-of-the-art economics, finance, and accounting tracks. Heavily targeted by global investment banks and sovereign wealth funds.',
         descriptionZh: '主司数理金融学、经济学、会计学。该院不仅具备极高声望，其毕业生常年直升国际大行及顶级管理咨询机构。',
         majors: [
-          { id: 'tsing-finance', nameEn: 'Finance', nameZh: '金融学', nationalMajorId: '5' },
-          { id: 'tsing-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79' },
-          { id: 'tsing-accounting', nameEn: 'Accounting', nameZh: '会计学', nationalMajorId: '1' }
+{ id: 'tsing-finance', nameEn: 'Finance', nameZh: '金融学', nationalMajorId: '5', sourceUrl: 'https://www.tsinghua.edu.cn/en/Academics/Schools_Departments.htm' },
+{ id: 'tsing-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79', sourceUrl: 'https://www.tsinghua.edu.cn/en/Academics/Schools_Departments.htm' },
+{ id: 'tsing-accounting', nameEn: 'Accounting', nameZh: '会计学', nationalMajorId: '1', sourceUrl: 'https://www.tsinghua.edu.cn/en/Academics/Schools_Departments.htm' }
         ]
       },
       {
@@ -927,8 +930,8 @@ export const universities: University[] = [
         descriptionEn: 'Focuses heavily on core research paradigms in physics, chemistry, and mathematics with world-class researcher side-by-side instruction.',
         descriptionZh: '物理系与数学系拥有极深的研究底蕴。提供严密的微积分析与微观物理器件研究氛围，是国家基础科研的骨干力量。',
         majors: [
-          { id: 'tsing-math', nameEn: 'Mathematics and Applied Mathematics', nameZh: '数学与应用数学', nationalMajorId: '140' },
-          { id: 'tsing-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152' }
+{ id: 'tsing-math', nameEn: 'Mathematics and Applied Mathematics', nameZh: '数学与应用数学', nationalMajorId: '140', sourceUrl: 'https://www.tsinghua.edu.cn/en/Academics/Schools_Departments.htm' },
+{ id: 'tsing-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152', sourceUrl: 'https://www.tsinghua.edu.cn/en/Academics/Schools_Departments.htm' }
         ]
       }
     ]
@@ -972,8 +975,8 @@ export const universities: University[] = [
         descriptionEn: 'Highly rigorous curriculum in topological algebra, probability model design, and high-performance computing theories.',
         descriptionZh: '其本科生在微积分底子、解析几何 and 现代概率控制论上的训练强度极深，多届本科校友获全球菲尔兹及科学大奖。',
         majors: [
-          { id: 'pk-math', nameEn: 'Mathematics and Applied Mathematics', nameZh: '数学与应用数学', nationalMajorId: '140' },
-          { id: 'pk-stats', nameEn: 'Probability and Statistics', nameZh: '概率统计学', nationalMajorId: '141' }
+{ id: 'pk-math', nameEn: 'Mathematics and Applied Mathematics', nameZh: '数学与应用数学', nationalMajorId: '140', sourceUrl: 'https://www.pku.edu.cn/department.html' },
+{ id: 'pk-stats', nameEn: 'Probability and Statistics', nameZh: '概率统计学', nationalMajorId: '141', sourceUrl: 'https://www.pku.edu.cn/department.html' }
         ]
       },
       {
@@ -988,8 +991,8 @@ export const universities: University[] = [
         descriptionEn: 'Offers state-of-the-art corporate financial management, macroeconomic evaluation, and accounting metrics. Excellent alumni network.',
         descriptionZh: '光华管理学院为本科生提供首屈一指的资本管理、微观组织决策、宏观金融工程课程体系，直接向国际投行与风投基金输送英才。',
         majors: [
-          { id: 'pk-finance', nameEn: 'Finance', nameZh: '金融学', nationalMajorId: '5' },
-          { id: 'pk-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79' }
+{ id: 'pk-finance', nameEn: 'Finance', nameZh: '金融学', nationalMajorId: '5', sourceUrl: 'https://www.pku.edu.cn/department.html' },
+{ id: 'pk-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79', sourceUrl: 'https://www.pku.edu.cn/department.html' }
         ]
       },
       {
@@ -1004,8 +1007,8 @@ export const universities: University[] = [
         descriptionEn: 'Drives pioneering computer architectures, natural language parsing, and chip microelectronics research.',
         descriptionZh: '北大信科在计算机算法（CS）、人工智能（智能科学）、核心微处理器电路设计方面实力雄厚，为现代软件工业提供了强大的底层算法驱动力。',
         majors: [
-          { id: 'pk-cs', nameEn: 'Computer Science and Technology', nameZh: '计算机科学与技术', nationalMajorId: '138' },
-          { id: 'pk-is', nameEn: 'Intelligent Science and Technology', nameZh: '智能科学与技术', nationalMajorId: '138' }
+{ id: 'pk-cs', nameEn: 'Computer Science and Technology', nameZh: '计算机科学与技术', nationalMajorId: '138', sourceUrl: 'https://www.pku.edu.cn/department.html' },
+{ id: 'pk-is', nameEn: 'Intelligent Science and Technology', nameZh: '智能科学与技术', nationalMajorId: '138', sourceUrl: 'https://www.pku.edu.cn/department.html' }
         ]
       }
     ]
@@ -1049,8 +1052,8 @@ export const universities: University[] = [
         descriptionEn: 'Offers pristine theoretical training in advanced computer science, statistics, physical chemistry, and cosmic relativity studies.',
         descriptionZh: '这里的计算机方向（CS）、理论物理高度绑定深奥的离散代数与理论分析，旨在打通未来的科学哲学边界。',
         majors: [
-          { id: 'ox-cs', nameEn: 'Computer Science', nameZh: '计算机科学与数学', nationalMajorId: '138' },
-          { id: 'ox-math', nameEn: 'Mathematics', nameZh: '经典纯粹数学', nationalMajorId: '140' }
+{ id: 'ox-cs', nameEn: 'Computer Science', nameZh: '计算机科学与数学', nationalMajorId: '138', sourceUrl: 'https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing' },
+{ id: 'ox-math', nameEn: 'Mathematics', nameZh: '经典纯粹数学', nationalMajorId: '140', sourceUrl: 'https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing' }
         ]
       },
       {
@@ -1065,8 +1068,8 @@ export const universities: University[] = [
         descriptionEn: 'Combines highly analytical philosophical rigor, statecraft political analysis, and macroeconomic mechanics to prepare future pioneers.',
         descriptionZh: '以大名鼎鼎的 PPE（哲学、政治学与经济学）专业闻名于世，探讨人类社会制度演进的核心规律。',
         majors: [
-          { id: 'ox-ppe', nameEn: 'Philosophy, Politics and Economics (PPE)', nameZh: '哲学、政治学与经济学 (PPE)', nationalMajorId: '79' },
-          { id: 'ox-econ-mgmt', nameEn: 'Economics and Management', nameZh: '经济与管理学', nationalMajorId: '4' }
+{ id: 'ox-ppe', nameEn: 'Philosophy, Politics and Economics (PPE)', nameZh: '哲学、政治学与经济学 (PPE)', nationalMajorId: '79', sourceUrl: 'https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing' },
+{ id: 'ox-econ-mgmt', nameEn: 'Economics and Management', nameZh: '经济与管理学', nationalMajorId: '4', sourceUrl: 'https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing' }
         ]
       },
       {
@@ -1081,7 +1084,7 @@ export const universities: University[] = [
         descriptionEn: 'Fosters precision writing, critical source analysis, and rigorous classical debates via weekly intense tutorial essay submission.',
         descriptionZh: '历史系等文科学部享誉世界，注重最严苛的史料考证、修辞论证与深度历史变迁演绎，毕业生在政界学术界底盘极深。',
         majors: [
-          { id: 'ox-hist', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63' }
+{ id: 'ox-hist', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63', sourceUrl: 'https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing' }
         ]
       }
     ]
@@ -1125,8 +1128,8 @@ export const universities: University[] = [
         descriptionEn: 'Offers intensive tracks in high-performance computing, artificial intelligence pipelines, and complex data infrastructure.',
         descriptionZh: '国大计算机系（SoC）学风极其强悍，注重坚实的算法基础、大规模云系统构建与网络安全，毕业生横扫东南亚及全球数智核心。',
         majors: [
-          { id: 'nus-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'nus-is', nameEn: 'Information Systems', nameZh: '信息系统学', nationalMajorId: '136' }
+{ id: 'nus-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://nus.edu.sg/gro/global-programmes/special-global-programmes' },
+{ id: 'nus-is', nameEn: 'Information Systems', nameZh: '信息系统学', nationalMajorId: '136', sourceUrl: 'https://nus.edu.sg/gro/global-programmes/special-global-programmes' }
         ]
       },
       {
@@ -1141,8 +1144,8 @@ export const universities: University[] = [
         descriptionEn: 'Focuses heavily on direct career linkage. Highly valued for computer engineering and operational hardware development.',
         descriptionZh: '涵盖自动化控制、分布式网络与电气系统设计。紧贴新加坡科技跨国基地，实施带薪研习直达通道。',
         majors: [
-          { id: 'nus-ee', nameEn: 'Electrical Engineering', nameZh: '电气工程', nationalMajorId: '104' },
-          { id: 'nus-me', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114' }
+{ id: 'nus-ee', nameEn: 'Electrical Engineering', nameZh: '电气工程', nationalMajorId: '104', sourceUrl: 'https://nus.edu.sg/gro/global-programmes/special-global-programmes' },
+{ id: 'nus-me', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114', sourceUrl: 'https://nus.edu.sg/gro/global-programmes/special-global-programmes' }
         ]
       },
       {
@@ -1157,8 +1160,148 @@ export const universities: University[] = [
         descriptionEn: 'Delivers top-class business management, financial asset valuations, and market analytics programs directly linked to Singapore Financial District.',
         descriptionZh: '得益于新加坡全球三大金融中心的优势，商学院本科将资本工程、商业决策与多语种商务协作相结合，校友网络遍布全球巨行。',
         majors: [
-          { id: 'nus-bizadmin', nameEn: 'Business Administration', nameZh: '工商管理', nationalMajorId: '4' },
-          { id: 'nus-bizanalytics', nameEn: 'Business Analytics', nameZh: '商业分析', nationalMajorId: '3' }
+{ id: 'nus-bizadmin', nameEn: 'Business Administration', nameZh: '工商管理', nationalMajorId: '4', sourceUrl: 'https://nus.edu.sg/gro/global-programmes/special-global-programmes' },
+{ id: 'nus-bizanalytics', nameEn: 'Business Analytics', nameZh: '商业分析', nationalMajorId: '3', sourceUrl: 'https://nus.edu.sg/gro/global-programmes/special-global-programmes' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'jhu',
+    nameEn: 'Johns Hopkins University',
+    nameZh: '约翰斯·霍普金斯大学',
+    shortNameEn: 'Johns Hopkins',
+    shortNameZh: '霍普金斯',
+    locationEn: 'Baltimore, MD',
+    locationZh: '马里兰州 巴尔的摩',
+    badgeEn: 'Medical & Research Pioneer',
+    badgeZh: '医学与研究先驱',
+    prestigeNumber: '#6',
+    prestigeLabelEn: 'US News National Rank',
+    prestigeLabelZh: 'US News 全美排名',
+    taglineEn: 'America\'s first research university, leading the world in medicine, public health, and engineering.',
+    taglineZh: '美国第一所研究型大学，在医学、公共卫生和工程领域引领全球。',
+    keyFactEn: 'Undergraduates study at Krieger School of Arts and Sciences or Whiting School of Engineering with unmatched research opportunities.',
+    keyFactZh: '本科生在克里格文理学院或怀廷工程学院就读，享有全美顶尖的研究资源与实验室机会。',
+    descriptionEn: 'Johns Hopkins University is a world-renowned private research university. It boasts the top-ranked Biomedical Engineering program and legendary pre-med tracks.',
+    descriptionZh: '约翰斯·霍普金斯大学作为医学与硬核科研的至高殿堂，其本科生物医学工程（BME）常年稳居全美第一。学校为本科生提供了极高水准的通识教育与前沿学术资源。',
+    bgColor: 'from-[#002D62] to-[#1E293B]',
+    primaryColor: '#002D62',
+    usNewsRank: 6,
+    usNewsYear: 2025,
+    qsRank: 32,
+    qsYear: 2025,
+    schools: [
+      {
+        id: 'jhu-krieger',
+        code: 'KSAS',
+        nameEn: 'Zanvyl Krieger School of Arts and Sciences',
+        nameZh: '克里格文理学院',
+        subtitleEn: 'The core undergraduate division offering rigorous liberal arts and natural sciences.',
+        subtitleZh: '霍普金斯本科核心文理学院，提供极高声誉的通识博雅与基础自然科学。',
+        tagEn: 'Academic & Pre-med Core',
+        tagZh: '学术与医学预科核芯',
+        descriptionEn: 'Krieger School is home to world-renowned pre-med tracks, economics, writing seminars, and behavioral sciences.',
+        descriptionZh: '学院以极强的医学预科背景、写作研讨、经济学及脑行为科学闻名全球，致力于培养深厚的科学与人文素养。',
+        majors: [
+{ id: 'jhu-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-neuro', nameEn: 'Neuroscience', nameZh: '神经科学', nationalMajorId: '132', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-chem', nameEn: 'Chemistry', nameZh: '化学', nationalMajorId: '145', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-bio', nameEn: 'Molecular and Cellular Biology', nameZh: '分子与细胞生物学', nationalMajorId: '131', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-gov', nameEn: 'Political Science', nameZh: '政治学', nationalMajorId: '85', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-psych', nameEn: 'Psychology', nameZh: '心理学', nationalMajorId: '75', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-hist', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63', sourceUrl: 'https://e-catalog.jhu.edu/' }
+        ]
+      },
+      {
+        id: 'jhu-whiting',
+        code: 'WSE',
+        nameEn: 'G.W.C. Whiting School of Engineering',
+        nameZh: '怀廷工程学院',
+        subtitleEn: 'Home of America\'s top-ranked Biomedical Engineering and computer science programs.',
+        subtitleZh: '拥有全美第一生物医学工程（BME）与计算机科学的研究重地。',
+        tagEn: 'Engineering Powerhouse',
+        tagZh: '工程科技巅峰',
+        descriptionEn: 'Whiting School offers cutting-edge engineering programs with hands-on clinical and industrial partnerships.',
+        descriptionZh: '学院倡导医学与工程的交叉融合，其生物医学工程（BME）常年独占鳌头，计算机科学、电子工程亦具备极高的科研声誉。',
+        majors: [
+{ id: 'jhu-bme', nameEn: 'Biomedical Engineering', nameZh: '生物医学工程', nationalMajorId: '101', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-ee', nameEn: 'Electrical Engineering', nameZh: '电机工程', nationalMajorId: '104', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-me', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-che', nameEn: 'Chemical and Biomolecular Engineering', nameZh: '化学与生物分子工程', nationalMajorId: '102', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-cee', nameEn: 'Civil and Systems Engineering', nameZh: '土木与系统工程', nationalMajorId: '103', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-mat', nameEn: 'Materials Science and Engineering', nameZh: '材料科学与工程', nationalMajorId: '113', sourceUrl: 'https://e-catalog.jhu.edu/' },
+{ id: 'jhu-env', nameEn: 'Environmental Engineering', nameZh: '环境工程', nationalMajorId: '108', sourceUrl: 'https://e-catalog.jhu.edu/' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'dartmouth',
+    nameEn: 'Dartmouth College',
+    nameZh: '达特茅斯学院',
+    shortNameEn: 'Dartmouth',
+    shortNameZh: '达特茅斯',
+    locationEn: 'Hanover, NH',
+    locationZh: '新罕布什尔州 汉诺威',
+    badgeEn: 'Ivy League Core',
+    badgeZh: '常春藤盟校博雅重镇',
+    prestigeNumber: '#16',
+    prestigeLabelEn: 'US News National Rank',
+    prestigeLabelZh: 'US News 全美排名',
+    taglineEn: 'The preeminent liberal arts undergraduate powerhouse among the Ivy League.',
+    taglineZh: '常春藤盟校中将本科“博雅教育”与研究深度融合的至尊典范。',
+    keyFactEn: 'Undergraduates enjoy the unique Dartmouth Plan (D-Plan) year-round flexible study terms with close faculty tutorial.',
+    keyFactZh: '实行独特的“达特茅斯计划”（D-Plan）全年弹性学期制，强调师生近距离研讨与户外探索。',
+    descriptionEn: 'Dartmouth College combines stellar undergraduate instruction with world-class graduate schools of business, engineering, and medicine.',
+    descriptionZh: '达特茅斯以极高水准的本科生教育质量闻名，师生比极高，其经济学、政府学和工程科学本科毕业生在华尔街、顶尖法学院及工程界极具竞争力。',
+    bgColor: 'from-[#00693E] to-[#1E293B]',
+    primaryColor: '#00693E',
+    usNewsRank: 16,
+    usNewsYear: 2025,
+    qsRank: 243,
+    qsYear: 2025,
+    schools: [
+      {
+        id: 'dartmouth-college',
+        code: 'DCAS',
+        nameEn: 'Dartmouth College of Arts and Sciences',
+        nameZh: '达特茅斯文理学部',
+        subtitleEn: 'The core undergraduate liberal arts division with stellar research and instruction.',
+        subtitleZh: '达特茅斯本科核心文理学部，强调高强度写作与深厚人文定量社科。',
+        tagEn: 'Liberal Arts Pinnacle',
+        tagZh: '博雅教育巅峰',
+        descriptionEn: 'Offers pristine theoretical training in economics, government studies, computer science, and biological sciences.',
+        descriptionZh: '学部以华尔街输送重地“经济学”、政界摇篮“政府学”以及高水准计算机科学为核心亮点，全小班授课。',
+        majors: [
+{ id: 'dart-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-gov', nameEn: 'Government', nameZh: '政府学 (政治学)', nationalMajorId: '85', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-psych', nameEn: 'Psychological and Brain Sciences', nameZh: '心理与脑科学', nationalMajorId: '75', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-bio', nameEn: 'Biology', nameZh: '生物学', nationalMajorId: '124', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-chem', nameEn: 'Chemistry', nameZh: '化学', nationalMajorId: '145', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-hist', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' },
+{ id: 'dart-eng', nameEn: 'English', nameZh: '英语语言与文学', nationalMajorId: '61', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' }
+        ]
+      },
+      {
+        id: 'dartmouth-thayer',
+        code: 'Thayer',
+        nameEn: 'Thayer School of Engineering',
+        nameZh: '塞耶工程学院',
+        subtitleEn: 'One of the oldest professional engineering schools in the US, offering highly unified engineering sciences.',
+        subtitleZh: '全美历史最悠久的专业工程学院之一，提供高度交叉的工程科学教育。',
+        tagEn: 'Unified Engineering',
+        tagZh: '无界交叉工程',
+        descriptionEn: 'Thayer School emphasizes project-based learning and entrepreneurship, breaking traditional departmental silos.',
+        descriptionZh: '学院打破了传统的科系壁垒，鼓励本科生开展跨学科工程系统设计与创新创业，注重动手实践能力。',
+        majors: [
+{ id: 'dart-engsci', nameEn: 'Engineering Sciences', nameZh: '工程科学', nationalMajorId: '109', sourceUrl: 'https://dartmouth.smartcatalogiq.com/' }
         ]
       }
     ]

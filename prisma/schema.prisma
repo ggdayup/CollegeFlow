@@ -98,12 +98,13 @@ model UniversityMajorAssociation {
   customCode      String?     // Specific school program code
   
   // Standard major mapping
-  standardMajorId String
-  standardMajor   Major       @relation(fields: [standardMajorId], references: [id])
+  standardMajorId String?
+  standardMajor   Major?      @relation(fields: [standardMajorId], references: [id])
   
   mappingScore    Float       @default(0.0)  // Semantic / Lexical similarity score
   isValidated     Boolean     @default(false) // Manual audit flag
   degreeLevel     String      @default("BACHELOR") // 'BACHELOR' | 'MASTER' | 'DOCTORATE'
+  sourceUrl       String?     // Reference verification URL to absolute official catalog handbook
   createdAt       DateTime    @default(now())
 }
 

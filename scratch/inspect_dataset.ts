@@ -1,23 +1,33 @@
-import fs from 'fs';
-import path from 'path';
+import { universities } from '../src/data/universitiesData';
 
-async function main() {
-  const scratchDir = path.resolve(process.cwd(), 'scratch');
-  const localPath = path.resolve(scratchDir, 'usnews_raw_archive.json');
-  
-  if (!fs.existsSync(localPath)) {
-    console.error('File not found! Run the download script first.');
-    return;
-  }
-  
-  const rawData = fs.readFileSync(localPath, 'utf8');
-  const data = JSON.parse(rawData);
-  
-  console.log('Princeton University structure:');
-  console.log(JSON.stringify(data['Princeton University'], null, 2));
-  
-  console.log('\nName structure (if it represents headers or years):');
-  console.log(JSON.stringify(data['Name'], null, 2));
-}
+console.log(` universities in static dataset: ${universities.length}`);
+let totalSchools = 0;
+let totalMajors = 0;
+let linkedMajors = 0;
 
-main().catch(console.error);
+universities.forEach(u => {
+  let uMajors = 0;
+  let uLinked = 0;
+  u.schools.forEach(s => {
+    totalSchools++;
+    if (s.majors) {
+      uMajors += s.majors.length;
+      uLinked += s.majors.filter(m => m.nationalMajorId).length;
+    }
+    if (s.categories) {
+      s.categories.forEach(c => {
+        if (c.majors) {
+          uMajors += c.majors.length;
+          uLinked += c.majors.filter(m => m.nationalMajorId).length;
+        }
+      });
+    }
+  });
+  totalMajors += uMajors;
+  linkedMajors += uLinked;
+  console.log(`- ${u.nameEn}: ${u.schools.length} schools, ${uMajors} majors (${uLinked} linked to nationalMajorId)`);
+});
+
+console.log(`\nTotal schools: ${totalSchools}`);
+console.log(`Total majors defined statically: ${totalMajors}`);
+console.log(`Total statically linked majors: ${linkedMajors}`);

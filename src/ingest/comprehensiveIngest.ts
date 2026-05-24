@@ -11,6 +11,7 @@ import {
   fallbackUniversities,
   FallbackUniversity
 } from './rankingsFallbackData.js';
+import { getUniversityNameZh, getUniversityNameZht } from '../utils/chineseLocalization.js';
 
 // Load environment configurations
 dotenv.config();
@@ -457,16 +458,20 @@ async function main() {
   console.log('\n✨ Stage 5: Writing / Upserting records to PostgreSQL database...');
   if (isDryRun) {
     console.log('[DRY-RUN] Sample first 15 records for upsert:');
-    console.table(finalIngestList.slice(0, 15).map(u => ({
-      nameEn: u.nameEn,
-      nameZh: u.nameZh,
-      countryEn: u.countryEn,
-      qs: u.rankingQs,
-      usNews: u.rankingUsNews,
-      coords: u.latitude ? `${u.latitude.toFixed(3)}, ${u.longitude?.toFixed(3)}` : 'N/A',
-      logo: u.logoUrl ? 'Yes' : 'No',
-      ipeds: u.scorecardUnitId || 'N/A'
-    })));
+    console.table(finalIngestList.slice(0, 15).map(u => {
+      const sampleId = normalizeName(u.nameEn).substring(0, 30);
+      return {
+        nameEn: u.nameEn,
+        nameZh: getUniversityNameZh(sampleId, u.nameZh || u.nameEn),
+        nameZht: getUniversityNameZht(sampleId, u.nameZh || u.nameEn),
+        countryEn: u.countryEn,
+        qs: u.rankingQs,
+        usNews: u.rankingUsNews,
+        coords: u.latitude ? `${u.latitude.toFixed(3)}, ${u.longitude?.toFixed(3)}` : 'N/A',
+        logo: u.logoUrl ? 'Yes' : 'No',
+        ipeds: u.scorecardUnitId || 'N/A'
+      };
+    }));
     console.log('[DRY-RUN] Database writes skipped.');
   } else {
     let createdCount = 0;
@@ -513,10 +518,13 @@ async function main() {
 
         if (existing) {
           // Update details, ensuring rankings are correct
+          const resolvedZh = getUniversityNameZh(existing.id, uni.nameZh || existing.nameZh || uni.nameEn);
+          const resolvedZht = getUniversityNameZht(existing.id, uni.nameZh || existing.nameZh || uni.nameEn);
           await prisma.university.update({
             where: { id: existing.id },
             data: {
-              nameZh: uni.nameZh || existing.nameZh,
+              nameZh: resolvedZh,
+              nameZht: resolvedZht,
               countryEn: countryEn,
               countryZh: countryZh || existing.countryZh,
               rankingQs: uni.rankingQs !== null ? uni.rankingQs : existing.rankingQs,
@@ -531,11 +539,14 @@ async function main() {
           updatedCount++;
         } else {
           // Create new record
+          const resolvedZh = getUniversityNameZh(id, uni.nameZh || uni.nameEn);
+          const resolvedZht = getUniversityNameZht(id, uni.nameZh || uni.nameEn);
           await prisma.university.create({
             data: {
               id,
               nameEn: uni.nameEn,
-              nameZh: uni.nameZh || null,
+              nameZh: resolvedZh,
+              nameZht: resolvedZht,
               countryEn: countryEn,
               countryZh: countryZh || null,
               rankingQs: uni.rankingQs,

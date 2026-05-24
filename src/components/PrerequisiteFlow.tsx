@@ -6,9 +6,10 @@
  * arc curves mapping prerequisite connections dynamically on hover/click.
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, useMotionValue, AnimatePresence } from 'motion/react';
 import { Cpu, ArrowRight, Layers, Sparkles, MoveHorizontal } from 'lucide-react';
+import { toTraditional } from '../utils/chineseLocalization';
 
 interface CourseNode {
   id: string;
@@ -23,7 +24,7 @@ interface CourseNode {
 }
 
 interface PrerequisiteFlowProps {
-  language: 'zh' | 'en';
+  language: 'zh' | 'zht' | 'en';
 }
 
 export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
@@ -36,6 +37,12 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const courseRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+  const t = (zh: string, en: string) => {
+    if (language === 'zh') return zh;
+    if (language === 'zht') return toTraditional(zh);
+    return en;
+  };
+
   // Coordinate connections state
   const [connections, setConnections] = useState<Array<{
     fromId: string;
@@ -44,7 +51,7 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
     active: boolean;
   }>>([]);
 
-  const courses: CourseNode[] = [
+  const rawCourses: CourseNode[] = [
     // Semester 1
     {
       id: 'cs101',
@@ -131,6 +138,14 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
     }
   ];
 
+  const courses = useMemo(() => {
+    if (language !== 'zht') return rawCourses;
+    return rawCourses.map(c => ({
+      ...c,
+      nameZh: toTraditional(c.nameZh)
+    }));
+  }, [language]);
+
   // Function to calculate SVG arc paths between course blocks
   const updatePaths = () => {
     if (!timelineRef.current || !containerRef.current) return;
@@ -215,19 +230,20 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
         <div>
           <h3 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
             <Layers className="w-6 h-6 text-blue-600" />
-            {language === 'zh' ? '学年先修课程路线图' : 'Interactive Academic Path & Prerequisite Flow'}
+            {t('学年先修课程路线图', 'Interactive Academic Path & Prerequisite Flow')}
           </h3>
           <p className="text-slate-500 text-xs md:text-sm mt-1">
-            {language === 'zh' 
-              ? '使用鼠标横向拖拽时间轴；鼠标移至具体课程上，即刻点亮其上下游前置与后续的依赖线弧。' 
-              : 'Drag the timeline horizontally to explore semesters. Hover/Click a course to reveal prerequisites.'}
+            {t(
+              '使用鼠标横向拖拽时间轴；鼠标移至具体课程上，即刻点亮其上下游前置与后续的依赖线弧。',
+              'Drag the timeline horizontally to explore semesters. Hover/Click a course to reveal prerequisites.'
+            )}
           </p>
         </div>
 
         {/* Swipe prompt banner */}
         <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-[11px] font-semibold text-slate-500 animate-pulse">
           <MoveHorizontal className="w-3.5 h-3.5" />
-          <span>{language === 'zh' ? '横向滑动时间轴' : 'Swipe / Drag Timeline'}</span>
+          <span>{t('横向滑动时间轴', 'Swipe / Drag Timeline')}</span>
         </div>
       </div>
 
@@ -326,7 +342,7 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
                         </div>
                         
                         <h4 className="text-xs font-bold truncate tracking-tight mt-1">
-                          {language === 'zh' ? course.nameZh : course.nameEn}
+                          {language !== 'en' ? course.nameZh : course.nameEn}
                         </h4>
                       </div>
                     );
@@ -354,10 +370,10 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs font-bold text-blue-600">{activeFocusCourse.code}</span>
                   <span className="text-xs text-slate-400">|</span>
-                  <span className="text-xs font-bold text-slate-700">{activeFocusCourse.credits} {language === 'zh' ? '学分' : 'Credits'}</span>
+                  <span className="text-xs font-bold text-slate-700">{activeFocusCourse.credits} {t('学分', 'Credits')}</span>
                 </div>
                 <h4 className="font-bold text-sm text-slate-900 mt-0.5">
-                  {language === 'zh' ? activeFocusCourse.nameZh : activeFocusCourse.nameEn}
+                  {language !== 'en' ? activeFocusCourse.nameZh : activeFocusCourse.nameEn}
                 </h4>
               </div>
             </div>
@@ -365,7 +381,7 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
             <div className="flex flex-wrap items-center gap-3">
               {activeFocusCourse.prereqs.length > 0 ? (
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold bg-slate-100/80 px-3 py-1.5 rounded-xl border border-slate-200">
-                  <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">{language === 'zh' ? '前置要求' : 'PREREQUISITES'}:</span>
+                  <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">{t('前置要求', 'PREREQUISITES')}:</span>
                   <span className="font-bold text-slate-700">
                     {activeFocusCourse.prereqs.map(pId => courses.find(c => c.id === pId)?.code).join(', ')}
                   </span>
@@ -373,13 +389,13 @@ export default function PrerequisiteFlow({ language }: PrerequisiteFlowProps) {
               ) : (
                 <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-semibold bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100">
                   <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>{language === 'zh' ? '无先修要求（新生友好）' : 'No Prerequisite requirements'}</span>
+                  <span>{t('无先修要求（新生友好）', 'No Prerequisite requirements')}</span>
                 </div>
               )}
               
               {courses.some(c => c.prereqs.includes(activeFocusCourse.id)) && (
                 <div className="flex items-center gap-1.5 text-xs text-blue-600 font-semibold bg-blue-50/50 px-3 py-1.5 rounded-xl border border-blue-100">
-                  <span>{language === 'zh' ? '开启后续' : 'Unlocks'}:</span>
+                  <span>{t('开启后续', 'Unlocks')}:</span>
                   <span className="font-bold">
                     {courses.filter(c => c.prereqs.includes(activeFocusCourse.id)).map(c => c.code).join(', ')}
                   </span>

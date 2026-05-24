@@ -6,6 +6,7 @@ export interface BroadField {
   id: string;
   nameEn: string;
   nameZh: string;
+  nameZht?: string;
   recentMedianEarningsEn: string;
   recentMedianEarningsVal: number;
   primeMedianEarningsEn: string;
@@ -19,6 +20,7 @@ export interface DetailedField {
   id: string;
   nameEn: string;
   nameZh: string;
+  nameZht?: string;
   broadFieldId: string;
   primeMedianEarningsVal: number;
   unemploymentRecentPercent: number; // e.g. 4.0 for 4%
@@ -32,6 +34,7 @@ export interface SubjectDemands {
   math: DemandLevel;
   physics: DemandLevel;
   chemistry: DemandLevel;
+  biology: DemandLevel;
   humanities: DemandLevel;
 }
 
@@ -39,6 +42,7 @@ export interface Major {
   id: string;
   nameEn: string;
   nameZh: string;
+  nameZht?: string;
   broadFieldId: string;
   detailedFieldId: string;
   specialTag?: 'highest' | 'lowest' | null;

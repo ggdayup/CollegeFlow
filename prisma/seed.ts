@@ -4,6 +4,7 @@ import pg from 'pg';
 import dotenv from 'dotenv';
 import { broadFields, detailedFields, majors } from '../src/data/majorsData';
 import { universities } from '../src/data/universitiesData';
+import { toTraditional, getUniversityNameZh, getUniversityNameZht } from '../src/utils/chineseLocalization';
 
 dotenv.config();
 
@@ -16,6 +17,8 @@ async function main() {
 
   // 1. Clean existing records in reverse dependency order
   console.log('🧹 Clearing existing database records...');
+  await prisma.savedItem.deleteMany();
+  await prisma.user.deleteMany();
   await prisma.universityMajorAssociation.deleteMany();
   await prisma.school.deleteMany();
   await prisma.university.deleteMany();
@@ -67,6 +70,7 @@ async function main() {
         id: m.id,
         nameEn: m.nameEn,
         nameZh: m.nameZh,
+        nameZht: toTraditional(m.nameZh),
         broadFieldId: m.broadFieldId,
         detailedFieldId: m.detailedFieldId,
         specialTag: m.specialTag || null,
@@ -74,6 +78,7 @@ async function main() {
         mathDemand: null,
         physicsDemand: null,
         chemistryDemand: null,
+        biologyDemand: null,
         humanitiesDemand: null,
       },
     });
@@ -86,7 +91,8 @@ async function main() {
       data: {
         id: u.id,
         nameEn: u.nameEn,
-        nameZh: u.nameZh || null,
+        nameZh: getUniversityNameZh(u.id, u.nameZh || u.nameEn),
+        nameZht: getUniversityNameZht(u.id, u.nameZh || u.nameEn),
         countryEn: 'United States', // default standard
         countryZh: '美国',          // default standard
         logoUrl: null,
@@ -153,6 +159,18 @@ async function main() {
       }
     }
   }
+
+  // 6. Seed a default test PRO user
+  console.log('👤 Seeding default demo users...');
+  await prisma.user.create({
+    data: {
+      email: 'demo@college.edu',
+      name: 'Demo Student',
+      role: 'PRO',
+      subscriptionStatus: 'active',
+      subscriptionEndsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // active for 1 year
+    },
+  });
 
   console.log('✅ Database seeding completed successfully.');
 }

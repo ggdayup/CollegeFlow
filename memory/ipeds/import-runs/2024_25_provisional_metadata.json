@@ -1,0 +1,27 @@
+{
+  "collectionYear": "2024-25",
+  "counts": {
+    "importRunId": "ipeds-metadata-20260524T125306Z-efa61a93",
+    "metadata_definitions24": 58,
+    "newVariables24": 63,
+    "rawTableManifests": 52,
+    "tables24": 52,
+    "valueSets24": 12143,
+    "varTable24": 2599
+  },
+  "generatedAt": "2026-05-24T12:53:08.107992+00:00",
+  "hashes": {
+    "access_db_sha256": "98e9175e54ba719cf7f0bfcc8e043fac4d11babd1b73ba1701ebbdc23e5470f5",
+    "readme_sha256": "793b51d606a4303b8d9d6bdacbc5e99ee692d892bbe9715e5d2a9bda7683783f",
+    "tables_doc_sha256": "e5c2197f55fb3f8853b866cde05d6d0be167c37480f9d0825ff4b7d60aaf5f6e"
+  },
+  "phase": "PROVISIONAL",
+  "releaseKey": "ipeds-2024-25-provisional",
+  "sourceFiles": {
+    "accessDb": "/Users/ggdayup/Downloads/college/IPEDS_2024-25_Provisional/IPEDS202425.accdb",
+    "readme": "/Users/ggdayup/Downloads/college/IPEDS_2024-25_Provisional/ReadMe2024-25.docx",
+    "tablesDoc": "/Users/ggdayup/Downloads/college/IPEDS_2024-25_Provisional/IPEDS202425Tablesdoc.xlsx"
+  },
+  "sourceLabel": "IPEDS 2024-25 Provisional Access Database",
+  "toolVersion": "ipeds-metadata-import-v1"
+}

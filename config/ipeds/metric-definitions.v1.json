@@ -1,0 +1,76 @@
+{
+  "version": "ipeds-metric-definitions-v1",
+  "sourceRelease": "ipeds-2024-25-provisional",
+  "definitions": [
+    {
+      "metricKey": "admission_rate_total",
+      "labelEn": "Admission Rate",
+      "labelZh": "录取率",
+      "valueType": "percent",
+      "unit": "percent",
+      "displayFormat": "percent",
+      "higherIsBetter": false,
+      "sourceSystem": "IPEDS",
+      "sourceTable": "DRVADM2024",
+      "sourceVariable": "DVADM01",
+      "missingValuePolicy": "preserve_status_and_reason",
+      "isPublicVisible": true
+    },
+    {
+      "metricKey": "admissions_yield_total",
+      "labelEn": "Admissions Yield",
+      "labelZh": "入学报到率",
+      "valueType": "percent",
+      "unit": "percent",
+      "displayFormat": "percent",
+      "higherIsBetter": null,
+      "sourceSystem": "IPEDS",
+      "sourceTable": "DRVADM2024",
+      "sourceVariable": "DVADM04",
+      "missingValuePolicy": "preserve_status_and_reason",
+      "isPublicVisible": true
+    },
+    {
+      "metricKey": "fall_enrollment_total",
+      "labelEn": "Fall Enrollment",
+      "labelZh": "秋季在校生人数",
+      "valueType": "integer",
+      "unit": "students",
+      "displayFormat": "integer",
+      "higherIsBetter": null,
+      "sourceSystem": "IPEDS",
+      "sourceTable": "DRVEF2024",
+      "sourceVariable": "ENRTOT",
+      "missingValuePolicy": "preserve_status_and_reason",
+      "isPublicVisible": true
+    },
+    {
+      "metricKey": "graduation_rate_150",
+      "labelEn": "Graduation Rate",
+      "labelZh": "毕业率",
+      "valueType": "percent",
+      "unit": "percent",
+      "displayFormat": "percent",
+      "higherIsBetter": true,
+      "sourceSystem": "IPEDS",
+      "sourceTable": "DRVGR2024",
+      "sourceVariable": "GRRTTOT",
+      "missingValuePolicy": "preserve_status_and_reason",
+      "isPublicVisible": true
+    },
+    {
+      "metricKey": "bachelor_programs_offered_count",
+      "labelEn": "Bachelor's Programs Offered",
+      "labelZh": "本科项目数量",
+      "valueType": "integer",
+      "unit": "programs",
+      "displayFormat": "integer",
+      "higherIsBetter": null,
+      "sourceSystem": "IPEDS",
+      "sourceTable": "C2024DEP",
+      "sourceVariable": "PBACHL",
+      "missingValuePolicy": "preserve_status_and_reason",
+      "isPublicVisible": false
+    }
+  ]
+}

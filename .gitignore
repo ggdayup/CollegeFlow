@@ -1,0 +1,21 @@
+# Dependencies and generated frontend output
+node_modules/
+dist/
+
+# Python/runtime generated files
+__pycache__/
+*.py[cod]
+backend/venv/
+
+# Local environment and OS files
+.env
+.env.local
+.env.*.local
+.DS_Store
+
+# Local large data artifacts
+data/ipeds/
+*.accdb
+*.mdb
+*.csv
+*.parquet

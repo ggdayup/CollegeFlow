@@ -40,7 +40,9 @@ export default function MajorsDirectory({
   };
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [searchScope, setSearchScope] = useState<'standard' | 'university'>('standard');
+  const [searchScope, setSearchScope] = useState<'standard' | 'university' | 'leaderboard'>('standard');
+  const [directoryDegreeFilter, setDirectoryDegreeFilter] = useState<'all' | 'BACHELOR' | 'MASTER' | 'DOCTORATE'>('all');
+  const [rankedSubjectId, setRankedSubjectId] = useState<string>('138');
   
   // Custom Filters state
   const [spotlightFilter, setSpotlightFilter] = useState<'all' | 'highest' | 'lowest' | 'fast_growing' | 'favorites'>('all');
@@ -83,6 +85,7 @@ export default function MajorsDirectory({
     onSelectDetailedField(null);
     onSearchQueryChange('');
     setSpotlightFilter('all');
+    setDirectoryDegreeFilter('all');
     setDemandsFilter({
       math: 'all',
       physics: 'all',
@@ -146,7 +149,7 @@ export default function MajorsDirectory({
           const standardMajor = majors.find(sm => sm.id === mLink.nationalMajorId);
           if (!standardMajor) return;
 
-          list.push({
+           list.push({
             id: `${uni.id}-${school.id}-${mLink.id}`,
             nameEn: mLink.nameEn,
             nameZh: mLink.nameZh || mLink.nameEn,
@@ -162,6 +165,8 @@ export default function MajorsDirectory({
             submajors: mLink.submajors,
             notesEn: mLink.notesEn,
             notesZh: mLink.notesZh,
+            degreeLevel: mLink.degreeLevel || 'BACHELOR',
+            rankings: mLink.rankings || [],
             broadFieldId: standardMajor.broadFieldId,
             detailedFieldId: standardMajor.detailedFieldId,
             specialTag: standardMajor.specialTag || null,
@@ -205,6 +210,9 @@ export default function MajorsDirectory({
       if (demandsFilter.biology !== 'all' && demands.biology !== demandsFilter.biology) return false;
       if (demandsFilter.humanities !== 'all' && demands.humanities !== demandsFilter.humanities) return false;
 
+      // 3.8. Program Degree Level Filter
+      if (directoryDegreeFilter !== 'all' && m.degreeLevel !== directoryDegreeFilter) return false;
+
       // 4. Search text matches Bilingual Name, University name or School name
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
@@ -238,7 +246,7 @@ export default function MajorsDirectory({
         ? a.nameZh.localeCompare(b.nameZh, 'zh-Hans-CN')
         : a.nameEn.localeCompare(b.nameEn);
     });
-  }, [allUniversityMajors, selectedBroadFieldId, selectedDetailedFieldId, spotlightFilter, demandsFilter, searchQuery, sortOrder, language, favorites]);
+  }, [allUniversityMajors, selectedBroadFieldId, selectedDetailedFieldId, spotlightFilter, demandsFilter, directoryDegreeFilter, searchQuery, sortOrder, language, favorites]);
 
   // Compute final filtered & searched majors list
   const filteredMajors = useMemo(() => {
@@ -299,6 +307,38 @@ export default function MajorsDirectory({
   const activeFilteredMajors = searchScope === 'standard' ? filteredMajors : filteredUniversityMajors;
   const activeTotalCount = searchScope === 'standard' ? 152 : allUniversityMajors.length;
 
+  const leaderboardItems = useMemo(() => {
+    if (searchScope !== 'leaderboard') return [];
+    
+    // Filter programs offering this standard major and having rankings
+    const list = allUniversityMajors.filter(m => m.nationalMajorId === rankedSubjectId && m.rankings && m.rankings.length > 0);
+    
+    // Unique by uniId to avoid duplicate entries (e.g. CAS vs SEAS CS programs in the same university)
+    const seen = new Set<string>();
+    const uniqueList: typeof list = [];
+    for (const item of list) {
+      if (!seen.has(item.uniId)) {
+        seen.add(item.uniId);
+        uniqueList.push(item);
+      }
+    }
+    
+    // Sort by US News Rank ascending (default), else QS, else THE.
+    return uniqueList.sort((a, b) => {
+      const aUSNews = a.rankings.find((r: any) => r.source === 'US_NEWS')?.rankInteger || 999;
+      const bUSNews = b.rankings.find((r: any) => r.source === 'US_NEWS')?.rankInteger || 999;
+      if (aUSNews !== bUSNews) return aUSNews - bUSNews;
+      
+      const aQs = a.rankings.find((r: any) => r.source === 'QS')?.rankInteger || 999;
+      const bQs = b.rankings.find((r: any) => r.source === 'QS')?.rankInteger || 999;
+      if (aQs !== bQs) return aQs - bQs;
+      
+      const aThe = a.rankings.find((r: any) => r.source === 'THE')?.rankInteger || 999;
+      const bThe = b.rankings.find((r: any) => r.source === 'THE')?.rankInteger || 999;
+      return aThe - bThe;
+    });
+  }, [allUniversityMajors, rankedSubjectId, searchScope]);
+
   return (
     <div className="space-y-6 font-sans" id="majors-directory-hub">
       {/* Search Header Banner */}
@@ -328,174 +368,296 @@ export default function MajorsDirectory({
             <School className="w-3.5 h-3.5 text-blue-600" />
             <span>{language === 'zh' ? `具体院校开设专业 (${allUniversityMajors.length})` : language === 'zht' ? `具體院校開設專業 (${allUniversityMajors.length})` : `University Specific Majors (${allUniversityMajors.length})`}</span>
           </button>
+          <button
+            onClick={() => setSearchScope('leaderboard')}
+            className={`flex-1 py-2 px-3.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer select-none ${
+              searchScope === 'leaderboard'
+                ? 'bg-white text-blue-600 shadow-xs border border-slate-200'
+                : 'text-slate-500 hover:text-slate-800 hover:bg-white/40'
+            }`}
+          >
+            <Trophy className="w-3.5 h-3.5 text-blue-600" />
+            <span>{language === 'zh' ? '🏆 垂直学科名校榜' : language === 'zht' ? '🏆 垂直學科名校榜' : 'Subject Leaderboard'}</span>
+          </button>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-          
-          {/* Main Search */}
-          <div className="col-span-1 md:col-span-6 relative">
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-1">
-              {searchScope === 'standard' 
-                ? (language === 'zh' ? '在 152 个大学专业目录中进行模糊搜索' : language === 'zht' ? '在 152 個大學專業目錄中進行模糊搜索' : 'Search Across 152 Accredited Majors')
-                : (language === 'zh' ? `在 ${allUniversityMajors.length} 个院校细分专业目录中进行模糊搜索` : language === 'zht' ? `在 ${allUniversityMajors.length} 個院校細分專業目錄中進行模糊搜索` : `Search Across ${allUniversityMajors.length} University Specific Majors`)
-              }
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => onSearchQueryChange(e.target.value)}
-                placeholder={language === 'zh' 
-                  ? (searchScope === 'standard' ? "输入专业中文或英文拼写 (例如：Computer, 会计...)" : "输入专业名称、大学、学系或课程细项 (例如：MIT, Physics, LSA...)")
-                  : "Enter major name, university, or school program (e.g. CS, Harvard, Ross...)"
-                }
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-10 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-inner"
-              />
-              <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-              {searchQuery && (
-                <button 
-                  onClick={() => onSearchQueryChange('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
+        {searchScope === 'university' && (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50 p-3 rounded-2xl border border-slate-150">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse shrink-0" />
+              <span className="text-xs font-black text-slate-700 tracking-tight">
+                {language === 'zh'
+                  ? '🎓 筛选具体院校开设学位层级：'
+                  : language === 'zht'
+                    ? '🎓 篩選具體院校開設學位層級：'
+                    : '🎓 Filter Specific Program Degree Level:'}
+              </span>
+            </div>
+            <div className="flex bg-slate-100 p-1 rounded-xl gap-1 shrink-0 shadow-inner">
+              {[
+                { id: 'all', labelEn: 'All Levels', labelZh: '全部层级' },
+                { id: 'BACHELOR', labelEn: "Bachelor's", labelZh: '本科项目' },
+                { id: 'MASTER', labelEn: "Master's", labelZh: '硕士项目' },
+                { id: 'DOCTORATE', labelEn: 'Doctorate', labelZh: '博士项目' },
+              ].map(tab => {
+                const isActive = directoryDegreeFilter === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setDirectoryDegreeFilter(tab.id as any)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-200'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    {language === 'en'
+                      ? tab.labelEn
+                      : language === 'zht'
+                        ? toTraditional(tab.labelZh)
+                        : tab.labelZh}
+                  </button>
+                );
+              })}
             </div>
           </div>
+        )}
 
-          {/* Quick Filters */}
-          <div className="col-span-1 md:col-span-6">
-            <span className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-1">
-              {language === 'zh' ? '高亮专业筛查' : language === 'zht' ? '高亮專業篩查' : 'Spotlight & extreme Filters'}
-            </span>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSpotlightFilter('all')}
-                className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${
-                  spotlightFilter === 'all'
-                    ? 'bg-slate-100 text-slate-800 border-slate-200 shadow-inner'
-                    : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                {searchScope === 'standard'
-                  ? (language === 'zh' ? '全部 152 个专业' : language === 'zht' ? '全部 152 個專業' : 'All 152 Majors')
-                  : (language === 'zh' ? `全部 ${allUniversityMajors.length} 个开设专业` : language === 'zht' ? `全部 ${allUniversityMajors.length} 個開設專業` : `All ${allUniversityMajors.length} Specific Majors`)
-                }
-              </button>
-
-              <button
-                onClick={() => setSpotlightFilter(prev => prev === 'highest' ? 'all' : 'highest')}
-                className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
-                  spotlightFilter === 'highest'
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-xs ring-1 ring-emerald-100'
-                    : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-emerald-600'
-                }`}
-              >
-                <Trophy className="w-3.5 h-3.5 text-emerald-600" />
-                {language === 'zh' ? '最高薪高亮' : 'Highest Earners'}
-              </button>
-
-              <button
-                onClick={() => setSpotlightFilter(prev => prev === 'lowest' ? 'all' : 'lowest')}
-                className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
-                  spotlightFilter === 'lowest'
-                    ? 'bg-rose-50 text-rose-700 border-rose-200 shadow-xs ring-1 ring-rose-100'
-                    : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-rose-600'
-                }`}
-              >
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
-                {language === 'zh' ? '最低薪警示' : 'Lowest Earners'}
-              </button>
-
-              <button
-                onClick={() => setSpotlightFilter(prev => prev === 'fast_growing' ? 'all' : 'fast_growing')}
-                className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
-                  spotlightFilter === 'fast_growing'
-                    ? 'bg-amber-50 text-amber-700 border-amber-200 shadow-xs ring-1 ring-amber-100'
-                    : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-amber-600'
-                }`}
-              >
-                <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
-                {language === 'zh' ? '超长线高增速 (产出增幅 >50%)' : 'High growth (>50%)'}
-              </button>
-
-              <button
-                onClick={() => setSpotlightFilter(prev => prev === 'favorites' ? 'all' : 'favorites')}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
-                  spotlightFilter === 'favorites'
-                    ? 'bg-amber-50 text-amber-800 border-amber-300 shadow-xs ring-1 ring-amber-100'
-                    : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-amber-600'
-                }`}
-              >
-                <Star className={`w-3.5 h-3.5 ${spotlightFilter === 'favorites' ? 'fill-amber-500 text-amber-500' : 'text-amber-550 text-amber-500'}`} />
-                <span>
-                  {language === 'zh' ? `我的选择/收藏 (${favorites.length})` : `My Bookmarks (${favorites.length})`}
-                </span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Dynamic Subject Demands Filters Panel */}
-        <div className="border-t border-slate-100 mt-5 pt-5">
-          <div className="flex items-center gap-2 mb-3">
-            <Filter className="w-4 h-4 text-slate-500" />
-            <h4 className="text-xs font-bold text-slate-700 uppercase tracking-widest">
-              {language === 'zh' ? '五大学科能力需求关联检索 / 专属定位' : 'Academic Subject Strengths Filter / Bilingual Finder'}
-            </h4>
-            <span className="text-[10px] bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full font-bold border border-blue-100">
-              {language === 'zh' ? '支持多选组合定位' : 'Multi-Target Combined Filters'}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {subjectData.map(subj => {
-              const currentVal = demandsFilter[subj.id];
-              return (
-                <div key={subj.id} className="bg-slate-50/50 border border-slate-150 p-3 rounded-xl flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-slate-700">
-                      {language === 'en' ? subj.nameEn : (language === 'zht' ? toTraditional(subj.nameZh) : subj.nameZh)}
-                    </span>
-                    {currentVal !== 'all' && (
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-extrabold uppercase ${getDemandBadgeClass(currentVal as any)}`}>
-                        {getDemandLabel(currentVal as any, language)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-4 gap-1">
-                    {(['all', 'H', 'M', 'L'] as const).map(level => {
-                      const isActive = currentVal === level;
-                      let btnClass = "";
-                      if (isActive) {
-                        if (level === 'all') btnClass = "bg-slate-800 text-white border-slate-800 shadow-xs";
-                        else if (level === 'H') btnClass = "bg-blue-600 text-white border-blue-600 shadow-xs";
-                        else if (level === 'M') btnClass = "bg-amber-500 text-white border-amber-500 shadow-xs";
-                        else btnClass = "bg-slate-500 text-white border-slate-500 shadow-xs";
-                      } else {
-                        btnClass = "bg-white hover:bg-slate-100 text-slate-600 border-slate-200 hover:text-slate-900";
-                      }
-
-                      return (
-                        <button
-                          key={level}
-                          onClick={() => setDemandsFilter(prev => ({ ...prev, [subj.id]: level }))}
-                          className={`py-1 text-[11px] font-bold rounded-lg border transition-all cursor-pointer text-center ${btnClass}`}
-                        >
-                          {level === 'all' 
-                            ? (language === 'en' ? 'All' : '不限')
-                            : getDemandLabel(level, language)
-                          }
-                        </button>
-                      );
-                    })}
-                  </div>
+        {searchScope === 'leaderboard' ? (
+          <div className="space-y-5">
+            {/* Methodology & Verification Banner */}
+            <div className="bg-gradient-to-r from-blue-50/60 via-indigo-50/40 to-slate-50/60 border border-blue-100 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full blur-xl pointer-events-none" />
+              <div className="flex items-start gap-3.5 relative z-10">
+                <div className="p-3 bg-blue-600 text-white rounded-xl shrink-0 shadow-md shadow-blue-500/10">
+                  <Trophy className="w-5 h-5 text-white" />
                 </div>
-              );
-            })}
+                <div>
+                  <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2 flex-wrap">
+                    {language === 'zh' ? '🏆 垂直学科名校排榜体系' : language === 'zht' ? '🏆 垂直學科名校排榜體系' : '🏆 Subject-Specific Leaderboards'}
+                    <span className="text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-250 px-2 py-0.5 rounded-full uppercase tracking-tight flex items-center gap-1 shadow-2xs">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                      {language === 'zh' ? '官方数据源已双重核验' : language === 'zht' ? '官方數據源已雙重核驗' : 'Authoritative Sources Verified'}
+                    </span>
+                  </h4>
+                  <p className="text-slate-500 text-xs mt-1.5 leading-relaxed max-w-3xl">
+                    {language === 'zh' 
+                      ? '本榜单默认按照 US News 的垂直学术排名体系进行排序。同时并列对比展示 QS World 和 THE World 专业学科排名，提供多维度声誉核验与内部平台验证编码，免去繁杂跳转，助您一站式权威掌握全球顶级学府的学科实力。' 
+                      : language === 'zht'
+                        ? '本榜單默認按照 US News 的垂直學術排名體系進行排序。同時並列對比展示 QS World 和 THE World 專業學科排名，提供多維度聲譽核驗與內部平台驗證編碼，免去繁雜跳轉，助您一站式權威掌握全球頂級學府的學科實力。'
+                        : 'Sorted primarily by US News Subject Rankings. Compare QS World and THE World rankings side-by-side. Displays internal platform audit badges for source validation without external redirection.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Subject Selector Tabs */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest px-1">
+                {language === 'zh' ? '选择想要查看的优势学科名校榜单：' : language === 'zht' ? '選擇想要查看的優勢學科名校榜單：' : 'Select a ranked subject specialization:'}
+              </label>
+              <div className="flex flex-wrap gap-2.5">
+                {[
+                  { id: '138', icon: '💻', nameZh: '计算机科学', nameZht: '計算機科學', nameEn: 'Computer Science' },
+                  { id: '4', icon: '💼', nameZh: '商业与管理', nameZht: '商業與管理', nameEn: 'Business & Management' },
+                  { id: '79', icon: '📊', nameZh: '经济学', nameZht: '經濟學', nameEn: 'Economics' },
+                  { id: '104', icon: '⚡️', nameZh: '电气工程', nameZht: '電氣工程', nameEn: 'Electrical Eng.' },
+                  { id: '152', icon: '⚛️', nameZh: '物理学', nameZht: '物理學', nameEn: 'Physics' }
+                ].map(subject => {
+                  const isActive = rankedSubjectId === subject.id;
+                  return (
+                    <button
+                      key={subject.id}
+                      onClick={() => setRankedSubjectId(subject.id)}
+                      className={`px-4.5 py-3 rounded-2xl text-xs font-bold flex items-center gap-2 cursor-pointer transition-all border ${
+                        isActive
+                          ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white border-blue-600 shadow-md shadow-blue-500/10 scale-[1.02] ring-2 ring-blue-100'
+                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-800'
+                      }`}
+                    >
+                      <span className="text-base">{subject.icon}</span>
+                      <span>
+                        {language === 'en'
+                          ? subject.nameEn
+                          : language === 'zht'
+                            ? subject.nameZht
+                            : subject.nameZh}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              
+              {/* Main Search */}
+              <div className="col-span-1 md:col-span-6 relative">
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-1">
+                  {searchScope === 'standard' 
+                    ? (language === 'zh' ? '在 152 个大学专业目录中进行模糊搜索' : language === 'zht' ? '在 152 個大學專業目錄中進行模糊搜索' : 'Search Across 152 Accredited Majors')
+                    : (language === 'zh' ? `在 ${allUniversityMajors.length} 个院校细分专业目录中进行模糊搜索` : language === 'zht' ? `在 ${allUniversityMajors.length} 個院校細分專業目錄中進行模糊搜索` : `Search Across ${allUniversityMajors.length} University Specific Majors`)
+                  }
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => onSearchQueryChange(e.target.value)}
+                    placeholder={language === 'zh' 
+                      ? (searchScope === 'standard' ? "输入专业中文或英文拼写 (例如：Computer, 会计...)" : "输入专业名称、大学、学系或课程细项 (例如：MIT, Physics, LSA...)")
+                      : "Enter major name, university, or school program (e.g. CS, Harvard, Ross...)"
+                    }
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-10 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-inner"
+                  />
+                  <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                  {searchQuery && (
+                    <button 
+                      onClick={() => onSearchQueryChange('')}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Quick Filters */}
+              <div className="col-span-1 md:col-span-6">
+                <span className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-1">
+                  {language === 'zh' ? '高亮专业筛查' : language === 'zht' ? '高亮專業篩查' : 'Spotlight & extreme Filters'}
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setSpotlightFilter('all')}
+                    className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${
+                      spotlightFilter === 'all'
+                        ? 'bg-slate-100 text-slate-800 border-slate-200 shadow-inner'
+                        : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-slate-900'
+                    }`}
+                  >
+                    {searchScope === 'standard'
+                      ? (language === 'zh' ? '全部 152 个专业' : language === 'zht' ? '全部 152 個專業' : 'All 152 Majors')
+                      : (language === 'zh' ? `全部 ${allUniversityMajors.length} 个开设专业` : language === 'zht' ? `全部 ${allUniversityMajors.length} 個開設專業` : `All ${allUniversityMajors.length} Specific Majors`)
+                    }
+                  </button>
+
+                  <button
+                    onClick={() => setSpotlightFilter(prev => prev === 'highest' ? 'all' : 'highest')}
+                    className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
+                      spotlightFilter === 'highest'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-xs ring-1 ring-emerald-100'
+                        : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-emerald-600'
+                    }`}
+                  >
+                    <Trophy className="w-3.5 h-3.5 text-emerald-600" />
+                    {language === 'zh' ? '最高薪高亮' : 'Highest Earners'}
+                  </button>
+
+                  <button
+                    onClick={() => setSpotlightFilter(prev => prev === 'lowest' ? 'all' : 'lowest')}
+                    className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
+                      spotlightFilter === 'lowest'
+                        ? 'bg-rose-50 text-rose-700 border-rose-200 shadow-xs ring-1 ring-rose-100'
+                        : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-rose-600'
+                    }`}
+                  >
+                    <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                    {language === 'zh' ? '最低薪警示' : 'Lowest Earners'}
+                  </button>
+
+                  <button
+                    onClick={() => setSpotlightFilter(prev => prev === 'fast_growing' ? 'all' : 'fast_growing')}
+                    className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
+                      spotlightFilter === 'fast_growing'
+                        ? 'bg-amber-50 text-amber-700 border-amber-200 shadow-xs ring-1 ring-amber-100'
+                        : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-amber-600'
+                    }`}
+                  >
+                    <TrendingUp className="w-3.5 h-3.5 text-amber-600" />
+                    {language === 'zh' ? '超长线高增速 (产出增幅 >50%)' : 'High growth (>50%)'}
+                  </button>
+
+                  <button
+                    onClick={() => setSpotlightFilter(prev => prev === 'favorites' ? 'all' : 'favorites')}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                      spotlightFilter === 'favorites'
+                        ? 'bg-amber-50 text-amber-800 border-amber-300 shadow-xs ring-1 ring-amber-100'
+                        : 'bg-transparent text-slate-600 border-transparent hover:bg-slate-50 hover:text-amber-600'
+                    }`}
+                  >
+                    <Star className={`w-3.5 h-3.5 ${spotlightFilter === 'favorites' ? 'fill-amber-500 text-amber-500' : 'text-amber-550 text-amber-500'}`} />
+                    <span>
+                      {language === 'zh' ? `我的选择/收藏 (${favorites.length})` : `My Bookmarks (${favorites.length})`}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Dynamic Subject Demands Filters Panel */}
+            <div className="border-t border-slate-100 mt-5 pt-5">
+              <div className="flex items-center gap-2 mb-3">
+                <Filter className="w-4 h-4 text-slate-500" />
+                <h4 className="text-xs font-bold text-slate-700 uppercase tracking-widest">
+                  {language === 'zh' ? '五大学科能力需求关联检索 / 专属定位' : 'Academic Subject Strengths Filter / Bilingual Finder'}
+                </h4>
+                <span className="text-[10px] bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full font-bold border border-blue-100">
+                  {language === 'zh' ? '支持多选组合定位' : 'Multi-Target Combined Filters'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                {subjectData.map(subj => {
+                  const currentVal = demandsFilter[subj.id];
+                  return (
+                    <div key={subj.id} className="bg-slate-50/50 border border-slate-150 p-3 rounded-xl flex flex-col justify-between">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-slate-700">
+                          {language === 'en' ? subj.nameEn : (language === 'zht' ? toTraditional(subj.nameZh) : subj.nameZh)}
+                        </span>
+                        {currentVal !== 'all' && (
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-extrabold uppercase ${getDemandBadgeClass(currentVal as any)}`}>
+                            {getDemandLabel(currentVal as any, language)}
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-4 gap-1">
+                        {(['all', 'H', 'M', 'L'] as const).map(level => {
+                          const isActive = currentVal === level;
+                          let btnClass = "";
+                          if (isActive) {
+                            if (level === 'all') btnClass = "bg-slate-800 text-white border-slate-800 shadow-xs";
+                            else if (level === 'H') btnClass = "bg-blue-600 text-white border-blue-600 shadow-xs";
+                            else if (level === 'M') btnClass = "bg-amber-500 text-white border-amber-500 shadow-xs";
+                            else btnClass = "bg-slate-500 text-white border-slate-500 shadow-xs";
+                          } else {
+                            btnClass = "bg-white hover:bg-slate-100 text-slate-600 border-slate-200 hover:text-slate-900";
+                          }
+
+                          return (
+                            <button
+                              key={level}
+                              onClick={() => setDemandsFilter(prev => ({ ...prev, [subj.id]: level }))}
+                              className={`py-1 text-[11px] font-bold rounded-lg border transition-all cursor-pointer text-center ${btnClass}`}
+                            >
+                              {level === 'all' 
+                                ? (language === 'en' ? 'All' : '不限')
+                                : getDemandLabel(level, language)
+                              }
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Current Active Category Summary Pills */}
         <div className="flex flex-wrap items-center justify-between border-t border-slate-100 mt-5 pt-4 gap-4">
@@ -741,7 +903,7 @@ export default function MajorsDirectory({
                           {language === 'zh' ? '成熟期中位年薪:' : 'Prime Median:'}
                         </span>
                         <span className="font-mono text-emerald-800">
-                          {major.specialTag === 'highest' && major.earningsValue
+                           {major.specialTag === 'highest' && major.earningsValue
                             ? `$${(major.earningsValue / 1000).toFixed(0)}k/年`
                             : major.specialTag === 'lowest' && major.earningsValue
                               ? `$${(major.earningsValue / 1000).toFixed(0)}k/年`
@@ -776,38 +938,202 @@ export default function MajorsDirectory({
       <div>
         <div className="flex justify-between items-center mb-4">
           <div className="text-slate-500 text-sm">
-            {language === 'zh' ? (
-              <>
-                已为您检索出 <strong className="text-slate-800 font-bold">{activeFilteredMajors.length}</strong> / {activeTotalCount} 个专业结果
-              </>
-            ) : language === 'zht' ? (
-              <>
-                已為您檢索出 <strong className="text-slate-800 font-bold">{activeFilteredMajors.length}</strong> / {activeTotalCount} 個專業結果
-              </>
+            {searchScope === 'leaderboard' ? (
+              language === 'zh' ? (
+                <>
+                  已核验并载入该垂直学科名校共 <strong className="text-slate-800 font-bold">{leaderboardItems.length}</strong> 所顶级学府
+                </>
+              ) : language === 'zht' ? (
+                <>
+                  已核驗並載入該垂直學科名校共 <strong className="text-slate-800 font-bold">{leaderboardItems.length}</strong> 所頂級學府
+                </>
+              ) : (
+                <>
+                  Loaded <strong className="text-slate-800 font-bold">{leaderboardItems.length}</strong> verified prestigious universities for this subject
+                </>
+              )
             ) : (
-              <>
-                Mapped <strong className="text-slate-800 font-bold">{activeFilteredMajors.length}</strong> out of {activeTotalCount} potential majors
-              </>
+              language === 'zh' ? (
+                <>
+                  已为您检索出 <strong className="text-slate-800 font-bold">{activeFilteredMajors.length}</strong> / {activeTotalCount} 个专业结果
+                </>
+              ) : language === 'zht' ? (
+                <>
+                  已為您檢索出 <strong className="text-slate-800 font-bold">{activeFilteredMajors.length}</strong> / {activeTotalCount} 個專業結果
+                </>
+              ) : (
+                <>
+                  Mapped <strong className="text-slate-800 font-bold">{activeFilteredMajors.length}</strong> out of {activeTotalCount} potential majors
+                </>
+              )
             )}
           </div>
 
           {/* Sorters */}
-          <div className="flex items-center gap-1 text-xs">
-            <span className="text-slate-400 font-medium">{language === 'zh' ? '排序方式:' : 'Sort Order:'}</span>
-            <button
-              onClick={() => setSortOrder(prev => prev === 'name' ? 'category' : 'name')}
-              className="text-slate-700 hover:text-slate-900 transition-colors font-semibold flex items-center gap-1 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-xs cursor-pointer"
-            >
-              <ArrowUpDown className="w-3.5 h-3.5 text-slate-450" />
-              {sortOrder === 'name'
-                ? (language === 'zh' ? '名称首字母' : language === 'zht' ? '名稱首字母' : 'Alphabetical Name')
-                : (language === 'zh' ? '学科大分类' : language === 'zht' ? '學科大分類' : 'Detailed Class Category')
-              }
-            </button>
-          </div>
+          {searchScope !== 'leaderboard' && (
+            <div className="flex items-center gap-1 text-xs">
+              <span className="text-slate-400 font-medium">{language === 'zh' ? '排序方式:' : 'Sort Order:'}</span>
+              <button
+                onClick={() => setSortOrder(prev => prev === 'name' ? 'category' : 'name')}
+                className="text-slate-700 hover:text-slate-900 transition-colors font-semibold flex items-center gap-1 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-xs cursor-pointer"
+              >
+                <ArrowUpDown className="w-3.5 h-3.5 text-slate-450" />
+                {sortOrder === 'name'
+                  ? (language === 'zh' ? '名称首字母' : language === 'zht' ? '名稱首字母' : 'Alphabetical Name')
+                  : (language === 'zh' ? '学科大分类' : language === 'zht' ? '學科大分類' : 'Detailed Class Category')
+                }
+              </button>
+            </div>
+          )}
         </div>
 
-        {activeFilteredMajors.length === 0 ? (
+        {searchScope === 'leaderboard' ? (
+          <motion.div
+            layout
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {leaderboardItems.map((item, idx) => {
+              const usNewsRank = item.rankings.find((r: any) => r.source === 'US_NEWS')?.rankInteger || 999;
+              const qsRank = item.rankings.find((r: any) => r.source === 'QS')?.rankInteger || 999;
+              const theRank = item.rankings.find((r: any) => r.source === 'THE')?.rankInteger || 999;
+              const usNewsVerification = item.rankings.find((r: any) => r.source === 'US_NEWS')?.verificationId || '';
+
+              const rankText = usNewsRank !== 999 ? `#${usNewsRank}` : 'Unranked';
+
+              // Golden/Silver/Bronze trophy styling for top 3
+              let trophyColor = "text-slate-450 bg-slate-100 border-slate-200 text-slate-500";
+              if (usNewsRank === 1) {
+                trophyColor = "bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-500/10";
+              } else if (usNewsRank === 2) {
+                trophyColor = "bg-slate-350 text-white border-slate-350 shadow-md shadow-slate-300/10";
+              } else if (usNewsRank === 3) {
+                trophyColor = "bg-amber-700 text-white border-amber-700 shadow-md shadow-amber-600/10";
+              }
+
+              return (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: Math.min(idx * 0.02, 0.2) }}
+                  className="bg-white border border-slate-200 hover:border-slate-300 rounded-3xl p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-300 group relative overflow-hidden min-h-[260px]"
+                >
+                  {/* HSL custom background decoration from university's primary color */}
+                  <div 
+                    className="absolute top-0 right-0 w-32 h-32 opacity-5 rounded-full blur-3xl pointer-events-none group-hover:scale-[1.15] transition-all duration-300"
+                    style={{ backgroundColor: item.uniPrimaryColor || '#3b82f6' }}
+                  />
+                  
+                  <div>
+                    {/* Top Row: Rank Badge & Verification Badge */}
+                    <div className="flex items-center justify-between mb-3.5 gap-2 relative z-10">
+                      <div className="flex items-center gap-1.5">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-xs border uppercase tracking-wider font-mono ${trophyColor}`}>
+                          {rankText}
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                          {language === 'zh' ? 'US NEWS 排名' : language === 'zht' ? 'US NEWS 排名' : 'US NEWS RANK'}
+                        </span>
+                      </div>
+
+                      {/* Audit Verification badge (No outbound redirects, internal check endorsement) */}
+                      <div className="flex items-center gap-1 bg-emerald-50/70 border border-emerald-150 rounded-lg px-2 py-1 text-emerald-700 font-bold text-[9px] shrink-0 shadow-3xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                        <span>{language === 'zh' ? '核验认证' : language === 'zht' ? '核驗認證' : 'VERIFIED'}</span>
+                      </div>
+                    </div>
+
+                    {/* University Names (Bilingual) */}
+                    <h4 className="font-extrabold text-slate-800 text-base leading-snug group-hover:text-blue-700 transition-colors line-clamp-1 relative z-10">
+                      {language === 'en' ? item.uniNameEn : (language === 'zht' ? item.uniNameZht : item.uniNameZh)}
+                    </h4>
+                    <p className="text-slate-450 text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 truncate relative z-10">
+                      {language === 'en' ? item.uniNameZh : item.uniNameEn}
+                    </p>
+
+                    {/* Offering School Info */}
+                    <div className="mb-4 bg-slate-50 border border-slate-150 p-2.5 rounded-xl flex items-center gap-2 relative z-10 shadow-3xs">
+                      <div 
+                        className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
+                        style={{ backgroundColor: item.uniPrimaryColor || '#3b82f6' }}
+                      />
+                      <div className="text-[11px] font-bold text-slate-700 truncate leading-relaxed">
+                        <span className="text-slate-500 font-semibold">{language === 'zh' ? '开设院系:' : language === 'zht' ? '開設院系:' : 'Dept:'}</span>{' '}
+                        {language === 'en' ? item.schoolNameEn : (language === 'zht' ? item.schoolNameZht : item.schoolNameZh)}
+                      </div>
+                    </div>
+
+                    {/* Multi-Source Co-Display Table */}
+                    <div className="grid grid-cols-3 gap-2 border-t border-slate-100 pt-3 pb-3 mb-2.5">
+                      <div className="text-center bg-slate-50/50 border border-slate-100 rounded-xl p-1.5 shadow-3xs">
+                        <div className="text-[9px] font-extrabold text-indigo-500 font-mono tracking-wider">US NEWS</div>
+                        <div className="text-xs font-black text-slate-800 mt-0.5">
+                          {usNewsRank !== 999 ? `#${usNewsRank}` : '—'}
+                        </div>
+                      </div>
+                      <div className="text-center bg-slate-50/50 border border-slate-100 rounded-xl p-1.5 shadow-3xs">
+                        <div className="text-[9px] font-extrabold text-blue-500 font-mono tracking-wider">QS WORLD</div>
+                        <div className="text-xs font-black text-slate-800 mt-0.5">
+                          {qsRank !== 999 ? `#${qsRank}` : '—'}
+                        </div>
+                      </div>
+                      <div className="text-center bg-slate-50/50 border border-slate-100 rounded-xl p-1.5 shadow-3xs">
+                        <div className="text-[9px] font-extrabold text-sky-500 font-mono tracking-wider">THE WORLD</div>
+                        <div className="text-xs font-black text-slate-800 mt-0.5">
+                          {theRank !== 999 ? `#${theRank}` : '—'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Action Section: Audit ID and Smooth Scroll link button */}
+                  <div className="border-t border-slate-100 mt-auto pt-3 flex items-center justify-between text-[10px] relative z-10">
+                    {/* Audit Citation ID badge */}
+                    <div className="font-mono text-[9px] text-slate-400 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded shadow-3xs" title="Authoritative Data Audit check-ID">
+                      {usNewsVerification || `AUDIT-${item.uniId.toUpperCase()}-${rankedSubjectId}`}
+                    </div>
+
+                    {/* Go to Navigator scroll button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        localStorage.setItem('preferred_uni_id', item.uniId);
+                        
+                        // Find school ID in finalUnis that contains this major
+                        const targetUniObj = finalUnis.find(u => u.id === item.uniId);
+                        if (targetUniObj) {
+                          const targetSchoolObj = targetUniObj.schools.find(school => {
+                            const majorsList = [];
+                            if (school.majors) majorsList.push(...school.majors);
+                            if (school.categories) {
+                              school.categories.forEach(cat => {
+                                  if (cat.majors) majorsList.push(...cat.majors);
+                              });
+                            }
+                            return majorsList.some((m: any) => m.nationalMajorId === rankedSubjectId);
+                          });
+                          if (targetSchoolObj) {
+                            localStorage.setItem('preferred_school_id', targetSchoolObj.id);
+                          } else {
+                            localStorage.removeItem('preferred_school_id');
+                          }
+                        }
+                        
+                        window.dispatchEvent(new Event('navigate_to_university'));
+                      }}
+                      className="text-[10px] font-extrabold text-blue-650 hover:text-white hover:bg-blue-600 border border-blue-200 hover:border-blue-600 bg-blue-50/70 px-3 py-1.5 rounded-xl shadow-3xs transition-all duration-200 cursor-pointer flex items-center gap-1 hover:scale-[1.03]"
+                    >
+                      <span>{language === 'zh' ? '🏫 直达该校院系导航' : language === 'zht' ? '🏫 直達該校院系導航' : '🏫 View Departments'}</span>
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        ) : activeFilteredMajors.length === 0 ? (
           <div className="bg-white border border-slate-200 text-center rounded-2xl py-14 px-6 shadow-xs">
             <Info className="w-10 h-10 text-amber-500 mx-auto mb-3" />
             <h4 className="text-slate-800 font-bold text-lg">

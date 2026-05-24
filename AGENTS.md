@@ -25,6 +25,21 @@ Use the following explicit state IDs when updating issues:
 
 ---
 
+## 🛡️ Core Project Requirements & Data Authenticity Policy (来源可靠 & 禁止编造数据)
+
+All agents working on the Collage Major project must strictly adhere to the following **Data Sovereignty and Authenticity Policy**. Any violation is strictly unacceptable.
+
+### 1. Zero-Hallucination & Authoritative-Only Sources (禁止幻觉与虚构)
+*   **Absolute Restriction**: Under no circumstances should an agent generate, synthesise, or fabricate any data concerning university admissions, degree programs, school divisions, or academic rankings.
+*   **Mandatory Provenance**: Every record entered into the database (PostgreSQL/Prisma) or rendered on the client must be linked to a recognized, verifiable, and authoritative real-world source.
+*   **Verification Audits**: Any statistical, academic, or ranking attributes must be accompanied by a unique platform audit check-ID (e.g., `USN-2026-CS-001` or `IPEDS-123456`) and dynamic verification flags to ensure E2E data transparency and pedigree.
+
+### 2. User Retentiveness (禁止向外导流)
+*   **No Outbound Redirections**: To prevent user leakage and maintain high in-platform engagement, never redirect users to external ranking or university websites.
+*   **Static In-Platform Citations**: Display clean, static, high-fidelity citations, badge endorsements, and platform-level audit check-IDs in the UI, ensuring users satisfy their informational validation within the platform.
+
+---
+
 ## 🔄 Agent Operational Workflow
 
 Every agent must follow this 4-step synchronization lifecycle for every task.
@@ -238,3 +253,12 @@ After completing any task, the agent must continuously summarize successful stra
 
 #### 36. Clean Category Tabs & Empty States in Multi-Level Filtering
 *   **Lesson**: When introducing degree level filtering across different academic departments, some departments (e.g. undergraduate schools) will naturally have 0 programs at advanced levels (Master's or PhD). In React, rather than showing empty category tabs or blank screens, compute the visibility of categories dynamically based on active filtered majors (`visibleCategories = activeSchool.categories?.filter(cat => cat.majors && cat.majors.length > 0) || []`). If the overall school has 0 majors for the selected degree level, render a beautiful, highly polished empty state card informing the user. This ensures 100% robust rendering across all combinations of schools and degree levels.
+
+#### 37. Strict Port Adherence & Conflict Resolution (启动服务时的端口严格一致与冲突解决)
+*   **Lesson**: When starting services, running on arbitrary or random ports due to conflict can break external integrations, CORS configurations, API proxies, and local development synchronization.
+*   **Strategy**: Always strictly adhere to the designated service port specified in the configuration. If a port conflict is encountered, inspect and terminate the existing process occupying that port first instead of randomly using a new port.
+
+#### 38. High-Fidelity In-Platform Verification Audits & Multi-Source Blending
+*   **Lesson**: Enforcing academic rankings verification without redirecting users off-platform requires providing robust internal verification cues.
+*   **Strategy**: Author multi-year database schemas to house multi-source ranking indices side-by-side. Inside the UI, rather than linking to external websites (which dilutes user attention), generate static citation badges accompanied by green check-marks and unique audit citation IDs (e.g. `USN-2026-CS-001`). This provides immediate academic credibility and authentic internal platform validation.
+

@@ -15,6 +15,86 @@ const prisma = new PrismaClient({ adapter });
 const WIKIDATA_SPARQL_URL = 'https://query.wikidata.org/sparql';
 const USER_AGENT = 'CollegeMajorWikidataIngestionEngine/1.0 (contact: ggdayup@example.com) Antigravity/1.0';
 
+const ELITE_UNIVERSITY_NAMES = [
+  "Harvard University",
+  "Yale University",
+  "Princeton University",
+  "Stanford University",
+  "Massachusetts Institute of Technology",
+  "California Institute of Technology",
+  "Columbia University",
+  "University of Pennsylvania",
+  "Johns Hopkins University",
+  "Dartmouth College",
+  "Brown University",
+  "Cornell University",
+  "Northwestern University",
+  "Duke University",
+  "University of Chicago",
+  "University of California, Berkeley",
+  "University of California, Los Angeles",
+  "University of Michigan, Ann Arbor",
+  "Carnegie Mellon University",
+  "New York University",
+  "Rice University",
+  "Vanderbilt University",
+  "Emory University",
+  "Washington University in St. Louis",
+  "Georgetown University",
+  "University of Southern California",
+  "University of Virginia",
+  "University of North Carolina at Chapel Hill",
+  "Wake Forest University",
+  "Tufts University",
+  "Boston University",
+  "Boston College",
+  "University of Rochester",
+  "Georgia Institute of Technology",
+  "University of Texas at Austin",
+  "University of Washington",
+  "University of Wisconsin-Madison",
+  "University of Illinois Urbana-Champaign",
+  "Purdue University",
+  "University of California, San Diego"
+];
+
+function buildTargetedSparqlQuery(names: string[]): string {
+  const formattedNames = names.map(name => `    "${name}"@en`).join('\n');
+  return `
+SELECT DISTINCT ?item ?nameEn ?nameZh ?countryEn ?countryZh ?coords ?logo ?ipeds ?qsId
+WHERE {
+  ?item wdt:P31 ?type .
+  VALUES ?type { wd:Q3918 wd:Q902104 }
+  
+  ?item rdfs:label ?nameEn .
+  VALUES ?nameEn {
+${formattedNames}
+  }
+  
+  OPTIONAL {
+    ?item rdfs:label ?nameZh .
+    FILTER(LANG(?nameZh) = "zh")
+  }
+  
+  OPTIONAL {
+    ?item wdt:P17 ?countryItem .
+    ?countryItem rdfs:label ?countryEn .
+    FILTER(LANG(?countryEn) = "en")
+  }
+  OPTIONAL {
+    ?item wdt:P17 ?countryItem .
+    ?countryItem rdfs:label ?countryZh .
+    FILTER(LANG(?countryZh) = "zh")
+  }
+  OPTIONAL { ?item wdt:P1771 ?ipeds . }
+  OPTIONAL { ?item wdt:P5584 ?qsId . }
+  OPTIONAL { ?item wdt:P625 ?coords . }
+  OPTIONAL { ?item wdt:P154 ?logo . }
+}
+  `.trim();
+}
+
+
 interface UniversityData {
   wikidataId: string;
   nameEn: string;
@@ -302,6 +382,55 @@ async function runIngestion(): Promise<void> {
   let totalProcessed = 0;
 
   try {
+    // Phase A: Fetch and Upsert Elite Target Universities first to ensure completeness
+    console.log(`🎯 Phase A: Aligning ${ELITE_UNIVERSITY_NAMES.length} Core Elite Universities...`);
+    const targetedQuery = buildTargetedSparqlQuery(ELITE_UNIVERSITY_NAMES);
+    const targetedUrl = `${WIKIDATA_SPARQL_URL}?query=${encodeURIComponent(targetedQuery)}&format=json`;
+    
+    try {
+      const targetedResponse = await fetchWithRetry(
+        targetedUrl,
+        {
+          headers: {
+            'User-Agent': USER_AGENT,
+            Accept: 'application/sparql-results+json',
+          },
+        },
+        3,
+        1500
+      );
+      const targetedBindings = targetedResponse?.results?.bindings || [];
+      console.log(`⚡ Found ${targetedBindings.length} matching elite universities on Wikidata.`);
+      
+      const eliteUniversities: UniversityData[] = [];
+      for (const binding of targetedBindings) {
+        const parsed = parseBinding(binding);
+        if (parsed) {
+          eliteUniversities.push(parsed);
+        }
+      }
+      
+      if (isDryRun) {
+        console.log(`\n[DRY-RUN] Targeted elite universities sample:`);
+        console.table(eliteUniversities.slice(0, 10));
+      } else {
+        console.log(`💾 Upserting ${eliteUniversities.length} elite universities...`);
+        for (const uni of eliteUniversities) {
+          try {
+            await upsertUniversity(uni);
+            totalProcessed++;
+          } catch (err) {
+            console.error(`[ERROR] Failed to upsert elite "${uni.nameEn}":`, (err as Error).message);
+          }
+        }
+        console.log(`[✓] Core Elite Alignment completed. Cumulative total upserted: ${totalProcessed}\n`);
+      }
+    } catch (targetedError: any) {
+      console.warn(`[WARN] Targeted elite university alignment failed, proceeding to paginated crawl:`, targetedError.message);
+    }
+
+    // Phase B: General Paginated Ingestion
+    console.log(`🎯 Phase B: Commencing general paginated ingestion...`);
     while (pageCount < maxPages) {
       console.log(`📡 Fetching batch ${pageCount + 1}/${maxPages} (OFFSET ${offset})...`);
       const query = buildSparqlQuery(batchSize, offset);

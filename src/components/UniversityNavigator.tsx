@@ -190,6 +190,43 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
     setDegreeLevelFilter
   } = useUniversityNavigator();
 
+  // Helper to render compact ranking badges on major cards
+  const renderMajorRankings = (rankings?: any[]) => {
+    if (!rankings || rankings.length === 0) return null;
+    
+    // Sort so US News is first (default)
+    const sorted = [...rankings].sort((a, b) => {
+      if (a.source === 'US_NEWS') return -1;
+      if (b.source === 'US_NEWS') return 1;
+      return 0;
+    });
+
+    return (
+      <div className="flex flex-wrap gap-1 mb-2">
+        {sorted.map((r, rx) => {
+          let badgeClass = "bg-slate-50 border-slate-200 text-slate-650";
+          if (r.source === 'US_NEWS') {
+            badgeClass = "bg-indigo-50 border-indigo-150 text-indigo-700";
+          } else if (r.source === 'QS') {
+            badgeClass = "bg-blue-50 border-blue-150 text-blue-700";
+          } else if (r.source === 'THE') {
+            badgeClass = "bg-sky-50 border-sky-150 text-sky-700";
+          }
+          return (
+            <span 
+              key={rx} 
+              className={`text-[9px] font-extrabold border ${badgeClass} px-2 py-0.5 rounded flex items-center gap-0.5 shadow-3xs hover:scale-[1.02] transition-transform`}
+              title={`${r.source.replace('_', ' ')} ${r.year} Ranking (Verified ID: ${r.verificationId})`}
+            >
+              <span>🏆</span>
+              <span>{r.source.replace('_', ' ')}: #{r.rankInteger}</span>
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
+
   // Helper to render compact demands indicators on major cards
   const renderMajorDemands = (nationalMajorId?: string) => {
     if (!nationalMajorId) return null;
@@ -842,6 +879,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                                       ))}
                                     </div>
                                   )}
+                                  {renderMajorRankings(m.rankings)}
                                   {renderMajorDemands(m.nationalMajorId)}
                                 </div>
 
@@ -1060,6 +1098,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                                           </p>
                                         </div>
                                       )}
+                                      {renderMajorRankings(m.rankings)}
                                       {renderMajorDemands(m.nationalMajorId)}
                                     </div>
 
@@ -1124,6 +1163,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                                   </p>
                                 </div>
                               )}
+                              {renderMajorRankings(m.rankings)}
                               {renderMajorDemands(m.nationalMajorId)}
                             </div>
 

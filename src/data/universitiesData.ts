@@ -1,3 +1,10 @@
+export interface MajorRankingItem {
+  source: string; // 'US_NEWS' | 'QS' | 'THE'
+  rankInteger: number;
+  year: number;
+  verificationId: string;
+}
+
 export interface MajorLink {
   id: string; // Unique inside university
   nameEn: string;
@@ -7,6 +14,7 @@ export interface MajorLink {
   degreeLevel?: 'BACHELOR' | 'MASTER' | 'DOCTORATE';
   notesEn?: string;
   notesZh?: string;
+  rankings?: MajorRankingItem[];
 }
 
 export interface SchoolCategory {
@@ -63,6 +71,13 @@ export interface University {
   qsRank: number;
   qsYear: number;
   isGlobalRank?: boolean; // If true, indicates US News is Global instead of National
+  majorRankings?: {
+    standardMajorId: string;
+    rankInteger: number;
+    year: number;
+    source: string;
+    verificationId: string;
+  }[];
 }
 
 export const universities: University[] = [
@@ -105,9 +120,45 @@ export const universities: University[] = [
         descriptionZh: '哈佛学院是哈佛大学招收本科生的唯一门户，强调基于深厚人文精神、定量社会科学以及基础科学的学术根底培养。',
         majors: [
           { id: 'harv-math', nameEn: 'Mathematics', nameZh: '数学', nationalMajorId: '140' },
-          { id: 'harv-econ', nameEn: 'Economics', nameZh: '计量经济学', nationalMajorId: '79' },
+          { id: 'harv-econ', nameEn: 'Economics', nameZh: '经济学', nationalMajorId: '79' },
           { id: 'harv-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152' },
-          { id: 'harv-stats', nameEn: 'Statistics', nameZh: '统计学与数据科学', nationalMajorId: '141' }
+          { id: 'harv-stats', nameEn: 'Statistics', nameZh: '统计学与数据科学', nationalMajorId: '141' },
+          { id: 'harv-afamer', nameEn: 'African and African American Studies', nameZh: '非裔与非裔美国人研究', nationalMajorId: '58' },
+          { id: 'harv-anthro', nameEn: 'Anthropology', nameZh: '人类学', nationalMajorId: '77' },
+          { id: 'harv-artfilm', nameEn: 'Art, Film, and Visual Studies', nameZh: '艺术、电影与视觉研究', nationalMajorId: '53' },
+          { id: 'harv-astro', nameEn: 'Astrophysics', nameZh: '天体物理学', nationalMajorId: '143' },
+          { id: 'harv-chemphys', nameEn: 'Chemistry and Physics', nameZh: '化学与物理学复合', nationalMajorId: '151' },
+          { id: 'harv-chem', nameEn: 'Chemistry', nameZh: '化学', nationalMajorId: '145' },
+          { id: 'harv-classics', nameEn: 'Classics', nameZh: '古典学', nationalMajorId: '58' },
+          { id: 'harv-complit', nameEn: 'Comparative Literature', nameZh: '比较文学', nationalMajorId: '67' },
+          { id: 'harv-eas', nameEn: 'East Asian Studies', nameZh: '东亚研究', nationalMajorId: '58' },
+          { id: 'harv-eng', nameEn: 'English', nameZh: '英语语言与文学', nationalMajorId: '61' },
+          { id: 'harv-folklore', nameEn: 'Folklore and Mythology', nameZh: '民俗与神话学', nationalMajorId: '58' },
+          { id: 'harv-german', nameEn: 'Germanic Languages and Literatures', nameZh: '德语语言与文学', nationalMajorId: '62' },
+          { id: 'harv-govt', nameEn: 'Government', nameZh: '政府学 (政治学)', nationalMajorId: '85' },
+          { id: 'harv-history', nameEn: 'History', nameZh: '历史学', nationalMajorId: '63' },
+          { id: 'harv-histlit', nameEn: 'History and Literature', nameZh: '历史与文学', nationalMajorId: '64' },
+          { id: 'harv-histsci', nameEn: 'History of Science', nameZh: '科学史', nationalMajorId: '64' },
+          { id: 'harv-ling', nameEn: 'Linguistics', nameZh: '语言学', nationalMajorId: '67' },
+          { id: 'harv-music', nameEn: 'Music', nameZh: '音乐学', nationalMajorId: '55' },
+          { id: 'harv-nes', nameEn: 'Near Eastern Languages and Civilizations', nameZh: '近东语言与文明', nationalMajorId: '58' },
+          { id: 'harv-neuro', nameEn: 'Neuroscience', nameZh: '神经科学', nationalMajorId: '132' },
+          { id: 'harv-phil', nameEn: 'Philosophy', nameZh: '哲学', nationalMajorId: '69' },
+          { id: 'harv-phys', nameEn: 'Physics', nameZh: '物理学', nationalMajorId: '152' },
+          { id: 'harv-psych', nameEn: 'Psychology', nameZh: '心理学', nationalMajorId: '75' },
+          { id: 'harv-romance', nameEn: 'Romance Languages and Literatures', nameZh: '罗曼语语言与文学', nationalMajorId: '62' },
+          { id: 'harv-ruseuras', nameEn: 'Russian and Eurasian Studies', nameZh: '俄罗斯与欧亚研究', nationalMajorId: '58' },
+          { id: 'harv-socstudies', nameEn: 'Social Studies', nameZh: '社会研究', nationalMajorId: '82' },
+          { id: 'harv-soc', nameEn: 'Sociology', nameZh: '社会学', nationalMajorId: '87' },
+          { id: 'harv-southasian', nameEn: 'South Asian Studies', nameZh: '南亚研究', nationalMajorId: '58' },
+          { id: 'harv-theater', nameEn: 'Theater, Dance, and Media', nameZh: '戏剧、舞蹈与媒体', nationalMajorId: '52' },
+          { id: 'harv-wgs', nameEn: 'Studies of Women, Gender, and Sexuality', nameZh: '妇女、性别与性取向研究', nationalMajorId: '82' },
+          { id: 'harv-ib', nameEn: 'Integrative Biology', nameZh: '整合生物学', nationalMajorId: '124' },
+          { id: 'harv-mcb', nameEn: 'Molecular and Cellular Biology', nameZh: '分子与细胞生物学', nationalMajorId: '131' },
+          { id: 'harv-cpb', nameEn: 'Chemical and Physical Biology', nameZh: '化学与物理生物学', nationalMajorId: '123' },
+          { id: 'harv-hdrb', nameEn: 'Human Developmental and Regenerative Biology', nameZh: '人类发育与再生生物学', nationalMajorId: '130' },
+          { id: 'harv-heb', nameEn: 'Human Evolutionary Biology', nameZh: '人类进化生物学', nationalMajorId: '130' },
+          { id: 'harv-eps', nameEn: 'Earth and Planetary Sciences', nameZh: '地球与行星科学', nationalMajorId: '146' }
         ]
       },
       {
@@ -123,8 +174,12 @@ export const universities: University[] = [
         descriptionZh: '保尔森工学院打破了传统工程生院的隔阂，提倡计算与物理应用、生物医药工程的跨界融合，配备了全球首屈一指的数字化实验室。',
         majors: [
           { id: 'harv-cs', nameEn: 'Computer Science', nameZh: '计算机科学', nationalMajorId: '138' },
-          { id: 'harv-bme', nameEn: 'Bioengineering', nameZh: '生物医学工程', nationalMajorId: '101' },
-          { id: 'harv-ee', nameEn: 'Electrical Engineering & Applied Math', nameZh: '电子工程与应用数学', nationalMajorId: '104' }
+          { id: 'harv-am', nameEn: 'Applied Mathematics', nameZh: '应用数学', nationalMajorId: '135' },
+          { id: 'harv-bme', nameEn: 'Biomedical Engineering', nameZh: '生物医学工程', nationalMajorId: '101' },
+          { id: 'harv-ee', nameEn: 'Electrical Engineering', nameZh: '电子工程', nationalMajorId: '104' },
+          { id: 'harv-me', nameEn: 'Mechanical Engineering', nameZh: '机械工程', nationalMajorId: '114' },
+          { id: 'harv-es', nameEn: 'Engineering Sciences', nameZh: '工程科学', nationalMajorId: '109' },
+          { id: 'harv-envsci', nameEn: 'Environmental Science and Public Policy', nameZh: '环境科学与公共政策', nationalMajorId: '127' }
         ]
       }
     ]

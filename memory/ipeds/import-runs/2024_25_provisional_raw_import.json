@@ -1,0 +1,485 @@
+{
+  "generatedAt": "2026-05-24T13:12:12.759970+00:00",
+  "importRunId": "ipeds-raw-20260524T131203Z",
+  "manifestPath": "data/ipeds/2024-25/provisional/manifest.json",
+  "releaseKey": "ipeds-2024-25-provisional",
+  "source": {
+    "accessDbPath": "/Users/ggdayup/Downloads/college/IPEDS_2024-25_Provisional/IPEDS202425.accdb",
+    "accessDbSha256": "98e9175e54ba719cf7f0bfcc8e043fac4d11babd1b73ba1701ebbdc23e5470f5"
+  },
+  "statusCounts": {
+    "IMPORTED": 52
+  },
+  "tables": [
+    {
+      "columnCount": 72,
+      "csvPath": "data/ipeds/2024-25/provisional/hd2024.csv",
+      "csvRows": 6072,
+      "importedRows": 6072,
+      "rawTableName": "hd2024",
+      "status": "IMPORTED",
+      "tableName": "HD2024"
+    },
+    {
+      "columnCount": 115,
+      "csvPath": "data/ipeds/2024-25/provisional/flags2024.csv",
+      "csvRows": 6072,
+      "importedRows": 6072,
+      "rawTableName": "flags2024",
+      "status": "IMPORTED",
+      "tableName": "FLAGS2024"
+    },
+    {
+      "columnCount": 110,
+      "csvPath": "data/ipeds/2024-25/provisional/ic2024.csv",
+      "csvRows": 5963,
+      "importedRows": 5963,
+      "rawTableName": "ic2024",
+      "status": "IMPORTED",
+      "tableName": "IC2024"
+    },
+    {
+      "columnCount": 3,
+      "csvPath": "data/ipeds/2024-25/provisional/ic2024mission.csv",
+      "csvRows": 5890,
+      "importedRows": 5890,
+      "rawTableName": "ic2024mission",
+      "status": "IMPORTED",
+      "tableName": "IC2024MISSION"
+    },
+    {
+      "columnCount": 8,
+      "csvPath": "data/ipeds/2024-25/provisional/customcgids2024.csv",
+      "csvRows": 51764,
+      "importedRows": 51764,
+      "rawTableName": "customcgids2024",
+      "status": "IMPORTED",
+      "tableName": "CUSTOMCGIDS2024"
+    },
+    {
+      "columnCount": 11,
+      "csvPath": "data/ipeds/2024-25/provisional/ef2024.csv",
+      "csvRows": 41775,
+      "importedRows": 41775,
+      "rawTableName": "ef2024",
+      "status": "IMPORTED",
+      "tableName": "EF2024"
+    },
+    {
+      "columnCount": 39,
+      "csvPath": "data/ipeds/2024-25/provisional/ef2024a.csv",
+      "csvRows": 113833,
+      "importedRows": 113833,
+      "rawTableName": "ef2024a",
+      "status": "IMPORTED",
+      "tableName": "EF2024A"
+    },
+    {
+      "columnCount": 13,
+      "csvPath": "data/ipeds/2024-25/provisional/ef2024b.csv",
+      "csvRows": 76359,
+      "importedRows": 76359,
+      "rawTableName": "ef2024b",
+      "status": "IMPORTED",
+      "tableName": "EF2024B"
+    },
+    {
+      "columnCount": 5,
+      "csvPath": "data/ipeds/2024-25/provisional/ef2024c.csv",
+      "csvRows": 70119,
+      "importedRows": 70119,
+      "rawTableName": "ef2024c",
+      "status": "IMPORTED",
+      "tableName": "EF2024C"
+    },
+    {
+      "columnCount": 36,
+      "csvPath": "data/ipeds/2024-25/provisional/ef2024cp.csv",
+      "csvRows": 168639,
+      "importedRows": 168639,
+      "rawTableName": "ef2024cp",
+      "status": "IMPORTED",
+      "tableName": "EF2024CP"
+    },
+    {
+      "columnCount": 17,
+      "csvPath": "data/ipeds/2024-25/provisional/ef2024d.csv",
+      "csvRows": 5578,
+      "importedRows": 5578,
+      "rawTableName": "ef2024d",
+      "status": "IMPORTED",
+      "tableName": "EF2024D"
+    },
+    {
+      "columnCount": 11,
+      "csvPath": "data/ipeds/2024-25/provisional/ef2024a_dist.csv",
+      "csvRows": 21819,
+      "importedRows": 21819,
+      "rawTableName": "ef2024a_dist",
+      "status": "IMPORTED",
+      "tableName": "EF2024A_DIST"
+    },
+    {
+      "columnCount": 87,
+      "csvPath": "data/ipeds/2024-25/provisional/drvef2024.csv",
+      "csvRows": 5843,
+      "importedRows": 5843,
+      "rawTableName": "drvef2024",
+      "status": "IMPORTED",
+      "tableName": "DRVEF2024"
+    },
+    {
+      "columnCount": 34,
+      "csvPath": "data/ipeds/2024-25/provisional/c2024_a.csv",
+      "csvRows": 1688471,
+      "importedRows": 1688471,
+      "rawTableName": "c2024_a",
+      "status": "IMPORTED",
+      "tableName": "C2024_A"
+    },
+    {
+      "columnCount": 41,
+      "csvPath": "data/ipeds/2024-25/provisional/c2024_b.csv",
+      "csvRows": 5827,
+      "importedRows": 5827,
+      "rawTableName": "c2024_b",
+      "status": "IMPORTED",
+      "tableName": "C2024_B"
+    },
+    {
+      "columnCount": 19,
+      "csvPath": "data/ipeds/2024-25/provisional/c2024_c.csv",
+      "csvRows": 16104,
+      "importedRows": 16104,
+      "rawTableName": "c2024_c",
+      "status": "IMPORTED",
+      "tableName": "C2024_C"
+    },
+    {
+      "columnCount": 41,
+      "csvPath": "data/ipeds/2024-25/provisional/c2024dep.csv",
+      "csvRows": 247147,
+      "importedRows": 247147,
+      "rawTableName": "c2024dep",
+      "status": "IMPORTED",
+      "tableName": "C2024DEP"
+    },
+    {
+      "columnCount": 22,
+      "csvPath": "data/ipeds/2024-25/provisional/drvc2024.csv",
+      "csvRows": 5876,
+      "importedRows": 5876,
+      "rawTableName": "drvc2024",
+      "status": "IMPORTED",
+      "tableName": "DRVC2024"
+    },
+    {
+      "columnCount": 146,
+      "csvPath": "data/ipeds/2024-25/provisional/f2324_f1a.csv",
+      "csvRows": 1911,
+      "importedRows": 1911,
+      "rawTableName": "f2324_f1a",
+      "status": "IMPORTED",
+      "tableName": "F2324_F1A"
+    },
+    {
+      "columnCount": 171,
+      "csvPath": "data/ipeds/2024-25/provisional/f2324_f2.csv",
+      "csvRows": 1750,
+      "importedRows": 1750,
+      "rawTableName": "f2324_f2",
+      "status": "IMPORTED",
+      "tableName": "F2324_F2"
+    },
+    {
+      "columnCount": 105,
+      "csvPath": "data/ipeds/2024-25/provisional/f2324_f3.csv",
+      "csvRows": 2046,
+      "importedRows": 2046,
+      "rawTableName": "f2324_f3",
+      "status": "IMPORTED",
+      "tableName": "F2324_F3"
+    },
+    {
+      "columnCount": 120,
+      "csvPath": "data/ipeds/2024-25/provisional/drvf2024.csv",
+      "csvRows": 5915,
+      "importedRows": 5915,
+      "rawTableName": "drvf2024",
+      "status": "IMPORTED",
+      "tableName": "DRVF2024"
+    },
+    {
+      "columnCount": 92,
+      "csvPath": "data/ipeds/2024-25/provisional/sfa2324.csv",
+      "csvRows": 5575,
+      "importedRows": 5575,
+      "rawTableName": "sfa2324",
+      "status": "IMPORTED",
+      "tableName": "SFA2324"
+    },
+    {
+      "columnCount": 22,
+      "csvPath": "data/ipeds/2024-25/provisional/sfav2324.csv",
+      "csvRows": 5823,
+      "importedRows": 5823,
+      "rawTableName": "sfav2324",
+      "status": "IMPORTED",
+      "tableName": "SFAV2324"
+    },
+    {
+      "columnCount": 36,
+      "csvPath": "data/ipeds/2024-25/provisional/gr2024.csv",
+      "csvRows": 51011,
+      "importedRows": 51011,
+      "rawTableName": "gr2024",
+      "status": "IMPORTED",
+      "tableName": "GR2024"
+    },
+    {
+      "columnCount": 21,
+      "csvPath": "data/ipeds/2024-25/provisional/gr2024_l2.csv",
+      "csvRows": 1535,
+      "importedRows": 1535,
+      "rawTableName": "gr2024_l2",
+      "status": "IMPORTED",
+      "tableName": "GR2024_L2"
+    },
+    {
+      "columnCount": 26,
+      "csvPath": "data/ipeds/2024-25/provisional/gr2024_pell_ssl.csv",
+      "csvRows": 8173,
+      "importedRows": 8173,
+      "rawTableName": "gr2024_pell_ssl",
+      "status": "IMPORTED",
+      "tableName": "GR2024_PELL_SSL"
+    },
+    {
+      "columnCount": 27,
+      "csvPath": "data/ipeds/2024-25/provisional/gr200_24.csv",
+      "csvRows": 4838,
+      "importedRows": 4838,
+      "rawTableName": "gr200_24",
+      "status": "IMPORTED",
+      "tableName": "GR200_24"
+    },
+    {
+      "columnCount": 37,
+      "csvPath": "data/ipeds/2024-25/provisional/drvgr2024.csv",
+      "csvRows": 5219,
+      "importedRows": 5219,
+      "rawTableName": "drvgr2024",
+      "status": "IMPORTED",
+      "tableName": "DRVGR2024"
+    },
+    {
+      "columnCount": 13,
+      "csvPath": "data/ipeds/2024-25/provisional/eap2024.csv",
+      "csvRows": 285259,
+      "importedRows": 285259,
+      "rawTableName": "eap2024",
+      "status": "IMPORTED",
+      "tableName": "EAP2024"
+    },
+    {
+      "columnCount": 56,
+      "csvPath": "data/ipeds/2024-25/provisional/sal2024_is.csv",
+      "csvRows": 15216,
+      "importedRows": 15216,
+      "rawTableName": "sal2024_is",
+      "status": "IMPORTED",
+      "tableName": "SAL2024_IS"
+    },
+    {
+      "columnCount": 29,
+      "csvPath": "data/ipeds/2024-25/provisional/sal2024_nis.csv",
+      "csvRows": 3914,
+      "importedRows": 3914,
+      "rawTableName": "sal2024_nis",
+      "status": "IMPORTED",
+      "tableName": "SAL2024_NIS"
+    },
+    {
+      "columnCount": 35,
+      "csvPath": "data/ipeds/2024-25/provisional/s2024_oc.csv",
+      "csvRows": 178024,
+      "importedRows": 178024,
+      "rawTableName": "s2024_oc",
+      "status": "IMPORTED",
+      "tableName": "S2024_OC"
+    },
+    {
+      "columnCount": 9,
+      "csvPath": "data/ipeds/2024-25/provisional/s2024_sis.csv",
+      "csvRows": 20784,
+      "importedRows": 20784,
+      "rawTableName": "s2024_sis",
+      "status": "IMPORTED",
+      "tableName": "S2024_SIS"
+    },
+    {
+      "columnCount": 34,
+      "csvPath": "data/ipeds/2024-25/provisional/s2024_is.csv",
+      "csvRows": 63389,
+      "importedRows": 63389,
+      "rawTableName": "s2024_is",
+      "status": "IMPORTED",
+      "tableName": "S2024_IS"
+    },
+    {
+      "columnCount": 35,
+      "csvPath": "data/ipeds/2024-25/provisional/s2024_nh.csv",
+      "csvRows": 40678,
+      "importedRows": 40678,
+      "rawTableName": "s2024_nh",
+      "status": "IMPORTED",
+      "tableName": "S2024_NH"
+    },
+    {
+      "columnCount": 27,
+      "csvPath": "data/ipeds/2024-25/provisional/drvhr2024.csv",
+      "csvRows": 5912,
+      "importedRows": 5912,
+      "rawTableName": "drvhr2024",
+      "status": "IMPORTED",
+      "tableName": "DRVHR2024"
+    },
+    {
+      "columnCount": 57,
+      "csvPath": "data/ipeds/2024-25/provisional/adm2024.csv",
+      "csvRows": 1956,
+      "importedRows": 1956,
+      "rawTableName": "adm2024",
+      "status": "IMPORTED",
+      "tableName": "ADM2024"
+    },
+    {
+      "columnCount": 13,
+      "csvPath": "data/ipeds/2024-25/provisional/drvadm2024.csv",
+      "csvRows": 1931,
+      "importedRows": 1931,
+      "rawTableName": "drvadm2024",
+      "status": "IMPORTED",
+      "tableName": "DRVADM2024"
+    },
+    {
+      "columnCount": 38,
+      "csvPath": "data/ipeds/2024-25/provisional/effy2024.csv",
+      "csvRows": 115026,
+      "importedRows": 115026,
+      "rawTableName": "effy2024",
+      "status": "IMPORTED",
+      "tableName": "EFFY2024"
+    },
+    {
+      "columnCount": 10,
+      "csvPath": "data/ipeds/2024-25/provisional/efia2024.csv",
+      "csvRows": 5861,
+      "importedRows": 5861,
+      "rawTableName": "efia2024",
+      "status": "IMPORTED",
+      "tableName": "EFIA2024"
+    },
+    {
+      "columnCount": 6,
+      "csvPath": "data/ipeds/2024-25/provisional/effy2024_dist.csv",
+      "csvRows": 21997,
+      "importedRows": 21997,
+      "rawTableName": "effy2024_dist",
+      "status": "IMPORTED",
+      "tableName": "EFFY2024_DIST"
+    },
+    {
+      "columnCount": 31,
+      "csvPath": "data/ipeds/2024-25/provisional/effy2024_hs.csv",
+      "csvRows": 2381,
+      "importedRows": 2381,
+      "rawTableName": "effy2024_hs",
+      "status": "IMPORTED",
+      "tableName": "EFFY2024_HS"
+    },
+    {
+      "columnCount": 62,
+      "csvPath": "data/ipeds/2024-25/provisional/drvef122024.csv",
+      "csvRows": 5862,
+      "importedRows": 5862,
+      "rawTableName": "drvef122024",
+      "status": "IMPORTED",
+      "tableName": "DRVEF122024"
+    },
+    {
+      "columnCount": 38,
+      "csvPath": "data/ipeds/2024-25/provisional/al2024.csv",
+      "csvRows": 3652,
+      "importedRows": 3652,
+      "rawTableName": "al2024",
+      "status": "IMPORTED",
+      "tableName": "AL2024"
+    },
+    {
+      "columnCount": 20,
+      "csvPath": "data/ipeds/2024-25/provisional/drval2024.csv",
+      "csvRows": 3920,
+      "importedRows": 3920,
+      "rawTableName": "drval2024",
+      "status": "IMPORTED",
+      "tableName": "DRVAL2024"
+    },
+    {
+      "columnCount": 28,
+      "csvPath": "data/ipeds/2024-25/provisional/om2024.csv",
+      "csvRows": 47029,
+      "importedRows": 47029,
+      "rawTableName": "om2024",
+      "status": "IMPORTED",
+      "tableName": "OM2024"
+    },
+    {
+      "columnCount": 109,
+      "csvPath": "data/ipeds/2024-25/provisional/drvom2024.csv",
+      "csvRows": 3590,
+      "importedRows": 3590,
+      "rawTableName": "drvom2024",
+      "status": "IMPORTED",
+      "tableName": "DRVOM2024"
+    },
+    {
+      "columnCount": 14,
+      "csvPath": "data/ipeds/2024-25/provisional/drvcost2024.csv",
+      "csvRows": 3388,
+      "importedRows": 3388,
+      "rawTableName": "drvcost2024",
+      "status": "IMPORTED",
+      "tableName": "DRVCOST2024"
+    },
+    {
+      "columnCount": 227,
+      "csvPath": "data/ipeds/2024-25/provisional/cost1_2024.csv",
+      "csvRows": 5867,
+      "importedRows": 5867,
+      "rawTableName": "cost1_2024",
+      "status": "IMPORTED",
+      "tableName": "COST1_2024"
+    },
+    {
+      "columnCount": 222,
+      "csvPath": "data/ipeds/2024-25/provisional/cost2_2024_financialaid.csv",
+      "csvRows": 5406,
+      "importedRows": 5406,
+      "rawTableName": "cost2_2024_financialaid",
+      "status": "IMPORTED",
+      "tableName": "COST2_2024_FinancialAid"
+    },
+    {
+      "columnCount": 55,
+      "csvPath": "data/ipeds/2024-25/provisional/cost2_2024_netprice.csv",
+      "csvRows": 5406,
+      "importedRows": 5406,
+      "rawTableName": "cost2_2024_netprice",
+      "status": "IMPORTED",
+      "tableName": "COST2_2024_NetPrice"
+    }
+  ],
+  "toolVersion": "ipeds-raw-import-v1",
+  "totalImportedRows": 3483395
+}

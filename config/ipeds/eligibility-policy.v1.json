@@ -1,0 +1,115 @@
+{
+  "policyVersion": "v1",
+  "academicYear": "2024-25",
+  "releaseKey": "2024-25-provisional",
+  "description": "Versioned eligibility policy for IPEDS institution candidates. Scores institutions on data completeness, institutional legitimacy, and product readiness.",
+  "scoring": {
+    "weights": {
+      "identityComplete": 20,
+      "fourYearDegreeGranting": 15,
+      "activeStatus": 15,
+      "bachelorProgramsPresent": 15,
+      "metricsComplete": 15,
+      "geolocated": 10,
+      "websitePresent": 5,
+      "accreditationFlag": 5
+    },
+    "thresholds": {
+      "autoPublish": 80,
+      "reviewRecommended": 50,
+      "manualOnly": 0
+    }
+  },
+  "blockingRules": [
+    {
+      "id": "CLOSED",
+      "condition": "CLOSEDAT IS NOT NULL AND CLOSEDAT != ''",
+      "reason": "Institution is closed",
+      "severity": "BLOCK"
+    },
+    {
+      "id": "DECEASED",
+      "condition": "DEATHYR IS NOT NULL AND DEATHYR != ''",
+      "reason": "Institution year of death is set",
+      "severity": "BLOCK"
+    },
+    {
+      "id": "NOT_POSTSECONDARY",
+      "condition": "POSTSEC = 0",
+      "reason": "Not a postsecondary institution",
+      "severity": "BLOCK"
+    },
+    {
+      "id": "INACTIVE",
+      "condition": "CYACTIVE = 0",
+      "reason": "Not currently active",
+      "severity": "BLOCK"
+    }
+  ],
+  "warningRules": [
+    {
+      "id": "NO_BACHELOR",
+      "condition": "UGOFFER = 0 AND GROFFER = 0",
+      "reason": "No undergraduate programs offered",
+      "severity": "WARNING"
+    },
+    {
+      "id": "HOSPITAL_ONLY",
+      "condition": "HOSPITAL = 1 AND SECTOR = 3",
+      "reason": "Medical-only institution, may lack standard academic programs",
+      "severity": "WARNING"
+    },
+    {
+      "id": "FOREIGN",
+      "condition": "STABBR IN ('AA','AE','AP') OR STABBR NOT IN ('AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC')",
+      "reason": "Foreign or military location institution",
+      "severity": "INFO"
+    },
+    {
+      "id": "NO_WEBSITE",
+      "condition": "WEBADDR IS NULL OR WEBADDR = ''",
+      "reason": "No website URL provided",
+      "severity": "WARNING"
+    },
+    {
+      "id": "NO_GEO",
+      "condition": "LONGITUD IS NULL OR LONGITUD = '' OR LATITUDE IS NULL OR LATITUDE = ''",
+      "reason": "No geolocation data",
+      "severity": "INFO"
+    }
+  ],
+  "scoringLogic": {
+    "identityComplete": {
+      "description": "Has non-blank INSTNM, CITY, STABBR, CONTROL, SECTOR",
+      "sourceTable": "HD2024"
+    },
+    "fourYearDegreeGranting": {
+      "description": "ICLEVEL indicates 4-year or above, DEGGRANT confers bachelor or higher",
+      "sourceTable": "HD2024"
+    },
+    "activeStatus": {
+      "description": "CYACTIVE=1, POSTSEC=1, no CLOSEDAT/DEATHYR",
+      "sourceTable": "HD2024"
+    },
+    "bachelorProgramsPresent": {
+      "description": "Has >= 1 CIP code with PBACHL > 0 in C2024DEP",
+      "sourceTable": "C2024DEP"
+    },
+    "metricsComplete": {
+      "description": "Has >= 2 structured metrics with valueStatus=REPORTED in InstitutionMetric",
+      "sourceTable": "InstitutionMetric"
+    },
+    "geolocated": {
+      "description": "Has valid LONGITUD and LATITUDE",
+      "sourceTable": "HD2024"
+    },
+    "websitePresent": {
+      "description": "Has non-blank WEBADDR",
+      "sourceTable": "HD2024"
+    },
+    "accreditationFlag": {
+      "description": "Has OPEFLAG=1 (Title IV eligible)",
+      "sourceTable": "HD2024"
+    }
+  }
+}

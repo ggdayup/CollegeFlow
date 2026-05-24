@@ -1089,11 +1089,10 @@ export default function MajorsDirectory({
                     </div>
                   </div>
 
-                  {/* Bottom Action Section: Audit ID and Smooth Scroll link button */}
+                  {/* Bottom Action Section: verification status and Smooth Scroll link button */}
                   <div className="border-t border-slate-100 mt-auto pt-3 flex items-center justify-between text-[10px] relative z-10">
-                    {/* Audit Citation ID badge */}
-                    <div className="font-mono text-[9px] text-slate-400 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded shadow-3xs" title="Authoritative Data Audit check-ID">
-                      {usNewsVerification || `AUDIT-${item.uniId.toUpperCase()}-${rankedSubjectId}`}
+                    <div className="font-semibold text-[9px] text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded shadow-3xs">
+                      {usNewsVerification ? 'Verified ranking' : 'Ranking under review'}
                     </div>
 
                     {/* Go to Navigator scroll button */}

@@ -11,6 +11,8 @@ This directory holds the official Architecture Decision Records (ADRs) and Decis
 | **[ADR-003](file:///Users/ggdayup/ggdayup-syncthing/code/college_major/docs/adr/ADR-003-vite-middleware-vs-reusable-bff.md)** | BFF/Express Architecture vs Vite Middleware | Runtime Architecture | **Accepted** | 2026-05-24 |
 | **[ADR-004](file:///Users/ggdayup/ggdayup-syncthing/code/college_major/docs/adr/ADR-004-saas-entitlement-boundary.md)** | SaaS Entitlement Gating before Billing Integration | SaaS & Monetization | **Accepted** | 2026-05-24 |
 | **[ADR-005](file:///Users/ggdayup/ggdayup-syncthing/code/college_major/docs/adr/ADR-005-ipeds-raw-mirror-and-product-projection.md)** | IPEDS Raw Mirror And Product Projection | Government Data & Provenance | **Accepted** | 2026-05-24 |
+| **[ADR-006](file:///Users/ggdayup/ggdayup-syncthing/code/college_major/docs/adr/ADR-006-role-based-user-management-and-collaborative-sharing.md)** | Role-Based User Workspaces, Paywall Gating, and Collaborative Sharing | SaaS & Security Boundary | **Proposed (需要商榷)** | 2026-05-24 |
+
 
 ---
 

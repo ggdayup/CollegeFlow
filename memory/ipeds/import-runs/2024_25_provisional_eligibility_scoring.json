@@ -1,0 +1,17 @@
+{
+  "audits": [],
+  "generatedAt": "2026-05-24T14:09:23.881820+00:00",
+  "releaseKey": "ipeds-2024-25-provisional",
+  "summary": {
+    "audits": [],
+    "distribution": {
+      "auto_publish": 2435,
+      "blocked": 71,
+      "manual_review": 25,
+      "publish_decisions_created": 2435,
+      "review_recommended": 3541,
+      "total": 6072
+    }
+  },
+  "toolVersion": "ipeds-eligibility-scoring-v1"
+}

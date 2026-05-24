@@ -1,0 +1,109 @@
+{
+  "task_id": "71c5ba07-0e99-4695-91d1-1b9e33849aea",
+  "state": "COMPLETED",
+  "progress": 100,
+  "message": "Successfully parsed curriculum and saved to data/curriculums/test_association_123.json",
+  "result": {
+    "program_name": "Bachelor of Science in Computer Science",
+    "total_credits": 120.0,
+    "credit_distribution": [
+      {
+        "category": "Core Requirements",
+        "min_credits": 60.0,
+        "courses": []
+      },
+      {
+        "category": "Core Requirements",
+        "min_credits": 60.0,
+        "courses": [
+          {
+            "code": "CS 101",
+            "name": "Introduction to Computer Science",
+            "credits": 4.0,
+            "description": "Foundations of programming",
+            "prerequisites": []
+          },
+          {
+            "code": "CS 102",
+            "name": "Data Structures & Algorithms",
+            "credits": 4.0,
+            "description": "Fundamental data structures",
+            "prerequisites": [
+              "CS 101"
+            ]
+          },
+          {
+            "code": "MATH 201",
+            "name": "Calculus I",
+            "credits": 4.0,
+            "description": "Single variable calculus",
+            "prerequisites": []
+          },
+          {
+            "code": "CS 210",
+            "name": "Computer Systems & Assembly",
+            "credits": 4.0,
+            "description": "Low-level architecture",
+            "prerequisites": [
+              "CS 102"
+            ]
+          }
+        ]
+      },
+      {
+        "category": "General Education",
+        "min_credits": 30.0,
+        "courses": [
+          {
+            "code": "WRIT 101",
+            "name": "Expository Composition",
+            "credits": 3.0,
+            "description": "University writing series",
+            "prerequisites": []
+          },
+          {
+            "code": "HIST 120",
+            "name": "American History",
+            "credits": 3.0,
+            "description": "U.S. History study",
+            "prerequisites": []
+          }
+        ]
+      }
+    ],
+    "core_requirements": [
+      {
+        "code": "CS 101",
+        "name": "Introduction to Computer Science",
+        "credits": 4.0,
+        "description": "Foundations of programming",
+        "prerequisites": []
+      },
+      {
+        "code": "CS 102",
+        "name": "Data Structures & Algorithms",
+        "credits": 4.0,
+        "description": "Fundamental data structures",
+        "prerequisites": [
+          "CS 101"
+        ]
+      },
+      {
+        "code": "MATH 201",
+        "name": "Calculus I",
+        "credits": 4.0,
+        "description": "Single variable calculus",
+        "prerequisites": []
+      },
+      {
+        "code": "CS 210",
+        "name": "Computer Systems & Assembly",
+        "credits": 4.0,
+        "description": "Low-level architecture",
+        "prerequisites": [
+          "CS 102"
+        ]
+      }
+    ]
+  }
+}

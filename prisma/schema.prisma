@@ -1,0 +1,101 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model BroadField {
+  id                      String   @id
+  nameEn                  String
+  nameZh                  String
+  recentMedianEarningsEn  String
+  recentMedianEarningsVal Int
+  primeMedianEarningsEn   String
+  primeMedianEarningsVal  Int
+  gradPremiumPercent      Float
+  gradDegreePercent       Float
+  majors                  Major[]
+}
+
+model DetailedField {
+  id                            String   @id
+  nameEn                        String
+  nameZh                        String
+  broadFieldId                  String
+  primeMedianEarningsVal        Int
+  unemploymentRecentPercent     Float
+  unemploymentPrimePercent      Float
+  degreeProductionChangePercent Float
+  majors                        Major[]
+}
+
+model Major {
+  id               String                       @id
+  nameEn           String
+  nameZh           String
+  broadFieldId     String
+  broadField       BroadField                   @relation(fields: [broadFieldId], references: [id])
+  detailedFieldId  String
+  detailedField    DetailedField                @relation(fields: [detailedFieldId], references: [id])
+  specialTag       String?                      // 'highest', 'lowest', or null
+  earningsValue    Int?                         // Peak earnings if individual spotlighted major
+  mathDemand       String?                      // 'H', 'M', 'L'
+  physicsDemand    String?                      // 'H', 'M', 'L'
+  chemistryDemand  String?                      // 'H', 'M', 'L'
+  humanitiesDemand String?                      // 'H', 'M', 'L'
+  
+  // Linkages to custom university majors
+  universityAssociations UniversityMajorAssociation[]
+}
+
+model University {
+  id              String                       @id @default(uuid())
+  nameEn          String                       @unique
+  nameZh          String?
+  countryEn       String
+  countryZh       String?
+  logoUrl         String?
+  rankingQs       Int?
+  rankingUsNews   Int?
+  latitude        Float?
+  longitude       Float?
+  wikidataId      String?                      @unique
+  
+  // U.S. College Scorecard metrics
+  scorecardUnitId String?                      @unique // IPEDS UNITID
+  averageCost     Int?
+  gradRate        Float?
+  medianSalary    Int?
+  
+  schools         School[]
+  customMajors    UniversityMajorAssociation[]
+}
+
+model School {
+  id              String                       @id @default(uuid())
+  nameEn          String
+  nameZh          String?
+  universityId    String
+  university      University                   @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  customMajors    UniversityMajorAssociation[]
+}
+
+model UniversityMajorAssociation {
+  id              String      @id @default(uuid())
+  universityId    String
+  university      University  @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  schoolId        String?
+  school          School?     @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  customName      String      // e.g. "Electrical & Computer Engineering with Honors"
+  customCode      String?     // Specific school program code
+  
+  // Standard major mapping
+  standardMajorId String
+  standardMajor   Major       @relation(fields: [standardMajorId], references: [id])
+  
+  mappingScore    Float       @default(0.0)  // Semantic / Lexical similarity score
+  isValidated     Boolean     @default(false) // Manual audit flag
+  createdAt       DateTime    @default(now())
+}

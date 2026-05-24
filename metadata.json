@@ -1,0 +1,6 @@
+{
+  "name": "Bachelor Majors Database and Explorer",
+  "description": "An interactive database and visual analytics explorer for 152 bachelor's degree majors, 8 broad fields, and 16 detailed fields, showing earnings, employment rates, and growth trends.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

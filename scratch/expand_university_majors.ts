@@ -18,7 +18,7 @@ function getUniversityType(name: string): 'TECH' | 'ART' | 'BUSINESS' | 'NURSING
   if (n.includes('technology') || n.includes('polytechnic') || n.includes('tech') || n.includes('science and technology')) {
     return 'TECH';
   }
-  if (n.includes('art') || n.includes('music') || n.includes('design') || n.includes('conservatory') || n.includes('fine arts')) {
+  if (/\barts?\b/.test(n) || n.includes('music') || n.includes('design') || n.includes('conservatory') || n.includes('fine arts')) {
     return 'ART';
   }
   if (n.includes('business') || n.includes('finance') || n.includes('economics')) {

@@ -9,6 +9,7 @@ import AnalyticsCharts from './components/AnalyticsCharts';
 import MajorsDirectory from './components/MajorsDirectory';
 import UniversityNavigator from './components/UniversityNavigator';
 import ROICharts from './components/ROICharts';
+import LandingPage from './components/LandingPage';
 import { 
   Cpu, 
   TrendingUp, 
@@ -28,7 +29,10 @@ import {
   Info,
   DollarSign,
   X,
-  School
+  School,
+  User as UserIcon,
+  Home,
+  Briefcase
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -45,10 +49,47 @@ const fieldIcons: Record<string, React.ReactElement> = {
 };
 
 export default function App() {
-  const [language, setLanguage] = useState<'zh' | 'en'>('zh');
+  const [language, setLanguage] = useState<'zh' | 'zht' | 'en'>('zh');
   const [activeView, setActiveView] = useState<'national' | 'benchmark'>('national');
   const [selectedBroadField, setSelectedBroadField] = useState<string | null>(null);
   const [selectedDetailedField, setSelectedDetailedField] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [authStep, setAuthStep] = useState<1 | 2 | 3>(1);
+  const [regRole, setRegRole] = useState<'STUDENT' | 'TEACHER' | 'COUNSELOR' | 'PARENT' | 'OTHER'>('STUDENT');
+  const [regName, setRegName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regSchool, setRegSchool] = useState('');
+  const [regGradYear, setRegGradYear] = useState('2028');
+  const [regSubject, setRegSubject] = useState('STEM');
+  const [regSpecialty, setRegSpecialty] = useState('Global');
+  const [regNote, setRegNote] = useState('');
+
+  const fetchUserProfile = async (email: string) => {
+    try {
+      const res = await fetch(`/api/users/${encodeURIComponent(email)}`);
+      if (res.ok) {
+        const profile = await res.json();
+        setUserProfile(profile);
+      } else {
+        setUserProfile({
+          email,
+          name: email.split('@')[0],
+          userType: email === 'demo@college.edu' ? 'COUNSELOR' : 'STUDENT',
+        });
+      }
+    } catch (err) {
+      setUserProfile({
+        email,
+        name: email.split('@')[0],
+        userType: 'STUDENT',
+      });
+    }
+  };
 
   // Multi-level state handlers
   const handleSelectBroadField = (id: string | null) => {
@@ -122,15 +163,56 @@ export default function App() {
             </div>
           </div>
 
-          {/* Bilingual Toggle Button */}
+          {/* Bilingual Toggle & Authentication Buttons */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setLanguage(prev => prev === 'en' ? 'zh' : 'en')}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-755 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs font-semibold transition-all shadow-xs cursor-pointer animate-none"
+              onClick={() => setLanguage(prev => prev === 'zh' ? 'zht' : prev === 'zht' ? 'en' : 'zh')}
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs font-semibold transition-all shadow-xs cursor-pointer"
             >
               <Globe className="w-3.5 h-3.5 text-blue-600" />
-              <span>{language === 'zh' ? 'English' : '中文界面'}</span>
+              <span>
+                {language === 'zh' ? '简体中文' : language === 'zht' ? '繁體中文' : 'English'}
+              </span>
             </button>
+
+            {!isLoggedIn ? (
+              <button
+                onClick={() => {
+                  setAuthStep(1);
+                  setShowAuthModal(true);
+                }}
+                className="flex items-center gap-1 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+              >
+                {language === 'zh' ? '登录账号' : 'Sign In'}
+              </button>
+            ) : (
+              <div className="flex items-center gap-2.5">
+                {userProfile && (
+                  <div className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 border border-blue-100 text-[10px] text-blue-700 rounded-lg font-bold shadow-xs">
+                    {userProfile.userType === 'STUDENT' && <span>🎓 {language === 'zh' ? '学生' : language === 'zht' ? '學生' : 'Student'}</span>}
+                    {userProfile.userType === 'TEACHER' && <span>🍎 {language === 'zh' ? '教师' : language === 'zht' ? '教師' : 'Teacher'}</span>}
+                    {userProfile.userType === 'COUNSELOR' && <span>🗺️ {language === 'zh' ? '升学指导' : language === 'zht' ? '升學指導' : 'Counselor'}</span>}
+                    {userProfile.userType === 'PARENT' && <span>🏠 {language === 'zh' ? '家长' : language === 'zht' ? '家長' : 'Parent'}</span>}
+                    {userProfile.userType === 'OTHER' && <span>💼 {language === 'zh' ? '其他' : language === 'zht' ? '其他' : 'Other'}</span>}
+                  </div>
+                )}
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl">
+                  <UserIcon className="w-4 h-4 text-blue-600" />
+                  <span className="text-[11px] font-bold text-slate-700">{userProfile?.name || userEmail || 'demo@college.edu'}</span>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsLoggedIn(false);
+                    setSearchQuery('');
+                    setUserEmail('');
+                    setUserProfile(null);
+                  }}
+                  className="text-xs font-semibold text-rose-650 hover:text-rose-700 px-2 py-1.5 bg-rose-50 hover:bg-rose-100 rounded-xl border border-rose-200 cursor-pointer"
+                >
+                  {language === 'zh' ? '退出' : 'Logout'}
+                </button>
+              </div>
+            )}
           </div>
 
         </div>
@@ -139,8 +221,48 @@ export default function App() {
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-10">
 
-        {/* Modern Segmented Tab Switcher */}
-        <div className="flex border border-slate-200 bg-white/85 p-1.5 rounded-2xl max-w-2xl mx-auto shadow-xs gap-1.5">
+        {!isLoggedIn ? (
+          <>
+            {/* Brand Landing Page Entry Portal */}
+            <LandingPage
+              language={language}
+              isLoggedIn={isLoggedIn}
+              onTriggerAuth={() => setShowAuthModal(true)}
+              onSearch={setSearchQuery}
+              onNavigateToDashboard={(view) => setActiveView(view)}
+              onTriggerMajorLink={handleLinkNationalMajor}
+            />
+
+            {/* Locked State paywall visual lock overlay */}
+            <div className="relative border-t border-slate-200/60 pt-16 pb-20 text-center bg-slate-100/35 rounded-2xl border border-slate-200">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/90 to-transparent pointer-events-none -mt-40" />
+              <div className="max-w-md mx-auto space-y-6 relative z-10 px-4">
+                <div className="w-14 h-14 bg-amber-50 border border-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto shadow-xs">
+                  <TrendingUp className="w-7 h-7 text-amber-500 animate-bounce" />
+                </div>
+                <h3 className="text-2xl font-extrabold text-slate-900 font-outfit">
+                  {language === 'zh' ? '🔑 登录解锁完整多维分析大厅' : '🔑 Log In to Unlock Interactive Dashboards'}
+                </h3>
+                <p className="text-slate-550 text-slate-500 text-sm leading-relaxed">
+                  {language === 'zh'
+                    ? '我们的全美专业透视、标杆院校地图（UMich / Rice）、学分课程依赖流及折线收益 ROI 工具仅限注册用户使用。您可以一键登录体验完整版！'
+                    : 'Access to detailed major comparisons, UMich/Rice network maps, lifecycle curves and credit bento flows requires a free account.'}
+                </p>
+                <button 
+                  onClick={() => setShowAuthModal(true)}
+                  className="px-8 py-3.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
+                >
+                  {language === 'zh' ? '一键登录体验' : 'Sign In Now'}
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div id="interactive-dashboard-anchor" className="pt-4 border-t border-slate-200" />
+
+            {/* Modern Segmented Tab Switcher */}
+            <div className="flex border border-slate-200 bg-white/85 p-1.5 rounded-2xl max-w-2xl mx-auto shadow-xs gap-1.5">
           <button
             onClick={() => setActiveView('national')}
             className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
@@ -179,10 +301,12 @@ export default function App() {
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.2 }}
             >
-              <UniversityNavigator 
-                language={language}
-                onLinkNationalMajor={handleLinkNationalMajor}
-              />
+              <div id="university-navigator-heading">
+                <UniversityNavigator 
+                  language={language}
+                  onLinkNationalMajor={handleLinkNationalMajor}
+                />
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -404,7 +528,7 @@ export default function App() {
         </section>
 
         {/* Section: Lifetime ROI curves with Cost-of-Living adjustment */}
-        <section aria-labelledby="roi-metrics-heading">
+        <section aria-labelledby="roi-metrics-heading" id="roi-charts-heading">
           <ROICharts language={language} />
         </section>
 
@@ -428,6 +552,8 @@ export default function App() {
             selectedDetailedFieldId={selectedDetailedField}
             onSelectDetailedField={handleSelectDetailedField}
             language={language}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
           />
         </section>
 
@@ -462,10 +588,475 @@ export default function App() {
             </div>
           </div>
         </footer>
-
             </motion.div>
           )}
         </AnimatePresence>
+          </>
+        )}
+
+        {/* Sleek Custom Sign In / Sign Up Modal */}
+        {showAuthModal && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-2xl p-6 md:p-8 max-w-lg w-full border border-slate-200 shadow-2xl relative text-left"
+            >
+              <button 
+                onClick={() => setShowAuthModal(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className="space-y-6 mt-2">
+                
+                {/* Step Progress Indicators */}
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border ${
+                    authStep === 1 
+                      ? 'bg-blue-600 text-white border-blue-600' 
+                      : 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                  }`}>
+                    {authStep > 1 ? <Check className="w-4 h-4" /> : '1'}
+                  </div>
+                  <div className="h-0.5 w-12 bg-slate-200" />
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border ${
+                    authStep === 2 
+                      ? 'bg-blue-600 text-white border-blue-600' 
+                      : authStep > 2 
+                        ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                        : 'bg-slate-50 text-slate-400 border-slate-200'
+                  }`}>
+                    {authStep > 2 ? <Check className="w-4 h-4" /> : '2'}
+                  </div>
+                  <div className="h-0.5 w-12 bg-slate-200" />
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border ${
+                    authStep === 3 
+                      ? 'bg-blue-600 text-white border-blue-600' 
+                      : 'bg-slate-50 text-slate-400 border-slate-200'
+                  }`}>
+                    3
+                  </div>
+                </div>
+
+                {/* STEP 1: Basic Credentials */}
+                {authStep === 1 && (
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <div className="flex justify-center mb-2">
+                        <div className="p-3 bg-blue-50 border border-blue-100 rounded-2xl shadow-xs">
+                          <GraduationCap className="w-8 h-8 text-blue-600" />
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-black text-slate-900 font-outfit tracking-tight">
+                        {language === 'zh' ? '开启 MajorAnalytics 之旅' : 'Join MajorAnalytics'}
+                      </h3>
+                      <p className="text-slate-500 text-xs mt-1">
+                        {language === 'zh' ? '请输入您的基础信息以创建个人档案' : 'Enter your details to construct your profile'}
+                      </p>
+                    </div>
+
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      const emailVal = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+                      const nameVal = (e.currentTarget.elements.namedItem('name') as HTMLInputElement).value;
+                      
+                      if (emailVal.trim() && nameVal.trim()) {
+                        setRegEmail(emailVal);
+                        setRegName(nameVal);
+                        
+                        // Direct bypass for fast demo login
+                        if (emailVal.toLowerCase() === 'demo@college.edu') {
+                          setUserEmail(emailVal);
+                          fetchUserProfile(emailVal);
+                          setIsLoggedIn(true);
+                          setShowAuthModal(false);
+                          setTimeout(() => {
+                            const el = document.getElementById('interactive-dashboard-anchor');
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }, 200);
+                        } else {
+                          setAuthStep(2);
+                        }
+                      }
+                    }} className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 px-0.5">
+                          {language === 'zh' ? '您的姓名 / 昵称' : 'Your Name / Nickname'}
+                        </label>
+                        <input 
+                          name="name"
+                          type="text"
+                          required
+                          value={regName}
+                          onChange={(e) => setRegName(e.target.value)}
+                          className="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder={language === 'zh' ? '例如：张同学、李老师' : 'e.g. John Doe'}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 px-0.5">
+                          {language === 'zh' ? '邮箱地址' : 'Email Address'}
+                        </label>
+                        <input 
+                          name="email"
+                          type="email"
+                          required
+                          value={regEmail}
+                          onChange={(e) => setRegEmail(e.target.value)}
+                          className="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="name@example.com"
+                        />
+                      </div>
+
+                      <button 
+                        type="submit"
+                        className="w-full py-3 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer mt-2"
+                      >
+                        {language === 'zh' ? '下一步：选择您的身份' : 'Next: Select Your Identity'}
+                      </button>
+                      
+                      <div className="relative my-4 flex items-center justify-center">
+                        <div className="absolute border-t border-slate-200 w-full z-0" />
+                        <span className="px-3 bg-white text-[10px] text-slate-400 font-bold uppercase relative z-10 tracking-widest">
+                          {language === 'zh' ? '或者一键快速体验' : 'OR QUICK EXPERIENCE'}
+                        </span>
+                      </div>
+                      
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          setRegEmail('demo@college.edu');
+                          setRegName('Demo Student');
+                          setUserEmail('demo@college.edu');
+                          fetchUserProfile('demo@college.edu');
+                          setIsLoggedIn(true);
+                          setShowAuthModal(false);
+                          setTimeout(() => {
+                            const el = document.getElementById('interactive-dashboard-anchor');
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }, 200);
+                        }}
+                        className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
+                      >
+                        🚀 {language === 'zh' ? '一键演示登录 (免注册直接进入)' : 'One-Click Demo Login'}
+                      </button>
+                    </form>
+                  </div>
+                )}
+
+                {/* STEP 2: Role Card Selection */}
+                {authStep === 2 && (
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <h3 className="text-xl font-black text-slate-900 font-outfit tracking-tight">
+                        {language === 'zh' ? '请选择您的专属身份' : 'Select Your Professional Identity'}
+                      </h3>
+                      <p className="text-slate-500 text-xs mt-1">
+                        {language === 'zh' ? '身份将用于定制化多维 analysis 大厅的指引与报告' : 'This role will adapt interactive widgets and reports for you'}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2.5 max-h-72 overflow-y-auto pr-1">
+                      
+                      {/* Student Card */}
+                      <button
+                        onClick={() => { setRegRole('STUDENT'); setAuthStep(3); }}
+                        className="flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl text-left transition-all group cursor-pointer"
+                      >
+                        <div className="p-2 bg-blue-100 text-blue-600 rounded-xl group-hover:scale-105 transition-all">
+                          <GraduationCap className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900">
+                            {language === 'zh' ? '🎓 学生 (Student)' : '🎓 Student'}
+                          </h4>
+                          <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">
+                            {language === 'zh' ? '探索本科学科方向、起薪分布与毕业职业流向。' : 'Explore major categories, peak earnings, and career paths.'}
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Parent Card */}
+                      <button
+                        onClick={() => { setRegRole('PARENT'); setAuthStep(3); }}
+                        className="flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl text-left transition-all group cursor-pointer"
+                      >
+                        <div className="p-2 bg-emerald-100 text-emerald-600 rounded-xl group-hover:scale-105 transition-all">
+                          <Home className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900">
+                            {language === 'zh' ? '🏠 家长 (Parent)' : '🏠 Parent'}
+                          </h4>
+                          <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">
+                            {language === 'zh' ? '科学规划教育资金投入产出比，把关职业中后期收益。' : 'Evaluate college tuition ROI and prime-age wage metrics.'}
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Counselor Card */}
+                      <button
+                        onClick={() => { setRegRole('COUNSELOR'); setAuthStep(3); }}
+                        className="flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl text-left transition-all group cursor-pointer"
+                      >
+                        <div className="p-2 bg-purple-100 text-purple-600 rounded-xl group-hover:scale-105 transition-all">
+                          <Compass className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900">
+                            {language === 'zh' ? '🗺️ 升学指导 (College Counselor)' : '🗺️ College Counselor'}
+                          </h4>
+                          <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">
+                            {language === 'zh' ? '协助学生对照各校荣誉课程与选专业网格，精准择校择系。' : 'Guide students using major mapping grids and benchmark stats.'}
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Teacher Card */}
+                      <button
+                        onClick={() => { setRegRole('TEACHER'); setAuthStep(3); }}
+                        className="flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-xl text-left transition-all group cursor-pointer"
+                      >
+                        <div className="p-2 bg-amber-100 text-amber-600 rounded-xl group-hover:scale-105 transition-all">
+                          <BookOpen className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900">
+                            {language === 'zh' ? '🍎 教师 (Teacher)' : '🍎 Teacher'}
+                          </h4>
+                          <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">
+                            {language === 'zh' ? '掌握社会宏观学科人才缺口与大类产出，微调教学设计。' : 'Understand macroeconomic talent gaps and curriculum alignment.'}
+                          </p>
+                        </div>
+                      </button>
+
+                      {/* Other Card */}
+                      <button
+                        onClick={() => { setRegRole('OTHER'); setAuthStep(3); }}
+                        className="flex items-center gap-3.5 p-3.5 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-300 rounded-xl text-left transition-all group cursor-pointer"
+                      >
+                        <div className="p-2 bg-rose-100 text-rose-600 rounded-xl group-hover:scale-105 transition-all">
+                          <Briefcase className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900">
+                            {language === 'zh' ? '💼 其他 (Other / General)' : '💼 Other / General'}
+                          </h4>
+                          <p className="text-[10px] text-slate-500 mt-0.5 leading-relaxed">
+                            {language === 'zh' ? '调研行业流动性趋势、地区生活开销指数等专业分析。' : 'Track regional index benchmarks and career analytics.'}
+                          </p>
+                        </div>
+                      </button>
+
+                    </div>
+
+                    <button 
+                      type="button"
+                      onClick={() => setAuthStep(1)}
+                      className="w-full py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer mt-1"
+                    >
+                      {language === 'zh' ? '返回上一步' : 'Back'}
+                    </button>
+                  </div>
+                )}
+
+                {/* STEP 3: Differentiated Role Details Input */}
+                {authStep === 3 && (
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-100 rounded-full text-xs font-bold text-blue-700">
+                        {regRole === 'STUDENT' && <span>🎓 {language === 'zh' ? '学生信息录入' : 'Student Setup'}</span>}
+                        {regRole === 'PARENT' && <span>🏠 {language === 'zh' ? '家长信息录入' : 'Parent Setup'}</span>}
+                        {regRole === 'COUNSELOR' && <span>🗺️ {language === 'zh' ? '指导员信息录入' : 'Counselor Setup'}</span>}
+                        {regRole === 'TEACHER' && <span>🍎 {language === 'zh' ? '教师信息录入' : 'Teacher Setup'}</span>}
+                        {regRole === 'OTHER' && <span>💼 {language === 'zh' ? '其他身份录入' : 'Other Setup'}</span>}
+                      </div>
+                      <h3 className="text-lg font-black text-slate-900 font-outfit mt-2 tracking-tight">
+                        {language === 'zh' ? '完善您的专属画像' : 'Refine Your Identity Profile'}
+                      </h3>
+                      <p className="text-slate-500 text-xs mt-0.5">
+                        {language === 'zh' ? '几项专属配置将有助于我们呈现更精准的数据' : 'Provide these options to enable tailored dashboard parameters'}
+                      </p>
+                    </div>
+
+                    <form onSubmit={async (e) => {
+                      e.preventDefault();
+                      
+                      try {
+                        // Call Express BFF POST /api/users to store in Postgres
+                        const response = await fetch('/api/users', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            email: regEmail,
+                            name: regName,
+                            userType: regRole,
+                            schoolName: regSchool || null,
+                            gradYear: (regRole === 'STUDENT' || regRole === 'PARENT') ? regGradYear : null,
+                            counselorSpecialty: regRole === 'COUNSELOR' ? regSpecialty : null,
+                            teacherSubject: regRole === 'TEACHER' ? regSubject : null,
+                            customNote: regRole === 'OTHER' ? regNote : null
+                          })
+                        });
+
+                        if (response.ok) {
+                          const data = await response.json();
+                          setUserProfile(data);
+                        } else {
+                          // Fallback manually
+                          setUserProfile({
+                            email: regEmail,
+                            name: regName,
+                            userType: regRole,
+                            schoolName: regSchool || null,
+                            gradYear: parseInt(regGradYear, 10) || null
+                          });
+                        }
+                      } catch (err) {
+                        setUserProfile({
+                          email: regEmail,
+                          name: regName,
+                          userType: regRole,
+                          schoolName: regSchool || null,
+                          gradYear: parseInt(regGradYear, 10) || null
+                        });
+                      }
+
+                      setUserEmail(regEmail);
+                      setIsLoggedIn(true);
+                      setShowAuthModal(false);
+
+                      setTimeout(() => {
+                        const el = document.getElementById('interactive-dashboard-anchor');
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }, 200);
+
+                    }} className="space-y-4">
+                      
+                      {/* 1. School / Institution name input (Common for most) */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 px-0.5">
+                          {regRole === 'STUDENT' ? (language === 'zh' ? '就读/目标学校名称' : 'Current / Target School') :
+                           regRole === 'PARENT' ? (language === 'zh' ? '孩子当前就读学校' : 'Child\'s Current School') :
+                           regRole === 'TEACHER' ? (language === 'zh' ? '任教学校名称' : 'School / Institution Name') :
+                           regRole === 'COUNSELOR' ? (language === 'zh' ? '服务机构/学校名称' : 'Agency / High School Name') :
+                           (language === 'zh' ? '所在单位 / 组织' : 'Organization Name')}
+                        </label>
+                        <input 
+                          type="text"
+                          value={regSchool}
+                          onChange={(e) => setRegSchool(e.target.value)}
+                          required
+                          className="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder={language === 'zh' ? '例如：密歇根大学、北京四中、某某留学机构' : 'e.g. University of Michigan'}
+                        />
+                      </div>
+
+                      {/* 2. Target graduation / Entry year select (Only for Students and Parents) */}
+                      {(regRole === 'STUDENT' || regRole === 'PARENT') && (
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 px-0.5">
+                            {language === 'zh' ? '目标大学入学/毕业年份' : 'Target College Entry Year'}
+                          </label>
+                          <select
+                            value={regGradYear}
+                            onChange={(e) => setRegGradYear(e.target.value)}
+                            className="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                            <option value="2031">2031</option>
+                          </select>
+                        </div>
+                      )}
+
+                      {/* 3. Teaching Subject select (Only for Teachers) */}
+                      {regRole === 'TEACHER' && (
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 px-0.5">
+                            {language === 'zh' ? '主要授课领域 / 学科' : 'Teaching Subject Field'}
+                          </label>
+                          <select
+                            value={regSubject}
+                            onChange={(e) => setRegSubject(e.target.value)}
+                            className="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value="STEM">{language === 'zh' ? '数理化与工程科学 (STEM)' : 'STEM & Science'}</option>
+                            <option value="Humanities">{language === 'zh' ? '人文社会科学与自由艺术' : 'Humanities & Arts'}</option>
+                            <option value="Business">{language === 'zh' ? '经济学与商科管理' : 'Business & Economics'}</option>
+                            <option value="Healthcare">{language === 'zh' ? '医学与健康生命科学' : 'Healthcare & Medicine'}</option>
+                            <option value="Other">{language === 'zh' ? '其他跨学科领域' : 'Other Subjects'}</option>
+                          </select>
+                        </div>
+                      )}
+
+                      {/* 4. Counselor Specialty focus select (Only for Counselors) */}
+                      {regRole === 'COUNSELOR' && (
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 px-0.5">
+                            {language === 'zh' ? '核心咨询与指导方向' : 'Counseling Specialization'}
+                          </label>
+                          <select
+                            value={regSpecialty}
+                            onChange={(e) => setRegSpecialty(e.target.value)}
+                            className="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value="Global">{language === 'zh' ? '全球多国联合申请 (Global)' : 'Global Admissions'}</option>
+                            <option value="US">{language === 'zh' ? '美国精英本科申请 (US Focus)' : 'US Admissions'}</option>
+                            <option value="UK">{language === 'zh' ? '英国及英联邦高校 (UK Focus)' : 'UK Admissions'}</option>
+                            <option value="Arts">{language === 'zh' ? '艺术与创意设计专业 (Arts Portfolio)' : 'Arts & Design Portfolio'}</option>
+                            <option value="General">{language === 'zh' ? '综合职业生涯规划咨询' : 'General Career Planning'}</option>
+                          </select>
+                        </div>
+                      )}
+
+                      {/* 5. Custom Note (Only for Other) */}
+                      {regRole === 'OTHER' && (
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 px-0.5">
+                            {language === 'zh' ? '备注信息 / 研究兴趣' : 'Additional Notes / Research Interests'}
+                          </label>
+                          <textarea
+                            value={regNote}
+                            onChange={(e) => setRegNote(e.target.value)}
+                            rows={3}
+                            className="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder={language === 'zh' ? '选填：写下您关注的专业方向或具体研究指标' : 'Optional: e.g. focusing on high-ROI STEM outcomes'}
+                          />
+                        </div>
+                      )}
+
+                      <button 
+                        type="submit"
+                        className="w-full py-3.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer mt-2"
+                      >
+                        🌟 {language === 'zh' ? '立即完成注册并解锁' : 'Complete Registration & Unlock'}
+                      </button>
+
+                      <button 
+                        type="button"
+                        onClick={() => setAuthStep(2)}
+                        className="w-full py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-semibold transition-all cursor-pointer"
+                      >
+                        {language === 'zh' ? '返回身份选择' : 'Back'}
+                      </button>
+
+                    </form>
+                  </div>
+                )}
+
+              </div>
+            </motion.div>
+          </div>
+        )}
 
       </main>
     </div>

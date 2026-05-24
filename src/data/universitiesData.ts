@@ -4,6 +4,7 @@ export interface MajorLink {
   nameZh: string;
   submajors?: string[];
   nationalMajorId?: string; // Links back to national majors from majorsData.ts for salary metrics
+  degreeLevel?: 'BACHELOR' | 'MASTER' | 'DOCTORATE';
   notesEn?: string;
   notesZh?: string;
 }

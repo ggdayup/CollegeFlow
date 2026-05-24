@@ -8,28 +8,6 @@ export default defineConfig(() => {
     plugins: [
       react(),
       tailwindcss(),
-      {
-        name: 'database-api-middleware',
-        configureServer(server) {
-          server.middlewares.use(async (req, res, next) => {
-            if (req.url === '/api/universities') {
-              try {
-                const { getDynamicUniversities } = await import('./src/utils/viteApiMiddleware.js');
-                const data = await getDynamicUniversities();
-                res.setHeader('Content-Type', 'application/json');
-                res.writeHead(200);
-                res.end(JSON.stringify(data));
-              } catch (e: any) {
-                console.error('[ViteMiddleware] Error serving dynamic universities:', e);
-                res.writeHead(500);
-                res.end(JSON.stringify({ error: e.message || 'Internal Server Error' }));
-              }
-            } else {
-              next();
-            }
-          });
-        }
-      }
     ],
     resolve: {
       alias: {
@@ -37,6 +15,12 @@ export default defineConfig(() => {
       },
     },
     server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:38080',
+          changeOrigin: true,
+        },
+      },
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',

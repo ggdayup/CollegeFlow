@@ -1,9 +1,13 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { universities, University, UniversitySchool, MajorLink } from '../data/universitiesData';
-import { majors, getDetailedFieldById, getBroadFieldById } from '../data/majorsData';
+import React from 'react';
+import { University, UniversitySchool, MajorLink } from '../data/universitiesData';
+import { majors } from '../data/majorsData';
 import { calculateSubjectDemands, getDemandBadgeClass, getDemandLabel } from '../utils/demands';
+import { SubjectDemands } from '../types';
 import CreditBento from './CreditBento';
 import PrerequisiteFlow from './PrerequisiteFlow';
+import SubjectRadarChart from './SubjectRadarChart';
+import { useUniversityNavigator } from './useUniversityNavigator';
+import { toTraditional } from '../utils/chineseLocalization';
 import { 
   Search, 
   HelpCircle, 
@@ -29,7 +33,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 
 interface UniversityNavigatorProps {
-  language: 'zh' | 'en';
+  language: 'zh' | 'zht' | 'en';
   onLinkNationalMajor?: (nationalId: string) => void;
 }
 
@@ -108,324 +112,124 @@ const US_STATE_ZH: Record<string, string> = {
   CO: '科罗拉多州', CT: '康涅狄格州', DE: '特拉华州', FL: '佛罗里达州', GA: '佐治亚州',
   HI: '夏威夷州', ID: '爱达荷州', IL: '伊利诺伊州', IN: '印第安纳州', IA: '艾奥瓦州',
   KS: '堪萨斯州', KY: '肯塔基州', LA: '路易斯安那州', ME: '缅因州', MD: '马里兰州',
-  MA: '马萨诸塞州', MI: '密歇根州', MN: '明尼苏达州', MS: '密西西比州', MO: '密苏里州',
+  MA: '马萨诸塞州', MI: '明尼苏达州', MN: '明尼苏达州', MS: '密西西比州', MO: '密苏里州',
   MT: '蒙大拿州', NE: '内布拉斯加州', NV: '内华达州', NH: '新罕布什尔州', NJ: '新泽西州',
   NM: '新墨西哥州', NY: '纽约州', NC: '北卡罗来纳州', ND: '北卡罗来纳州', OH: '俄亥俄州',
-  OK: '俄克拉荷马州', OR: '俄勒冈州', PA: '宾夕法尼亚州', RI: '罗得岛州', SC: '南卡罗来纳州',
+  OK: '俄跨拉荷马州', OR: '俄勒冈州', PA: '宾夕法尼亚州', RI: '罗得岛州', SC: '南卡罗来纳州',
   SD: '南达科他州', TN: '田纳西州', TX: '德克萨斯州', UT: '犹他州', VT: '佛蒙特州',
-  VA: '弗吉尼亚州', WA: '华盛顿州', WV: '西弗吉尼亚州', WI: '威斯康星州', WY: '怀阅明州'
+  VA: '弗吉尼亚州', WA: '华盛顿州', WV: '西弗吉尼亚州', WI: '威斯康星州', WY: '怀俄明州'
 };
 
 export default function UniversityNavigator({ language, onLinkNationalMajor }: UniversityNavigatorProps) {
-  const [activeUniId, setActiveUniId] = useState<string>('umich');
-  const [selectedSchoolId, setSelectedSchoolId] = useState<string>('lsa');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activeCategoryTab, setActiveCategoryTab] = useState<string>('');
-  const [showcaseNationalMajorId, setShowcaseNationalMajorId] = useState<string | null>(null);
 
-  // States for the 1000-university Directory Hub
-  const [uniSearchQuery, setUniSearchQuery] = useState<string>('');
-  const [uniTypeFilter, setUniTypeFilter] = useState<string>('all');
-  const [uniCountryFilter, setUniCountryFilter] = useState<string>('all');
-  const [uniStateFilter, setUniStateFilter] = useState<string>('all');
-  const [uniPage, setUniPage] = useState<number>(1);
-  const uniPageSize = 6;
-  const [uniSortBy, setUniSortBy] = useState<string>('nameEn');
+  const getUniversityName = (u: any) => {
+    if (!u) return '';
+    if (language === 'en') return u.nameEn;
+    if (language === 'zht') return u.nameZht || toTraditional(u.nameZh || u.nameEn);
+    return u.nameZh || u.nameEn;
+  };
 
-  // DB universities loading state
-  const [dbUniversities, setDbUniversities] = useState<University[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const getSchoolName = (s: any) => {
+    if (!s) return '';
+    if (language === 'en') return s.nameEn;
+    if (language === 'zht') return s.nameZht || toTraditional(s.nameZh || s.nameEn);
+    return s.nameZh || s.nameEn;
+  };
 
-  useEffect(() => {
-    let active = true;
-    async function load() {
-      try {
-        const res = await fetch('/api/universities');
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        if (active) {
-          setDbUniversities(data);
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error('Failed to load universities from API, falling back to static seeds:', err);
-        if (active) {
-          setLoading(false);
-        }
-      }
-    }
-    load();
-    return () => {
-      active = false;
-    };
-  }, []);
+  const getMajorName = (m: any) => {
+    if (!m) return '';
+    if (language === 'en') return m.nameEn;
+    if (language === 'zht') return m.nameZht || toTraditional(m.nameZh || m.nameEn);
+    return m.nameZh || m.nameEn;
+  };
 
-  // Resilient Dual-path loading strategy: automatic static fallback
-  const finalUnis = useMemo(() => {
-    return dbUniversities.length > 0 ? dbUniversities : universities;
-  }, [dbUniversities]);
+  const getFieldName = (f: any) => {
+    if (!f) return '';
+    if (language === 'en') return f.nameEn;
+    if (language === 'zht') return f.nameZht || toTraditional(f.nameZh || f.nameEn);
+    return f.nameZh || f.nameEn;
+  };
 
-  // Retrieve current active university object
-  const activeUni = useMemo(() => {
-    return finalUnis.find(u => u.id === activeUniId) || finalUnis[0];
-  }, [activeUniId, finalUnis]);
+  const {
+    loading,
+    activeUniId,
+    setActiveUniId,
+    activeUni,
+    selectedSchoolId,
+    setSelectedSchoolId,
+    activeSchool,
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+    activeCategoryTab,
+    setActiveCategoryTab,
+    showcaseNationalMajorId,
+    setShowcaseNationalMajorId,
+    showcaseMajorObj,
+    uniSearchQuery,
+    setUniSearchQuery,
+    uniTypeFilter,
+    setUniTypeFilter,
+    uniCountryFilter,
+    setUniCountryFilter,
+    uniStateFilter,
+    setUniStateFilter,
+    uniSortBy,
+    setUniSortBy,
+    uniPage,
+    setUniPage,
+    totalPages,
+    filteredUniversities,
+    paginatedUniversities,
+    landmarks,
+    uniqueCountries,
+    uniqueStates,
+    handleOpenNationalShowcase,
+    finalUnis,
+    degreeLevelFilter,
+    setDegreeLevelFilter
+  } = useUniversityNavigator();
 
-  // Landmark/Prestigious universities lookup
-  const landmarks = useMemo(() => {
-    const list = [];
-    const ids = ['harvard', 'mit', 'stanford', 'princeton', 'berkeley', 'umich', 'rice'];
-    ids.forEach(id => {
-      const u = finalUnis.find(x => x.id === id);
-      if (u) list.push(u);
-    });
-    return list;
-  }, [finalUnis]);
-
-  // Collect unique countries for geographic filtering (pinning popular options first)
-  const uniqueCountries = useMemo(() => {
-    const countriesSet = new Set<string>();
-    finalUnis.forEach(u => {
-      if (u.countryEn) {
-        countriesSet.add(u.countryEn);
-      }
-    });
-
-    const allCountries = Array.from(countriesSet);
-    const popular = [
-      'United States',
-      'United Kingdom',
-      'Canada',
-      'Australia',
-      'Singapore',
-      'Hong Kong'
-    ];
-
-    const popularPresent = popular.filter(c => countriesSet.has(c));
-    const others = allCountries.filter(c => !popular.includes(c)).sort();
-
-    return [...popularPresent, ...others];
-  }, [finalUnis]);
-
-  // Collect unique US states for filtering (pinning popular options first)
-  const uniqueStates = useMemo(() => {
-    const statesSet = new Set<string>();
-    finalUnis.forEach(u => {
-      if (u.countryEn === 'United States' || u.locationEn.includes(', ')) {
-        const parts = u.locationEn.split(', ');
-        if (parts.length > 1) {
-          statesSet.add(parts[1]);
-        }
-      }
-    });
-
-    const allStates = Array.from(statesSet);
-    const popular = ['CA', 'NY', 'MA', 'TX', 'PA', 'IL'];
-
-    const popularPresent = popular.filter(s => statesSet.has(s));
-    const others = allStates.filter(s => !popular.includes(s)).sort();
-
-    return [...popularPresent, ...others];
-  }, [finalUnis]);
-
-  // Set page back to 1 if filters or sorting change
-  useEffect(() => {
-    setUniPage(1);
-  }, [uniSearchQuery, uniTypeFilter, uniCountryFilter, uniStateFilter, uniSortBy]);
-
-  // Filter and Sort 1000 universities based on search & criteria & sorting rules
-  const filteredUniversities = useMemo(() => {
-    const filtered = finalUnis.filter(u => {
-      const query = uniSearchQuery.trim().toLowerCase();
-      const matchesSearch = !query || 
-        u.nameEn.toLowerCase().includes(query) || 
-        u.nameZh.toLowerCase().includes(query) || 
-        u.shortNameEn.toLowerCase().includes(query) || 
-        u.shortNameZh.toLowerCase().includes(query);
-
-      let matchesType = true;
-      if (uniTypeFilter !== 'all') {
-        const badgeLower = u.badgeEn.toLowerCase();
-        const isPrivate = badgeLower.includes('private') || badgeLower.includes('ivy') || badgeLower.includes('liberal');
-        const isPublic = badgeLower.includes('public') || badgeLower.includes('flagship') || badgeLower.includes('ivy');
-        const isStem = badgeLower.includes('tech') || badgeLower.includes('stem');
-        
-        if (uniTypeFilter === 'private' && !isPrivate) matchesType = false;
-        if (uniTypeFilter === 'public' && !isPublic) matchesType = false;
-        if (uniTypeFilter === 'stem' && !isStem) matchesType = false;
-      }
-
-      let matchesCountry = true;
-      if (uniCountryFilter !== 'all') {
-        if (u.countryEn !== uniCountryFilter) {
-          matchesCountry = false;
-        }
-      }
-
-      let matchesState = true;
-      if (uniCountryFilter === 'United States' && uniStateFilter !== 'all') {
-        const parts = u.locationEn.split(', ');
-        const state = parts.length > 1 ? parts[1] : '';
-        if (state !== uniStateFilter) matchesState = false;
-      }
-
-      return matchesSearch && matchesType && matchesCountry && matchesState;
-    });
-
-    const sorted = [...filtered];
-    if (uniSortBy === 'qsRank') {
-      sorted.sort((a, b) => {
-        const rankA = a.qsRank && a.qsRank > 0 && a.qsRank < 999 ? a.qsRank : 999999;
-        const rankB = b.qsRank && b.qsRank > 0 && b.qsRank < 999 ? b.qsRank : 999999;
-        if (rankA !== rankB) return rankA - rankB;
-        return a.nameEn.localeCompare(b.nameEn);
-      });
-    } else if (uniSortBy === 'usNewsRank') {
-      sorted.sort((a, b) => {
-        const rankA = a.usNewsRank && a.usNewsRank > 0 && a.usNewsRank < 999 ? a.usNewsRank : 999999;
-        const rankB = b.usNewsRank && b.usNewsRank > 0 && b.usNewsRank < 999 ? b.usNewsRank : 999999;
-        if (rankA !== rankB) return rankA - rankB;
-        return a.nameEn.localeCompare(b.nameEn);
-      });
-    } else {
-      sorted.sort((a, b) => a.nameEn.localeCompare(b.nameEn));
-    }
-
-    return sorted.map(u => {
-      let prestigeNumber = u.prestigeNumber;
-      let prestigeLabelEn = u.prestigeLabelEn;
-      let prestigeLabelZh = u.prestigeLabelZh;
-
-      if (uniSortBy === 'qsRank') {
-        prestigeNumber = u.qsRank && u.qsRank > 0 && u.qsRank < 999 ? `#${u.qsRank}` : 'Unranked';
-        prestigeLabelEn = 'QS World Rank';
-        prestigeLabelZh = 'QS 世界排名';
-      } else if (uniSortBy === 'usNewsRank') {
-        prestigeNumber = u.usNewsRank && u.usNewsRank > 0 && u.usNewsRank < 999 ? `#${u.usNewsRank}` : 'Unranked';
-        prestigeLabelEn = 'US News Rank';
-        prestigeLabelZh = 'US News 排名';
-      }
-
-      return {
-        ...u,
-        prestigeNumber,
-        prestigeLabelEn,
-        prestigeLabelZh
-      };
-    });
-  }, [uniSearchQuery, uniTypeFilter, uniCountryFilter, uniStateFilter, uniSortBy, finalUnis]);
-
-  // Paginated visible universities slice
-  const paginatedUniversities = useMemo(() => {
-    const startIndex = (uniPage - 1) * uniPageSize;
-    return filteredUniversities.slice(startIndex, startIndex + uniPageSize);
-  }, [filteredUniversities, uniPage]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredUniversities.length / uniPageSize));
-
-  // Synchronize school and category tabs when active university changes
-  useEffect(() => {
-    if (activeUni && activeUni.schools.length > 0) {
-      const firstSchool = activeUni.schools[0];
-      setSelectedSchoolId(firstSchool.id);
-      
-      if (firstSchool.categories && firstSchool.categories.length > 0) {
-        setActiveCategoryTab(firstSchool.categories[0].id);
-      } else {
-        setActiveCategoryTab('');
-      }
-    }
-  }, [activeUniId]);
-
-  // Synchronize category tab when school selection changes
-  const activeSchool = useMemo(() => {
-    const school = activeUni.schools.find(s => s.id === selectedSchoolId);
-    if (school) {
-      // If category tab is not valid for this school, reset it
-      if (school.categories && school.categories.length > 0) {
-        // Only set tab if current tab is not in the categories list
-        const tabExists = school.categories.some(c => c.id === activeCategoryTab);
-        if (!tabExists) {
-          setActiveCategoryTab(school.categories[0].id);
-        }
-      } else {
-        setActiveCategoryTab('');
-      }
-      return school;
-    }
-    
-    // Fallback safely
-    const fallback = activeUni.schools[0];
-    if (fallback && fallback.categories && fallback.categories.length > 0) {
-      setActiveCategoryTab(fallback.categories[0].id);
-    }
-    return fallback;
-  }, [selectedSchoolId, activeUni]);
-
-  // Search filter across the current active university's schools, categories, and majors
-  const searchResults = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return null;
-
-    const matchedSchools: { school: UniversitySchool; matchingMajors: MajorLink[] }[] = [];
-
-    activeUni.schools.forEach(school => {
-      const allSchoolMajors: MajorLink[] = [];
-      
-      if (school.categories) {
-        school.categories.forEach(cat => {
-          allSchoolMajors.push(...cat.majors);
-        });
-      } else if (school.majors) {
-        allSchoolMajors.push(...school.majors);
-      }
-
-      const matchingMajors = allSchoolMajors.filter(m => {
-        const matchesNameEn = m.nameEn.toLowerCase().includes(query);
-        const matchesNameZh = m.nameZh.toLowerCase().includes(query);
-        const matchesSubEn = m.submajors?.some(sm => sm.toLowerCase().includes(query)) || false;
-        const matchesNotesEn = m.notesEn?.toLowerCase().includes(query) || false;
-        const matchesNotesZh = m.notesZh?.toLowerCase().includes(query) || false;
-        return matchesNameEn || matchesNameZh || matchesSubEn || matchesNotesEn || matchesNotesZh;
-      });
-
-      const schoolMatches = 
-        school.nameEn.toLowerCase().includes(query) || 
-        school.nameZh.toLowerCase().includes(query) || 
-        school.code.toLowerCase().includes(query) ||
-        school.descriptionEn.toLowerCase().includes(query) ||
-        school.descriptionZh.toLowerCase().includes(query);
-
-      if (matchingMajors.length > 0 || schoolMatches) {
-        matchedSchools.push({
-          school,
-          matchingMajors
-        });
-      }
-    });
-
-    return matchedSchools;
-  }, [searchQuery, activeUni]);
-
-  // Find info of the currently showcased national major
-  const showcaseMajorObj = useMemo(() => {
-    if (!showcaseNationalMajorId) return null;
-    const major = majors.find(m => m.id === showcaseNationalMajorId);
-    if (!major) return null;
-
-    const df = getDetailedFieldById(major.detailedFieldId);
-    const bf = getBroadFieldById(major.broadFieldId);
-    const demands = calculateSubjectDemands(major);
-
-    return {
-      major,
-      df,
-      bf,
-      demands
-    };
-  }, [showcaseNationalMajorId]);
-
-  const handleOpenNationalShowcase = (nationalId: string) => {
-    setShowcaseNationalMajorId(nationalId);
+  // Helper to render compact demands indicators on major cards
+  const renderMajorDemands = (nationalMajorId?: string) => {
+    if (!nationalMajorId) return null;
+    const standardMajor = majors.find(sm => sm.id === nationalMajorId);
+    if (!standardMajor) return null;
+    const demands = calculateSubjectDemands(standardMajor);
+    return (
+      <div className="grid grid-cols-5 gap-1 border-t border-slate-100 pt-2 mb-2 bg-slate-50/50 p-1 rounded-lg border border-slate-150">
+        <div className="text-center">
+          <div className="text-[8px] font-bold text-slate-400">{language === 'zh' ? '数' : 'M'}</div>
+          <div className={`text-[9px] font-extrabold rounded-md mt-0.5 border ${getDemandBadgeClass(demands.math)}`}>
+            {getDemandLabel(demands.math, language)}
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-[8px] font-bold text-slate-400">{language === 'zh' ? '物' : 'P'}</div>
+          <div className={`text-[9px] font-extrabold rounded-md mt-0.5 border ${getDemandBadgeClass(demands.physics)}`}>
+            {getDemandLabel(demands.physics, language)}
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-[8px] font-bold text-slate-400">{language === 'zh' ? '化' : 'C'}</div>
+          <div className={`text-[9px] font-extrabold rounded-md mt-0.5 border ${getDemandBadgeClass(demands.chemistry)}`}>
+            {getDemandLabel(demands.chemistry, language)}
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-[8px] font-bold text-slate-400">{language === 'zh' ? '生' : 'B'}</div>
+          <div className={`text-[9px] font-extrabold rounded-md mt-0.5 border ${getDemandBadgeClass(demands.biology)}`}>
+            {getDemandLabel(demands.biology, language)}
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="text-[8px] font-bold text-slate-400">{language === 'zh' ? '人' : 'H'}</div>
+          <div className={`text-[9px] font-extrabold rounded-md mt-0.5 border ${getDemandBadgeClass(demands.humanities)}`}>
+            {getDemandLabel(demands.humanities, language)}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -710,7 +514,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
 
                           <h4 className="font-extrabold text-xs text-slate-900 tracking-tight flex items-center gap-1 pt-0.5 line-clamp-1">
                             <School className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-600' : 'text-slate-400'}`} />
-                            <span>{language === 'zh' ? uni.nameZh : uni.nameEn}</span>
+                            <span>{getUniversityName(uni)}</span>
                           </h4>
 
                           <div className="flex items-center gap-1.5 text-[9px] font-mono font-bold">
@@ -795,9 +599,9 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
             </div>
             
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-              {language === 'zh' 
-                ? `${activeUni.nameZh} · 本科选专业地图与联动` 
-                : `${activeUni.shortNameEn} — Undergraduate Academic Explorer`}
+              {language === 'en'
+                ? `${activeUni.shortNameEn} — Undergraduate Academic Explorer`
+                : `${getUniversityName(activeUni)} · ${language === 'zht' ? '本科選專業地圖與聯動' : '本科选专业地图与联动'}`}
             </h2>
             
             <p className="text-slate-200 text-xs sm:text-sm leading-relaxed font-normal">
@@ -927,7 +731,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                         </span>
                       </div>
                       <h4 className="font-extrabold text-xs line-clamp-1 tracking-tight">
-                        {language === 'zh' ? school.nameZh : school.nameEn}
+                        {getSchoolName(school)}
                       </h4>
                     </div>
                     <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isSelected ? 'text-amber-400 rotate-90' : 'text-slate-400'}`} />
@@ -992,7 +796,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                               {school.code}
                             </span>
                             <h4 className="font-extrabold text-xs text-slate-800">
-                              {language === 'zh' ? school.nameZh : school.nameEn}
+                              {getSchoolName(school)}
                             </h4>
                           </div>
                           
@@ -1023,10 +827,10 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                               <div key={m.id} className="bg-white border border-slate-200 p-3.5 rounded-xl flex flex-col justify-between shadow-xs">
                                 <div>
                                   <h5 className="font-extrabold text-slate-800 text-sm leading-tight">
-                                    {language === 'zh' ? m.nameZh : m.nameEn}
+                                    {getMajorName(m)}
                                   </h5>
                                   <p className="text-[10px] text-slate-400 font-medium tracking-wide mt-0.5 italic">
-                                    {language === 'zh' ? m.nameEn : m.nameZh}
+                                    {language === 'en' ? getMajorName(m) : m.nameEn}
                                   </p>
 
                                   {m.submajors && m.submajors.length > 0 && (
@@ -1038,6 +842,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                                       ))}
                                     </div>
                                   )}
+                                  {renderMajorDemands(m.nationalMajorId)}
                                 </div>
 
                                 {m.nationalMajorId && (
@@ -1085,165 +890,258 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
 
                   <div>
                     <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                      {language === 'zh' ? activeSchool.nameZh : activeSchool.nameEn}
+                      {getSchoolName(activeSchool)}
                     </h3>
-                    <p className="text-slate-500 text-xs sm:text-sm mt-1">
-                      {language === 'zh' ? activeSchool.subtitleZh : activeSchool.subtitleEn}
+                    <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">
+                      {language === 'en'
+                        ? activeSchool.subtitleEn
+                        : language === 'zht'
+                          ? toTraditional(activeSchool.subtitleZh || activeSchool.subtitleEn)
+                          : activeSchool.subtitleZh || activeSchool.subtitleEn}
                     </p>
                   </div>
 
                   <p className="text-slate-650 text-slate-700 text-xs leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    {language === 'zh' ? activeSchool.descriptionZh : activeSchool.descriptionEn}
+                    {language === 'en'
+                      ? activeSchool.descriptionEn
+                      : language === 'zht'
+                        ? toTraditional(activeSchool.descriptionZh || activeSchool.descriptionEn)
+                        : activeSchool.descriptionZh || activeSchool.descriptionEn}
                   </p>
                 </div>
 
-                {/* Subcategories (like LSA with nesting categories) */}
-                {activeSchool.categories ? (
-                  <div className="space-y-6">
-                    {/* Inner Tabs for nested categories to avoid page overflow */}
-                    <div className="flex flex-wrap gap-1.5 p-1.5 bg-slate-100/80 border border-slate-200 rounded-2xl">
-                      {activeSchool.categories.map(cat => {
-                        const isTabActive = activeCategoryTab === cat.id;
-                        return (
-                          <button
-                            key={cat.id}
-                            onClick={() => setActiveCategoryTab(cat.id)}
-                            className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-center cursor-pointer ${
-                              isTabActive
-                                ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-205 border-transparent'
-                                : 'text-slate-500 hover:text-slate-800'
-                            }`}
-                          >
-                            {language === 'zh' ? cat.nameZh : cat.nameEn}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {activeSchool.categories.map(cat => {
-                      if (activeCategoryTab !== cat.id) return null;
+                {/* Degree Level Selector (Dynamic Tab Bar) */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50 p-3 rounded-2xl border border-slate-150">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse shrink-0" />
+                    <span className="text-xs font-black text-slate-700 tracking-tight">
+                      {language === 'en'
+                        ? 'Select Degree Level'
+                        : language === 'zht'
+                          ? '選擇學位層級'
+                          : '选择学位层级'}
+                    </span>
+                  </div>
+                  <div className="flex bg-slate-100 p-1 rounded-xl gap-1 shrink-0 shadow-inner">
+                    {[
+                      { id: 'BACHELOR', labelEn: "Bachelor's", labelZh: '本科' },
+                      { id: 'MASTER', labelEn: "Master's", labelZh: '硕士' },
+                      { id: 'DOCTORATE', labelEn: 'Doctorate', labelZh: '博士' },
+                    ].map(tab => {
+                      const isActive = degreeLevelFilter === tab.id;
                       return (
-                        <div key={cat.id} className="space-y-4">
-                          <div className="bg-blue-50/25 border border-blue-100 rounded-2xl p-4">
-                            <h4 className="font-extrabold text-sm text-slate-850 flex items-center gap-1.5 text-blue-900">
-                              <Compass className="w-4 h-4 text-blue-600" />
-                              {language === 'zh' ? cat.nameZh : cat.nameEn}
-                            </h4>
-                            {cat.descriptionEn && (
-                              <p className="text-[11px] text-slate-500 mt-1 leading-normal">
-                                {language === 'zh' && cat.descriptionZh ? cat.descriptionZh : cat.descriptionEn}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {cat.majors.map(m => (
-                              <div key={m.id} className="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs hover:border-slate-350 transition-colors flex flex-col justify-between">
-                                <div className="space-y-2.5">
-                                  <div>
-                                    <h5 className="font-extrabold text-slate-850 text-sm leading-tight">
-                                      {language === 'zh' ? m.nameZh : m.nameEn}
-                                    </h5>
-                                    <p className="text-[10px] text-slate-400 font-semibold tracking-wider italic mt-0.5 line-clamp-1">
-                                      {language === 'zh' ? m.nameEn : m.nameZh}
-                                    </p>
-                                  </div>
-
-                                  {m.submajors && m.submajors.length > 0 && (
-                                    <div className="flex flex-wrap gap-1 pb-1 flex-wrap">
-                                      {m.submajors.map((sm, sx) => (
-                                        <span key={sx} className="text-[9px] font-bold bg-slate-50 border border-slate-200 text-slate-550 px-1.5 py-0.5 rounded">
-                                          {sm}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  )}
-
-                                  {(m.notesZh || m.notesEn) && (
-                                    <div className="bg-amber-50/20 border border-amber-150 rounded-xl p-2.5 text-[10px] text-amber-805 flex items-start gap-1">
-                                      <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                                      <p className="text-amber-850 font-medium leading-relaxed">
-                                        {language === 'zh' && m.notesZh ? m.notesZh : m.notesEn}
-                                      </p>
-                                    </div>
-                                  )}
-                                </div>
-
-                                {m.nationalMajorId && (
-                                  <button
-                                    onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
-                                    className="mt-4 w-full bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 rounded-xl border border-slate-200 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                                  >
-                                    <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold" />
-                                    <span>{language === 'zh' ? '🧮 联动全美行业薪资回报' : 'Link National Career Data'}</span>
-                                  </button>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
+                        <button
+                          key={tab.id}
+                          onClick={() => setDegreeLevelFilter(tab.id as any)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            isActive
+                              ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-200'
+                              : 'text-slate-500 hover:text-slate-800'
+                          }`}
+                        >
+                          {language === 'en'
+                            ? tab.labelEn
+                            : language === 'zht'
+                              ? toTraditional(tab.labelZh)
+                              : tab.labelZh}
+                        </button>
                       );
                     })}
                   </div>
-                ) : (
-                  // Simple Schools (not nested by inner categories, like Business architecture etc.)
-                  <div className="space-y-4">
-                    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-                      <span className="text-slate-700 font-extrabold leading-normal">
-                        {language === 'zh' 
-                          ? `${activeSchool.nameZh} 共有 ${activeSchool.majors?.length || 0} 个专业项目分支建立映射：` 
-                          : `The ${activeSchool.nameEn} administers ${activeSchool.majors?.length || 0} core degree tracks:`}
-                      </span>
-                    </div>
+                </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {activeSchool.majors?.map(m => (
-                        <div key={m.id} className="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs hover:border-slate-350 transition-colors flex flex-col justify-between">
-                          <div className="space-y-2.5">
-                            <div>
-                              <h5 className="font-extrabold text-slate-850 text-sm leading-tight">
-                                {language === 'zh' ? m.nameZh : m.nameEn}
-                              </h5>
-                              <p className="text-[10px] text-slate-400 font-semibold tracking-wider italic mt-0.5 line-clamp-1">
-                                {language === 'zh' ? m.nameEn : m.nameZh}
-                              </p>
-                            </div>
+                {/* Subcategories or Simple Majors List with degree filtering */}
+                {(() => {
+                  const visibleCategories = activeSchool.categories?.filter(cat => cat.majors && cat.majors.length > 0) || [];
+                  const hasMajors = activeSchool.categories 
+                    ? visibleCategories.length > 0 
+                    : (activeSchool.majors && activeSchool.majors.length > 0);
 
-                            {m.submajors && m.submajors.length > 0 && (
-                              <div className="flex flex-wrap gap-1 leading-normal pb-0.5 flex-wrap">
-                                {m.submajors.map((sm, sx) => (
-                                  <span key={sx} className="text-[9px] font-bold bg-slate-50 border border-slate-200 text-slate-550 px-1.5 py-0.5 rounded">
-                                    {sm}
-                                  </span>
+                  if (!hasMajors) {
+                    return (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-center py-12 px-6 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200 flex flex-col items-center justify-center space-y-3"
+                      >
+                        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-xl shadow-inner">
+                          🎓
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="text-sm font-bold text-slate-800">
+                            {language === 'en'
+                              ? 'No Programs Found'
+                              : language === 'zht'
+                                ? '未找到學位項目'
+                                : '未找到学位项目'}
+                          </h4>
+                          <p className="text-[11px] text-slate-500 max-w-xs leading-normal">
+                            {language === 'en'
+                              ? `The ${activeSchool.nameEn} does not offer programs at this degree level.`
+                              : language === 'zht'
+                                ? `該學院（${getSchoolName(activeSchool)}）暫無此學位層級的項目開設。`
+                                : `该学院（${getSchoolName(activeSchool)}）暂无此学位层级的项目开设。`}
+                          </p>
+                        </div>
+                      </motion.div>
+                    );
+                  }
+
+                  if (activeSchool.categories) {
+                    return (
+                      <div className="space-y-6">
+                        {/* Inner Tabs for nested categories to avoid page overflow */}
+                        <div className="flex flex-wrap gap-1.5 p-1.5 bg-slate-100/80 border border-slate-200 rounded-2xl">
+                          {visibleCategories.map(cat => {
+                            const isTabActive = activeCategoryTab === cat.id || 
+                              (!visibleCategories.some(c => c.id === activeCategoryTab) && visibleCategories[0].id === cat.id);
+                            return (
+                              <button
+                                key={cat.id}
+                                onClick={() => setActiveCategoryTab(cat.id)}
+                                className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all text-center cursor-pointer ${
+                                  isTabActive
+                                    ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-205 border-transparent'
+                                    : 'text-slate-500 hover:text-slate-800'
+                                }`}
+                              >
+                                {getFieldName(cat)}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {visibleCategories.map((cat, idx) => {
+                          const isTabActive = activeCategoryTab === cat.id || 
+                            (!visibleCategories.some(c => c.id === activeCategoryTab) && idx === 0);
+                          if (!isTabActive) return null;
+                          return (
+                            <div key={cat.id} className="space-y-4">
+                              <div className="bg-blue-50/25 border border-blue-100 rounded-2xl p-4">
+                                <h4 className="font-extrabold text-sm text-slate-850 flex items-center gap-1.5 text-blue-900">
+                                  <Compass className="w-4 h-4 text-blue-600" />
+                                  {getFieldName(cat)}
+                                </h4>
+                                {cat.descriptionEn && (
+                                  <p className="text-[11px] text-slate-500 mt-1 leading-normal">
+                                    {language === 'zh' && cat.descriptionZh ? cat.descriptionZh : cat.descriptionEn}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {cat.majors.map(m => (
+                                  <div key={m.id} className="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs hover:border-slate-350 transition-colors flex flex-col justify-between">
+                                    <div className="space-y-2.5">
+                                      <div>
+                                        <h5 className="font-extrabold text-slate-850 text-sm leading-tight">
+                                          {getMajorName(m)}
+                                        </h5>
+                                        <p className="text-[10px] text-slate-400 font-semibold tracking-wider italic mt-0.5 line-clamp-1">
+                                          {language === 'en' ? getMajorName(m) : m.nameEn}
+                                        </p>
+                                      </div>
+
+                                      {m.submajors && m.submajors.length > 0 && (
+                                        <div className="flex flex-wrap gap-1 pb-1 flex-wrap">
+                                          {m.submajors.map((sm, sx) => (
+                                            <span key={sx} className="text-[9px] font-bold bg-slate-50 border border-slate-200 text-slate-550 px-1.5 py-0.5 rounded">
+                                              {sm}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      )}
+
+                                      {(m.notesZh || m.notesEn) && (
+                                        <div className="bg-amber-50/20 border border-amber-150 rounded-xl p-2.5 text-[10px] text-amber-805 flex items-start gap-1">
+                                          <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                                          <p className="text-amber-850 font-medium leading-relaxed">
+                                            {language === 'zh' && m.notesZh ? m.notesZh : m.notesEn}
+                                          </p>
+                                        </div>
+                                      )}
+                                      {renderMajorDemands(m.nationalMajorId)}
+                                    </div>
+
+                                    {m.nationalMajorId && (
+                                      <button
+                                        onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
+                                        className="mt-4 w-full bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 rounded-xl border border-slate-200 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                                      >
+                                        <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold" />
+                                        <span>{language === 'zh' ? '🧮 联动全美行业薪资回报' : 'Link National Career Data'}</span>
+                                      </button>
+                                    )}
+                                  </div>
                                 ))}
                               </div>
-                            )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  }
 
-                            {(m.notesZh || m.notesEn) && (
-                              <div className="bg-amber-50/20 border border-amber-150 rounded-xl p-2.5 text-[10px] text-auto flex items-start gap-1">
-                                <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                                <p className="text-amber-850 font-medium leading-relaxed">
-                                  {language === 'zh' && m.notesZh ? m.notesZh : m.notesEn}
+                  return (
+                    <div className="space-y-4">
+                      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                        <span className="text-slate-700 font-extrabold leading-normal">
+                          {language === 'en'
+                            ? `The ${activeSchool.nameEn} administers ${activeSchool.majors?.length || 0} core degree tracks:`
+                            : `${getSchoolName(activeSchool)} ${language === 'zht' ? '共有' : '共有'} ${activeSchool.majors?.length || 0} ${language === 'zht' ? '個專業項目分支建立映射：' : '个专业项目分支建立映射：'}`}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {activeSchool.majors?.map(m => (
+                          <div key={m.id} className="bg-white border border-slate-200 p-4 rounded-2xl shadow-xs hover:border-slate-350 transition-colors flex flex-col justify-between">
+                            <div className="space-y-2.5">
+                              <div>
+                                <h5 className="font-extrabold text-slate-850 text-sm leading-tight">
+                                  {getMajorName(m)}
+                                </h5>
+                                <p className="text-[10px] text-slate-400 font-semibold tracking-wider italic mt-0.5 line-clamp-1">
+                                  {language === 'en' ? getMajorName(m) : m.nameEn}
                                 </p>
                               </div>
+
+                              {m.submajors && m.submajors.length > 0 && (
+                                <div className="flex flex-wrap gap-1 leading-normal pb-0.5 flex-wrap">
+                                  {m.submajors.map((sm, sx) => (
+                                    <span key={sx} className="text-[9px] font-bold bg-slate-50 border border-slate-200 text-slate-550 px-1.5 py-0.5 rounded">
+                                      {sm}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+
+                              {(m.notesZh || m.notesEn) && (
+                                <div className="bg-amber-50/20 border border-amber-150 rounded-xl p-2.5 text-[10px] text-auto flex items-start gap-1">
+                                  <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                                  <p className="text-amber-850 font-medium leading-relaxed">
+                                    {language === 'zh' && m.notesZh ? m.notesZh : m.notesEn}
+                                  </p>
+                                </div>
+                              )}
+                              {renderMajorDemands(m.nationalMajorId)}
+                            </div>
+
+                            {m.nationalMajorId && (
+                              <button
+                                onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
+                                className="mt-4 w-full bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 rounded-xl border border-slate-205 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                              >
+                                <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold animate-pulse" />
+                                <span>{language === 'zh' ? '🧮 联动全美行业薪资回报' : 'Link National Career Data'}</span>
+                              </button>
                             )}
                           </div>
-
-                          {m.nationalMajorId && (
-                            <button
-                              onClick={() => handleOpenNationalShowcase(m.nationalMajorId!)}
-                              className="mt-4 w-full bg-slate-50 hover:bg-slate-100 text-slate-705 py-2 rounded-xl border border-slate-205 text-[10px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-                            >
-                              <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600 font-bold animate-pulse" />
-                              <span>{language === 'zh' ? '🧮 联动全美行业薪资回报' : 'Link National Career Data'}</span>
-                            </button>
-                          )}
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </motion.div>
             )}
           </AnimatePresence>
@@ -1298,10 +1196,10 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                 </div>
 
                 <h4 className="text-base sm:text-lg font-black mt-2 leading-snug">
-                  {language === 'zh' ? showcaseMajorObj.major.nameZh : showcaseMajorObj.major.nameEn}
+                  {getMajorName(showcaseMajorObj.major)}
                 </h4>
                 <p className="text-xs text-sky-100 opacity-80 mt-0.5 italic">
-                  {language === 'zh' ? showcaseMajorObj.major.nameEn : showcaseMajorObj.major.nameZh}
+                  {language === 'en' ? showcaseMajorObj.major.nameZh : showcaseMajorObj.major.nameEn}
                 </p>
 
                 {/* Close Button top-right */}
@@ -1323,7 +1221,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                       {language === 'zh' ? '国民一级行业门类' : 'Broad Field Group'}
                     </span>
                     <strong className="text-slate-800 mt-1 block font-bold leading-snug">
-                      {showcaseMajorObj.bf ? (language === 'zh' ? showcaseMajorObj.bf.nameZh : showcaseMajorObj.bf.nameEn) : ''}
+                      {showcaseMajorObj.bf ? getFieldName(showcaseMajorObj.bf) : ''}
                     </strong>
                   </div>
                   <div>
@@ -1331,7 +1229,7 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                       {language === 'zh' ? '学门二级细分专业分类' : 'Detailed Academic Area'}
                     </span>
                     <strong className="text-slate-800 mt-1 block font-bold leading-snug">
-                      {showcaseMajorObj.df ? (language === 'zh' ? showcaseMajorObj.df.nameZh : showcaseMajorObj.df.nameEn) : ''}
+                      {showcaseMajorObj.df ? getFieldName(showcaseMajorObj.df) : ''}
                     </strong>
                   </div>
                 </div>
@@ -1370,35 +1268,46 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
                 </div>
 
                 {/* 3. Core Academic Subject Demands Indicators */}
-                <div className="space-y-3">
+                <div className="space-y-3 border-t border-slate-100 pt-4">
                   <h5 className="text-xs font-bold text-slate-700 uppercase tracking-widest pl-1">
-                    {language === 'zh' ? '🧠 学科核心能力关联需求 (H/M/L)' : '🧠 Critical Subject Strengths (Bilingual)'}
+                    {language === 'zh' ? '🧠 学科核心能力关联需求 (5D 雷达图谱)' : '🧠 Critical Subject Demands (5D Radar Chart)'}
                   </h5>
 
-                  <div className="grid grid-cols-4 gap-2 text-slate-700">
-                    <div className="text-center p-2 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div className="text-[10px] font-semibold text-slate-400">{language === 'zh' ? '理学数学' : 'Math'}</div>
-                      <div className={`mt-1.5 py-0.5 text-[10px] font-extrabold rounded-md border ${getDemandBadgeClass(showcaseMajorObj.demands.math)}`}>
-                        {getDemandLabel(showcaseMajorObj.demands.math, language)}
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-slate-50/45 p-4 border border-slate-150 rounded-2xl">
+                    {/* Left Column: Radar Chart */}
+                    <div className="flex justify-center">
+                      <SubjectRadarChart demands={showcaseMajorObj.demands} language={language} />
                     </div>
-                    <div className="text-center p-2 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div className="text-[10px] font-semibold text-slate-400">{language === 'zh' ? '硬核物理' : 'Physics'}</div>
-                      <div className={`mt-1.5 py-0.5 text-[10px] font-extrabold rounded-md border ${getDemandBadgeClass(showcaseMajorObj.demands.physics)}`}>
-                        {getDemandLabel(showcaseMajorObj.demands.physics, language)}
-                      </div>
-                    </div>
-                    <div className="text-center p-2 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div className="text-[10px] font-semibold text-slate-400">{language === 'zh' ? '材料化学' : 'Chemistry'}</div>
-                      <div className={`mt-1.5 py-0.5 text-[10px] font-extrabold rounded-md border ${getDemandBadgeClass(showcaseMajorObj.demands.chemistry)}`}>
-                        {getDemandLabel(showcaseMajorObj.demands.chemistry, language)}
-                      </div>
-                    </div>
-                    <div className="text-center p-2 bg-slate-50 border border-slate-100 rounded-xl">
-                      <div className="text-[10px] font-semibold text-slate-400">{language === 'zh' ? '人文社会' : 'Humanities'}</div>
-                      <div className={`mt-1.5 py-0.5 text-[10px] font-extrabold rounded-md border ${getDemandBadgeClass(showcaseMajorObj.demands.humanities)}`}>
-                        {getDemandLabel(showcaseMajorObj.demands.humanities, language)}
-                      </div>
+
+                    {/* Right Column: Progressive Bars */}
+                    <div className="space-y-3">
+                      {[
+                        { key: 'math', labelEn: 'Mathematics', labelZh: '理学数学', color: 'bg-blue-600', val: showcaseMajorObj.demands.math },
+                        { key: 'physics', labelEn: 'Physics', labelZh: '物理科学', color: 'bg-indigo-600', val: showcaseMajorObj.demands.physics },
+                        { key: 'chemistry', labelEn: 'Chemistry', labelZh: '化学材料', color: 'bg-purple-600', val: showcaseMajorObj.demands.chemistry },
+                        { key: 'biology', labelEn: 'Biology', labelZh: '生命生物', color: 'bg-teal-600', val: showcaseMajorObj.demands.biology },
+                        { key: 'humanities', labelEn: 'Humanities', labelZh: '人文社科', color: 'bg-amber-500', val: showcaseMajorObj.demands.humanities }
+                      ].map(sub => {
+                        const numericVal = sub.val === 'H' ? 100 : sub.val === 'M' ? 66 : 33;
+                        return (
+                          <div key={sub.key} className="space-y-1">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="font-bold text-slate-700">
+                                {language === 'zh' ? sub.labelZh : sub.labelEn}
+                              </span>
+                              <span className={`text-[10px] px-2 py-0.5 rounded font-black border uppercase ${getDemandBadgeClass(sub.val)}`}>
+                                {getDemandLabel(sub.val, language)}
+                              </span>
+                            </div>
+                            <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                              <div 
+                                className={`${sub.color} h-1.5 rounded-full transition-all duration-500`}
+                                style={{ width: `${numericVal}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

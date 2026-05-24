@@ -35,6 +35,7 @@ model Major {
   id               String                       @id
   nameEn           String
   nameZh           String
+  nameZht          String?
   broadFieldId     String
   broadField       BroadField                   @relation(fields: [broadFieldId], references: [id])
   detailedFieldId  String
@@ -44,6 +45,7 @@ model Major {
   mathDemand       String?                      // 'H', 'M', 'L'
   physicsDemand    String?                      // 'H', 'M', 'L'
   chemistryDemand  String?                      // 'H', 'M', 'L'
+  biologyDemand    String?                      // 'H', 'M', 'L'
   humanitiesDemand String?                      // 'H', 'M', 'L'
   
   // Linkages to custom university majors
@@ -54,6 +56,7 @@ model University {
   id              String                       @id @default(uuid())
   nameEn          String                       @unique
   nameZh          String?
+  nameZht         String?
   countryEn       String
   countryZh       String?
   logoUrl         String?
@@ -71,6 +74,7 @@ model University {
   
   schools         School[]
   customMajors    UniversityMajorAssociation[]
+  rankingLineages UniversityRankingLineage[]
 }
 
 model School {
@@ -97,5 +101,53 @@ model UniversityMajorAssociation {
   
   mappingScore    Float       @default(0.0)  // Semantic / Lexical similarity score
   isValidated     Boolean     @default(false) // Manual audit flag
+  degreeLevel     String      @default("BACHELOR") // 'BACHELOR' | 'MASTER' | 'DOCTORATE'
   createdAt       DateTime    @default(now())
+}
+
+model UniversityRankingLineage {
+  id            String   @id @default(uuid())
+  universityId  String
+  university    University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  rankInteger   Int
+  year          Int
+  source        String   // 'QS', 'US_NEWS', 'DOE_SCORECARD'
+  isGlobal      Boolean  @default(false)
+  tieCount      Int      @default(0)
+  sourceUrl     String?  // Reference verification URL
+  isVerified    Boolean  @default(false)
+  verifiedBy    String?  // Admin username or automation engine identifier
+  verifiedAt    DateTime?
+  createdAt     DateTime @default(now())
+
+  @@unique([universityId, year, source, isGlobal])
+}
+
+model User {
+  id                 String      @id @default(uuid())
+  email              String      @unique
+  name               String?
+  role               String      @default("FREE") // 'GUEST' | 'FREE' | 'PRO' | 'ADMIN'
+  userType           String      @default("STUDENT") // 'STUDENT' | 'TEACHER' | 'COUNSELOR' | 'PARENT' | 'OTHER'
+  schoolName         String?
+  gradYear           Int?
+  counselorSpecialty String?
+  teacherSubject     String?
+  customNote         String?
+  subscriptionStatus String      @default("none") // 'active' | 'trialing' | 'canceled' | 'none'
+  subscriptionEndsAt DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  savedItems         SavedItem[]
+}
+
+model SavedItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemType  String   // 'MAJOR' | 'UNIVERSITY'
+  itemId    String   // references standard Major.id or University.id
+  createdAt DateTime @default(now())
+
+  @@unique([userId, itemType, itemId])
 }

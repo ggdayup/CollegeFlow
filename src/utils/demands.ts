@@ -1,116 +1,151 @@
 import { Major, SubjectDemands, DemandLevel } from '../types';
 
 /**
- * Programmatically computes the precise subject demands (Mathematics, Physics, Chemistry, Humanities)
- * for any of the 152 college majors based on deep domain relationships.
+ * Programmatically computes the precise subject demands (Mathematics, Physics, Chemistry, Biology, Humanities)
+ * for any of the 152 college majors based on deep database records or domain relationships.
  */
 export function calculateSubjectDemands(major: Partial<Major> & { nameEn: string; detailedFieldId: string; broadFieldId: string }): SubjectDemands {
-  // Direct default values based on Detailed Academic Fields
+  // 1. High-Priority Database-Active Path
+  const dbMath = (major as any).mathDemand;
+  const dbPhysics = (major as any).physicsDemand;
+  const dbChemistry = (major as any).chemistryDemand;
+  const dbBiology = (major as any).biologyDemand;
+  const dbHumanities = (major as any).humanitiesDemand;
+
+  if (dbMath !== undefined && dbMath !== null && dbPhysics !== undefined && dbPhysics !== null) {
+    return {
+      math: dbMath as DemandLevel,
+      physics: dbPhysics as DemandLevel,
+      chemistry: dbChemistry as DemandLevel,
+      biology: (dbBiology || 'L') as DemandLevel,
+      humanities: dbHumanities as DemandLevel
+    };
+  }
+
+  // 2. Fallback Static Heuristics Path
   let math: DemandLevel = 'L';
   let physics: DemandLevel = 'L';
   let chemistry: DemandLevel = 'L';
+  let biology: DemandLevel = 'L';
   let humanities: DemandLevel = 'L';
 
   const field = major.detailedFieldId;
   const name = major.nameEn.toLowerCase();
 
-  // 1. Broad Category Defaults
+  // Broad Category Defaults
   if (major.broadFieldId === 'stem') {
     math = 'M';
     physics = 'M';
     chemistry = 'M';
+    biology = 'L';
     humanities = 'L';
   } else if (major.broadFieldId === 'humanities_arts') {
     math = 'L';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'H';
   } else if (major.broadFieldId === 'social_sciences') {
-    math = 'M'; // Statistics and social research
+    math = 'M';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'H';
   } else if (major.broadFieldId === 'education_public_service') {
     math = 'L';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'H';
   } else if (major.broadFieldId === 'healthcare') {
     math = 'M';
     physics = 'L';
-    chemistry = 'H'; // Biology & pharmacology is heavy on chemistry
-    humanities = 'M'; // Patient care empathy / sociology
+    chemistry = 'H';
+    biology = 'H';
+    humanities = 'M';
   } else if (major.broadFieldId === 'business_comms') {
     math = 'M';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'M';
   } else if (major.broadFieldId === 'multidisciplinary') {
     math = 'M';
     physics = 'M';
     chemistry = 'M';
+    biology = 'M';
     humanities = 'M';
   } else if (major.broadFieldId === 'career_focused') {
     math = 'L';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'M';
   }
 
-  // 2. Refined Detailed Field Rules
+  // Refined Detailed Field Rules
   if (field === 'computers_stats_math') {
     math = 'H';
     physics = 'M';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'L';
   } else if (field === 'architecture_engineering') {
     math = 'H';
     physics = 'H';
     chemistry = 'M';
+    biology = 'L';
     humanities = 'L';
   } else if (field === 'physical_sciences') {
     math = 'H';
     physics = 'H';
     chemistry = 'H';
+    biology = 'M';
     humanities = 'L';
   } else if (field === 'biology_life') {
     math = 'M';
     physics = 'M';
     chemistry = 'H';
+    biology = 'H';
     humanities = 'L';
   } else if (field === 'business') {
     math = 'M';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'M';
   } else if (field === 'communications_journalism') {
     math = 'L';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'H';
   } else if (field === 'arts') {
     math = 'L';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'H';
   } else if (field === 'humanities_liberal_arts') {
     math = 'L';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'H';
   } else if (field === 'psychology') {
-    math = 'M'; // Statistics in psychology
+    math = 'M';
     physics = 'L';
     chemistry = 'L';
+    biology = 'M';
     humanities = 'H';
   } else if (field === 'social_sciences') {
     math = 'L';
     physics = 'L';
     chemistry = 'L';
+    biology = 'L';
     humanities = 'H';
   }
 
-  // 3. Precise Single Major Overrides (matching keywords)
   // Mathematics keywords
   if (
     name.includes('math') ||
@@ -139,20 +174,33 @@ export function calculateSubjectDemands(major: Partial<Major> & { nameEn: string
   if (
     name.includes('chemist') ||
     name.includes('chemical') ||
-    name.includes('pharmacy') ||
-    name.includes('pharmaceutical') ||
     name.includes('materials science') ||
-    name.includes('metallurgical') ||
-    name.includes('biomedical') ||
-    name.includes('biochem') ||
-    name.includes('genetic') ||
-    name.includes('soil science') ||
-    name.includes('food science')
+    name.includes('metallurgical')
   ) {
     chemistry = 'H';
   }
 
-  // Humanities keywords (STEM or Business majors that have strong Humanities needs, or overrides)
+  // Biology keywords
+  if (
+    name.includes('biology') ||
+    name.includes('biological') ||
+    name.includes('biomedical') ||
+    name.includes('botany') ||
+    name.includes('zoology') ||
+    name.includes('genetics') ||
+    name.includes('microbiology') ||
+    name.includes('physiology') ||
+    name.includes('neuroscience') ||
+    name.includes('biochemical') ||
+    name.includes('agriculture') ||
+    name.includes('plant science') ||
+    name.includes('ecology') ||
+    name.includes('environmental science')
+  ) {
+    biology = 'H';
+  }
+
+  // Humanities keywords
   if (
     name.includes('architecture') ||
     name.includes('history') ||
@@ -180,40 +228,46 @@ export function calculateSubjectDemands(major: Partial<Major> & { nameEn: string
     humanities = 'H';
   }
 
-  // Double check and guarantee some extreme logical constraints:
-  // Non-STEM, non-business social studies: humanities are certainly High
+  // Double check logical constraints
   if (major.broadFieldId === 'humanities_arts' || major.broadFieldId === 'education_public_service') {
     humanities = 'H';
   }
 
-  // Pure Math & Pure Physics should have H
+  // Extreme cases overrides
   if (name === 'mathematics') {
     math = 'H';
     physics = 'H';
     chemistry = 'M';
+    biology = 'L';
     humanities = 'L';
   }
   if (name === 'physics') {
     math = 'H';
     physics = 'H';
     chemistry = 'M';
+    biology = 'L';
     humanities = 'L';
   }
   if (name === 'chemistry') {
     math = 'H';
     physics = 'M';
     chemistry = 'H';
+    biology = 'L';
     humanities = 'L';
   }
+  if (name.includes('biology') && name.includes('chemistry')) {
+    chemistry = 'H';
+    biology = 'H';
+  }
 
-  return { math, physics, chemistry, humanities };
+  return { math, physics, chemistry, biology, humanities };
 }
 
 /**
  * Returns a bilingual label for the demand levels (H/M/L)
  */
-export function getDemandLabel(level: DemandLevel, lang: 'zh' | 'en'): string {
-  if (lang === 'zh') {
+export function getDemandLabel(level: DemandLevel, lang: 'zh' | 'zht' | 'en'): string {
+  if (lang === 'zh' || lang === 'zht') {
     return level === 'H' ? '高' : level === 'M' ? '中' : '低';
   }
   return level === 'H' ? 'High' : level === 'M' ? 'Medium' : 'Low';
@@ -239,5 +293,6 @@ export const subjectData = [
   { id: 'math' as const, nameEn: 'Math', nameZh: '数学' },
   { id: 'physics' as const, nameEn: 'Physics', nameZh: '物理' },
   { id: 'chemistry' as const, nameEn: 'Chemistry', nameZh: '化学' },
+  { id: 'biology' as const, nameEn: 'Biology', nameZh: '生物' },
   { id: 'humanities' as const, nameEn: 'Humanities', nameZh: '人文' }
 ];

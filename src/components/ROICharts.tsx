@@ -21,8 +21,10 @@ import {
 import { motion } from 'motion/react';
 import { DollarSign, Landmark, TrendingUp, Info, RefreshCw } from 'lucide-react';
 
+import { toTraditional } from '../utils/chineseLocalization';
+
 interface ROIChartsProps {
-  language: 'zh' | 'en';
+  language: 'zh' | 'zht' | 'en';
 }
 
 interface CareerCurvePoint {
@@ -39,14 +41,20 @@ export default function ROICharts({ language }: ROIChartsProps) {
   const [selectedColRegion, setSelectedColRegion] = useState<'national' | 'high' | 'med' | 'low'>('national');
   const [activeField, setActiveField] = useState<'all' | 'stem' | 'business' | 'healthcare' | 'humanities'>('all');
 
+  const t = (zh: string, en: string) => {
+    if (language === 'zh') return zh;
+    if (language === 'zht') return toTraditional(zh);
+    return en;
+  };
+
   // COL multipliers representing real disposable income/purchasing power adjustments
   // NYC/SF has higher nominal salaries but massive taxes & housing (multiplier < 1.0 for purchasing power)
   // Low COL areas increase the relative value/purchasing power of the dollar (multiplier > 1.0)
   const colMultipliers = {
-    national: { nameZh: '全美平均', nameEn: 'National Average', value: 1.0, icon: '🇺🇸' },
-    high: { nameZh: '超一线城市 (NYC/SF)', nameEn: 'Metro High COL (NYC/SF)', value: 0.78, icon: '🗽' },
-    med: { nameZh: '二线中高成本 (Seattle/Austin)', nameEn: 'Medium COL (Austin/Seattle)', value: 0.95, icon: '🌵' },
-    low: { nameZh: '低生活成本 (Houston/Indiana)', nameEn: 'Low COL (Houston/Indiana)', value: 1.18, icon: '🏡' }
+    national: { nameZh: t('全美平均', 'National Average'), value: 1.0, icon: '🇺🇸' },
+    high: { nameZh: t('超一线城市 (NYC/SF)', 'Metro High COL (NYC/SF)'), value: 0.78, icon: '🗽' },
+    med: { nameZh: t('二线中高成本 (Seattle/Austin)', 'Medium COL (Austin/Seattle)'), value: 0.95, icon: '🌵' },
+    low: { nameZh: t('低生活成本 (Houston/Indiana)', 'Low COL (Houston/Indiana)'), value: 1.18, icon: '🏡' }
   };
 
   // Base raw annual earnings curve data across various career phases (in USD)
@@ -64,13 +72,14 @@ export default function ROICharts({ language }: ROIChartsProps) {
     const multiplier = colMultipliers[selectedColRegion].value;
     return baseCareerData.map(pt => ({
       ...pt,
+      yearZh: language === 'zht' ? toTraditional(pt.yearZh) : pt.yearZh,
       stem: Math.round(pt.stem * multiplier),
       business: Math.round(pt.business * multiplier),
       healthcare: Math.round(pt.healthcare * multiplier),
       humanities: Math.round(pt.humanities * multiplier),
       average: Math.round(pt.average * multiplier)
     }));
-  }, [selectedColRegion]);
+  }, [selectedColRegion, language]);
 
   const currentMultiplier = colMultipliers[selectedColRegion].value;
 
@@ -80,7 +89,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
       return (
         <div className="bg-slate-900/95 backdrop-blur-md border border-slate-750 p-4 rounded-xl shadow-xl text-xs text-white space-y-2 select-none z-50">
           <p className="font-extrabold text-[11px] tracking-wider text-blue-400 uppercase border-b border-slate-700/50 pb-1.5 mb-1.5">
-            {language === 'zh' ? payload[0].payload.yearZh : label}
+            {language !== 'en' ? payload[0].payload.yearZh : label}
           </p>
           
           <div className="space-y-1.5">
@@ -101,9 +110,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
           </div>
 
           <div className="text-[10px] text-slate-450 border-t border-slate-700/50 pt-1.5 mt-1.5 italic text-slate-400">
-            {language === 'zh' 
-              ? `已应用地区购买力系数: ${currentMultiplier}x` 
-              : `Purchasing Power Coeff Applied: ${currentMultiplier}x`}
+            {t(`已应用地区购买力系数: ${currentMultiplier}x`, `Purchasing Power Coeff Applied: ${currentMultiplier}x`)}
           </div>
         </div>
       );
@@ -120,12 +127,10 @@ export default function ROICharts({ language }: ROIChartsProps) {
         <div>
           <h3 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
             <TrendingUp className="w-6 h-6 text-emerald-600" />
-            {language === 'zh' ? '毕业生黄金年龄段回报率与收入增长曲线' : 'ROI Prime-Age Earnings & Growth Velocity Curves'}
+            {t('毕业生黄金年龄段回报率与收入增长曲线', 'ROI Prime-Age Earnings & Growth Velocity Curves')}
           </h3>
           <p className="text-slate-500 text-xs md:text-sm mt-1">
-            {language === 'zh'
-              ? '对比入行起步（近期毕业生）到黄金成熟期（25-54岁）的购买力攀升，支持地区生活成本 (COL) 动态乘数折算。'
-              : 'Contrast immediate grad yields against peak mid-career prime-age curves with local cost adjustment toggles.'}
+            {t('对比入行起步（近期毕业生）到黄金成熟期（25-54岁）的购买力攀升，支持地区生活成本 (COL) 动态乘数折算。', 'Contrast immediate grad yields against peak mid-career prime-age curves with local cost adjustment toggles.')}
           </p>
         </div>
 
@@ -133,7 +138,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
         <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-100 rounded-2xl">
           <DollarSign className="w-4 h-4 text-emerald-600" />
           <div className="text-[11px] font-bold text-emerald-800">
-            {language === 'zh' ? '最高增幅: STEM 科系 +122%' : 'Highest Growth: STEM Fields +122%'}
+            {t('最高增幅: STEM 科系 +122%', 'Highest Growth: STEM Fields +122%')}
           </div>
         </div>
       </div>
@@ -149,7 +154,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               activeField === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
             }`}
           >
-            {language === 'zh' ? '展示全部' : 'Show All'}
+            {t('展示全部', 'Show All')}
           </button>
           
           <button
@@ -167,7 +172,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               activeField === 'business' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
             }`}
           >
-            {language === 'zh' ? '商科' : 'Business'}
+            {t('商科', 'Business')}
           </button>
 
           <button
@@ -176,7 +181,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               activeField === 'healthcare' ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
             }`}
           >
-            {language === 'zh' ? '健康医疗' : 'Healthcare'}
+            {t('健康医疗', 'Healthcare')}
           </button>
 
           <button
@@ -185,7 +190,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               activeField === 'humanities' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
             }`}
           >
-            {language === 'zh' ? '人文艺术' : 'Humanities'}
+            {t('人文艺术', 'Humanities')}
           </button>
         </div>
 
@@ -204,7 +209,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
                 }`}
               >
                 <span>{region.icon}</span>
-                <span>{language === 'zh' ? region.nameZh : region.nameEn}</span>
+                <span>{region.nameZh}</span>
                 <span className="text-[10px] text-slate-400">({region.value}x)</span>
               </button>
             );
@@ -245,7 +250,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
             
             <XAxis
-              dataKey={language === 'zh' ? 'yearZh' : 'year'}
+              dataKey={language !== 'en' ? 'yearZh' : 'year'}
               stroke="#94a3b8"
               fontSize={11}
               tickLine={false}
@@ -280,7 +285,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               <Area
                 type="monotone"
                 dataKey="stem"
-                name={language === 'zh' ? 'STEM 理工科' : 'STEM Fields'}
+                name={t('STEM 理工科', 'STEM Fields')}
                 stroke="#2563eb"
                 strokeWidth={3}
                 fillOpacity={1}
@@ -292,7 +297,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               <Area
                 type="monotone"
                 dataKey="business"
-                name={language === 'zh' ? '商科及管理' : 'Business & Management'}
+                name={t('商科及管理', 'Business & Management')}
                 stroke="#4f46e5"
                 strokeWidth={2.5}
                 fillOpacity={1}
@@ -304,7 +309,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               <Area
                 type="monotone"
                 dataKey="healthcare"
-                name={language === 'zh' ? '健康医疗科学' : 'Healthcare & Medicine'}
+                name={t('健康医疗科学', 'Healthcare & Medicine')}
                 stroke="#e11d48"
                 strokeWidth={2.5}
                 fillOpacity={1}
@@ -316,7 +321,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               <Area
                 type="monotone"
                 dataKey="humanities"
-                name={language === 'zh' ? '人文、社会及自由艺术' : 'Humanities & Social Sci'}
+                name={t('人文、社会及自由艺术', 'Humanities & Social Sci')}
                 stroke="#d97706"
                 strokeWidth={2}
                 fillOpacity={1}
@@ -328,7 +333,7 @@ export default function ROICharts({ language }: ROIChartsProps) {
               <Area
                 type="monotone"
                 dataKey="average"
-                name={language === 'zh' ? '全门类本科综合均值' : 'Overall Averages'}
+                name={t('全门类本科综合均值', 'Overall Averages')}
                 stroke="#0d9488"
                 strokeWidth={1.5}
                 strokeDasharray="4 4"
@@ -345,12 +350,13 @@ export default function ROICharts({ language }: ROIChartsProps) {
         <Info className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
         <div className="space-y-1">
           <strong className="text-slate-800 block">
-            {language === 'zh' ? '地区生活成本 (COL) 动态折算原理' : 'Understanding purchasing power multiplier adjustments'}
+            {t('地区生活成本 (COL) 动态折算原理', 'Understanding purchasing power multiplier adjustments')}
           </strong>
           <p className="leading-relaxed">
-            {language === 'zh'
-              ? '为了客观衡量实际购买力，本系统加入了地区成本折算。例如，超一线城市（纽约/旧金山）的名义年薪虽高，但由于极高税率、房租及日常开支，其实际购买力系数打折扣（0.78x）；而低生活成本区（休斯敦/印第安纳）则具有高消费乘数（1.18x），使同等工资拥有更强的可支配消费能级。'
-              : 'While nominal salaries are high in cities like NYC or San Francisco, severe housing costs and state taxes reduce actual purchasing power (0.78x). Converses are true in low-cost states where dollar stretches further (1.18x multiplier), resulting in higher net disposable income.'}
+            {t(
+              '为了客观衡量实际购买力，本系统加入了地区成本折算。例如，超一线城市（纽约/旧金山）的名义年薪虽高，但由于极高税率、房租及日常开支，其实际购买力系数打折扣（0.78x）；而低生活成本区（休斯敦/印第安纳）则具有高消费乘数（1.18x），使同等工资拥有更强的可支配消费能级。',
+              'While nominal salaries are high in cities like NYC or San Francisco, severe housing costs and state taxes reduce actual purchasing power (0.78x). Converses are true in low-cost states where dollar stretches further (1.18x multiplier), resulting in higher net disposable income.'
+            )}
           </p>
         </div>
       </div>

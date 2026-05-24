@@ -6,9 +6,10 @@
  * card layouts showing credit category breakdowns.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { BookOpen, Award, CheckCircle, GraduationCap, Percent, HelpCircle } from 'lucide-react';
+import { BookOpen, CheckCircle, Percent, GraduationCap, HelpCircle } from 'lucide-react';
+import { toTraditional } from '../utils/chineseLocalization';
 
 interface CreditCategory {
   id: string;
@@ -24,7 +25,7 @@ interface CreditCategory {
 }
 
 interface CreditBentoProps {
-  language: 'zh' | 'en';
+  language: 'zh' | 'zht' | 'en';
   totalCredits?: number;
   categories?: CreditCategory[];
 }
@@ -32,6 +33,12 @@ interface CreditBentoProps {
 export default function CreditBento({ language, totalCredits = 120, categories }: CreditBentoProps) {
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>('core');
+
+  const t = (zh: string, en: string) => {
+    if (language === 'zh') return zh;
+    if (language === 'zht') return toTraditional(zh);
+    return en;
+  };
 
   // Realistic default categories representing a premium Bachelor of Science / Bachelor of Arts curriculum
   const defaultCategories: CreditCategory[] = [
@@ -85,7 +92,17 @@ export default function CreditBento({ language, totalCredits = 120, categories }
     }
   ];
 
-  const activeCategories = categories || defaultCategories;
+  const activeCategories = useMemo(() => {
+    const raw = categories || defaultCategories;
+    if (language !== 'zht') return raw;
+    return raw.map(cat => ({
+      ...cat,
+      nameZh: toTraditional(cat.nameZh),
+      descriptionZh: toTraditional(cat.descriptionZh),
+      coursesZh: cat.coursesZh.map(toTraditional)
+    }));
+  }, [categories, language]);
+
   const currentCategoryObj = activeCategories.find(c => c.id === (activeCategory || 'core')) || activeCategories[0];
 
   // Calculate coordinates for SVG donut chart segments
@@ -105,10 +122,10 @@ export default function CreditBento({ language, totalCredits = 120, categories }
         <div className="w-full flex items-center justify-between mb-4 z-10">
           <div>
             <h4 className="text-slate-900 font-extrabold text-base tracking-tight">
-              {language === 'zh' ? '学分结构配比' : 'Credit Ratio Anatomy'}
+              {t('学分结构配比', 'Credit Ratio Anatomy')}
             </h4>
             <p className="text-slate-500 text-[11px] mt-0.5">
-              {language === 'zh' ? '总要求 120 学分' : '120 Total Credits Required'}
+              {t('总要求 120 学分', '120 Total Credits Required')}
             </p>
           </div>
           <div className="p-2 bg-blue-50/80 rounded-xl border border-blue-100 shadow-xs">
@@ -178,7 +195,7 @@ export default function CreditBento({ language, totalCredits = 120, categories }
                           {selectedCat.credits}
                         </span>
                         <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">
-                          {language === 'zh' ? selectedCat.nameZh.substring(0, 6) : selectedCat.nameEn.substring(0, 10)}
+                          {language !== 'en' ? selectedCat.nameZh.substring(0, 6) : selectedCat.nameEn.substring(0, 10)}
                         </span>
                         <span className="text-[10px] text-slate-400 font-mono mt-0.5">
                           {((selectedCat.credits / totalCredits) * 100).toFixed(0)}%
@@ -193,7 +210,7 @@ export default function CreditBento({ language, totalCredits = 120, categories }
                         {totalCredits}
                       </span>
                       <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1">
-                        {language === 'zh' ? '总要求学分' : 'TOTAL CREDITS'}
+                        {t('总要求学分', 'TOTAL CREDITS')}
                       </span>
                     </>
                   );
@@ -223,7 +240,7 @@ export default function CreditBento({ language, totalCredits = 120, categories }
                 />
                 <div className="truncate">
                   <span className="text-slate-800 text-[11px] font-bold block truncate">
-                    {language === 'zh' ? category.nameZh : category.nameEn}
+                    {language !== 'en' ? category.nameZh : category.nameEn}
                   </span>
                   <span className="text-slate-400 text-[9.5px] font-mono block">
                     {category.credits} Credits ({((category.credits / totalCredits) * 100).toFixed(0)}%)
@@ -243,10 +260,10 @@ export default function CreditBento({ language, totalCredits = 120, categories }
           <div className="flex items-center justify-between mb-4">
             <div>
               <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest block">
-                {language === 'zh' ? '课程配比细节' : 'CURRICULUM BREAKDOWN'}
+                {t('课程配比细节', 'CURRICULUM BREAKDOWN')}
               </span>
               <h4 className="text-slate-900 font-extrabold text-lg tracking-tight mt-0.5">
-                {language === 'zh' ? currentCategoryObj.nameZh : currentCategoryObj.nameEn}
+                {language !== 'en' ? currentCategoryObj.nameZh : currentCategoryObj.nameEn}
               </h4>
             </div>
             <div 
@@ -258,18 +275,18 @@ export default function CreditBento({ language, totalCredits = 120, categories }
           </div>
 
           <p className="text-slate-600 text-xs md:text-sm leading-relaxed border-l-2 pl-4 py-1" style={{ borderColor: currentCategoryObj.color }}>
-            {language === 'zh' ? currentCategoryObj.descriptionZh : currentCategoryObj.descriptionEn}
+            {language !== 'en' ? currentCategoryObj.descriptionZh : currentCategoryObj.descriptionEn}
           </p>
 
           {/* Interactive Core Courses Highlights Cards */}
           <div className="mt-6">
             <h5 className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5" />
-              {language === 'zh' ? '代表性高频核心课程' : 'Representative Foundation Courses'}
+              {t('代表性高频核心课程', 'Representative Foundation Courses')}
             </h5>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {(language === 'zh' ? currentCategoryObj.coursesZh : currentCategoryObj.coursesEn).map((course, idx) => (
+              {(language !== 'en' ? currentCategoryObj.coursesZh : currentCategoryObj.coursesEn).map((course, idx) => (
                 <motion.div
                   key={idx}
                   whileHover={{ x: 3 }}
@@ -281,7 +298,7 @@ export default function CreditBento({ language, totalCredits = 120, categories }
                       {course}
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono mt-0.5 block">
-                      3 Credits | {language === 'zh' ? '学前研讨班' : 'Undergraduate core'}
+                      3 Credits | {t('学前研讨班', 'Undergraduate core')}
                     </span>
                   </div>
                 </motion.div>
@@ -298,17 +315,17 @@ export default function CreditBento({ language, totalCredits = 120, categories }
             </div>
             <div>
               <span className="text-slate-800 text-xs font-bold block">
-                {language === 'zh' ? '学士学位要求' : 'Bachelor of Science Track'}
+                {t('学士学位要求', 'Bachelor of Science Track')}
               </span>
               <span className="text-[10px] text-slate-400 block">
-                {language === 'zh' ? '满足全美 AACSB 或 ABET 专业质量认证标准' : 'Standard 120 credit hour program, ABET / AACSB accredited.'}
+                {t('满足全美 AACSB 或 ABET 专业质量认证标准', 'Standard 120 credit hour program, ABET / AACSB accredited.')}
               </span>
             </div>
           </div>
           
           <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-blue-600 transition-colors cursor-pointer">
             <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
-            <span>{language === 'zh' ? '如何转移学分？' : 'Credit Transfer Guide'}</span>
+            <span>{t('如何转移学分？', 'Credit Transfer Guide')}</span>
           </div>
         </div>
 

@@ -137,7 +137,7 @@ function AppContent({
 
   // Onboarding guard: redirect verified users who haven't completed role setup
   const isDemoBypass = user?.email?.toLowerCase() === 'demo@college.edu';
-  const isEmailVerified = isDemoBypass || (user as { emailVerified?: boolean }).emailVerified;
+  const isEmailVerified = isDemoBypass || !!user?.emailVerified;
   const hasUserType = !!user?.userType;
   const hasRoleFields = (() => {
     switch (user?.userType) {

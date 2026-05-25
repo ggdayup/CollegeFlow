@@ -1,6 +1,10 @@
-# PRD-000: Product Charter
+# PRD-010: Product Charter
 
 Status: Draft
+
+## Depends On
+
+- [PRD-000: Commercial Thesis](PRD-000-commercial-thesis.md)
 
 ## Product Purpose
 
@@ -31,4 +35,3 @@ The platform is not only a directory or recommendation interface. Its core value
 - Counselors can package trusted data-backed decisions into client-facing workflows.
 - Data claims are traceable to authoritative sources and versioned when source years change.
 - New data sources can be added without rewriting unrelated experience PRDs.
-

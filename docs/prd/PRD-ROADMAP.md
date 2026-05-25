@@ -30,3 +30,4 @@ This roadmap is a product-documentation roadmap, not an engineering delivery pla
 - Define Decision Readiness as the paid workspace outcome, with Direction Clarity first and Data-backed Comparison as the primary proof of data value.
 - Define P0 School / Program Comparison around Decision Options, with ranking, admissions, program fit, outcomes/ROI, and confidence/data-gap lenses.
 - Deepen the data asset PRDs so P0 comparison has a trustworthy foundation across identity, lineage, mapping, admissions, rankings, programs, and outcomes.
+- Define the search-engine-style entry as the lowest-friction start point into discovery, comparison, and workspace experiences.

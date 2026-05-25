@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Project Source Of Truth
-- Plane is the only task tracker for this project. Before code or planning work, list project issues and move the matched issue to `In Progress`; if none exists, create one in `In Progress`.
+- Plane is the only task tracker for this project. For complex tasks (e.g., new features, refactoring, multi-file architectural changes), list project issues and move the matched issue to `In Progress` before planning or coding; if none exists, create one in `In Progress`. For simple, trivial tasks (e.g., single-line edits, configuration tweaks, typos, simple UI text adjustments), creating or moving a Plane issue is NOT required.
 - Plane metadata: workspace `sheenvita`, project `Collage Major`, project ID `15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
 - Plane state IDs: `Backlog` `e51c56b6-8ef9-4b10-baaf-37b05bc94925`, `Todo` `16406b06-6ecc-4701-b8fc-0e807f5b9e4c`, `In Progress` `c7701ec6-17bc-4b40-a72f-2970f96cdc9e`, `Done` `aa17c124-ecbb-4e70-bfde-7c607685f9f3`, `Cancelled` `08e8c222-091a-4597-9fd0-9969ceb12e5a`.
 - Plane CLI: `node /Users/ggdayup/.agents/skills/plane-api/scripts/plane-api.js list-issues sheenvita 15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
@@ -37,7 +37,7 @@
 - Do not invent, infer, or "fill in" any university, program, ranking, admissions, salary, school, or source data without authoritative provenance.
 - Do not write fake citations, fake audit IDs, fake verification flags, placeholder rankings, or guessed IPEDS/Wikidata/QS identifiers into code, seed data, database records, screenshots, or UI copy.
 - Do not add outbound UI links or redirects to external ranking/university sites as a validation shortcut; verification must remain in-platform.
-- Do not start implementation, planning, or cleanup work without a corresponding Plane issue moved to `In Progress`.
+- Do not start implementation, planning, or cleanup work for complex tasks without a corresponding Plane issue moved to `In Progress` (simple, trivial tasks are exempt).
 - Do not bypass Prisma 7 driver-adapter setup by instantiating `new PrismaClient()` without the required adapter in runtime or standalone database scripts.
 - Do not change configured service ports to dodge conflicts. Free the configured port and restart the intended service instead.
 - Do not edit generated, dependency, cache, or environment directories such as `node_modules/`, `dist/`, `backend/venv/`, `.git/`, or `.DS_Store` unless the user explicitly asks.

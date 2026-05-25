@@ -8,7 +8,7 @@ Plane remains the task tracker. PRDs describe product intent, user value, decisi
 
 PRDs are organized by product knowledge layer:
 
-1. `00-charter/`: product charter, user segments, and non-negotiable trust principles.
+1. `00-charter/`: commercial thesis, product charter, user segments, and non-negotiable trust principles.
 2. `10-data-assets/`: source-specific admissions data assets and shared data governance rules.
 3. `20-intelligence-products/`: decision products that combine data assets into user-facing judgments.
 4. `30-user-experience/`: student, parent, and counselor-facing product experiences.
@@ -22,7 +22,8 @@ PRDs are organized by product knowledge layer:
 PRDs should depend in one direction:
 
 ```text
-Charter
+Commercial Thesis
+  -> Charter
   -> Data Assets
     -> Intelligence Products
       -> User Experience
@@ -35,15 +36,21 @@ Data asset PRDs define source authority, product value, verification, freshness,
 
 ## Current Starting Points
 
-- [Product Charter](00-charter/PRD-000-product-charter.md)
+- [Commercial Thesis](00-charter/PRD-000-commercial-thesis.md)
+- [Product Charter](00-charter/PRD-010-product-charter.md)
 - [Data Trust and Citation Principles](00-charter/PRD-002-data-trust-and-citation-principles.md)
 - [Data Asset Strategy](10-data-assets/10-overview/PRD-100-data-asset-strategy.md)
 - [Data Source Governance](10-data-assets/10-overview/PRD-101-data-source-governance.md)
 - [Data Lineage, Verification, and Freshness](10-data-assets/10-overview/PRD-102-data-lineage-verification-and-freshness.md)
+- [P0 Data Asset Loop](10-data-assets/10-overview/PRD-103-p0-data-asset-loop.md)
 - [Decision Profile](20-intelligence-products/PRD-200-decision-profile.md)
+- [Decision Readiness](20-intelligence-products/PRD-205-decision-readiness.md)
+- [School / Program Comparison](20-intelligence-products/PRD-206-school-program-comparison.md)
 - [Entitlement Model](50-commercial/PRD-500-entitlement-model.md)
+- [Channel Partner and Revenue Share](50-commercial/PRD-504-channel-partner-and-revenue-share.md)
+- [Invited User Conversion Path](50-commercial/PRD-505-invited-user-conversion-path.md)
+- [Initial and Full Workspace Boundary](50-commercial/PRD-506-initial-and-full-workspace-boundary.md)
 
 ## Archived Source
 
 The previous unified PRD was retained at [90-archive/deprecated/PRD-unified-user-auth-collaboration-monetization.md](90-archive/deprecated/PRD-unified-user-auth-collaboration-monetization.md). It should be treated as historical source material, not the current structure of record.
-

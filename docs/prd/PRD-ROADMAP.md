@@ -7,6 +7,7 @@ This roadmap is a product-documentation roadmap, not an engineering delivery pla
 - Establish the PRD index, glossary, dependency map, and archive convention.
 - Split the previous unified PRD into product-domain PRDs.
 - Mark data assets as first-class upstream product contracts.
+- Establish the commercial thesis: trusted channels distribute, students or parents pay, and the full Decision Workspace is the core paid product.
 
 ## Phase 2: Data Asset PRDs
 
@@ -24,4 +25,8 @@ This roadmap is a product-documentation roadmap, not an engineering delivery pla
 - Rewrite user-facing workflows as consumers of data assets and intelligence products.
 - Keep paywall and entitlement rules separate from data truth rules.
 - Clarify counselor SaaS, sponsored access, reports, and shareable deliverables.
-
+- Define channel partner revenue share and invited-user conversion around the full Decision Workspace unlock.
+- Define the Initial Workspace versus Full Decision Workspace boundary so free preview value and paid decision value remain clear.
+- Define Decision Readiness as the paid workspace outcome, with Direction Clarity first and Data-backed Comparison as the primary proof of data value.
+- Define P0 School / Program Comparison around Decision Options, with ranking, admissions, program fit, outcomes/ROI, and confidence/data-gap lenses.
+- Deepen the data asset PRDs so P0 comparison has a trustworthy foundation across identity, lineage, mapping, admissions, rankings, programs, and outcomes.

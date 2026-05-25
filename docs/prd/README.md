@@ -46,6 +46,7 @@ Data asset PRDs define source authority, product value, verification, freshness,
 - [Decision Profile](20-intelligence-products/PRD-200-decision-profile.md)
 - [Decision Readiness](20-intelligence-products/PRD-205-decision-readiness.md)
 - [School / Program Comparison](20-intelligence-products/PRD-206-school-program-comparison.md)
+- [Search Entry Experience](30-user-experience/PRD-305-search-entry-experience.md)
 - [Entitlement Model](50-commercial/PRD-500-entitlement-model.md)
 - [Channel Partner and Revenue Share](50-commercial/PRD-504-channel-partner-and-revenue-share.md)
 - [Invited User Conversion Path](50-commercial/PRD-505-invited-user-conversion-path.md)

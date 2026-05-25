@@ -52,6 +52,7 @@
 - PostgreSQL and Redis are provided by `docker-compose.yml` on host ports `35432` and `36379`.
 - The frontend has resilient fallbacks: dynamic DB APIs should degrade to static definitions when the DB/BFF is unavailable, and Redis-backed proxy cache should fall back to in-memory cache.
 - The FastAPI backend runs crawl/parse jobs with local `BackgroundTasks` first-class; Celery/Redis is optional. Status polling reads JSON task files when present.
+- The Common Data Set (CDS) data asset utilizes a PostgreSQL-native flat facts schema. Ingested JSON trees (leaves, empty structures, and explicit nulls) from the 16 target universities are recursively flattened into the unified `cds_values` table with zero data loss, supporting dynamic on-the-fly fields dictionary (`canonical_fields`) additions.
 
 ## Commands
 - Install frontend dependencies: `npm install`.
@@ -63,6 +64,9 @@
 - Prisma seed: `npx prisma db seed`.
 - Docker services: `docker compose up -d`; if ports were previously conflicted, stop the conflicting process and run `docker compose down` before recreating services.
 - Backend API dev: `backend/venv/bin/uvicorn backend.main:app --reload` from the repo root after installing `backend/requirements.txt` into `backend/venv`.
+- PostgreSQL CDS Initialization: `backend/venv/bin/python data/cds/CollegeFlow_CDS/database/init_pg_db.py`.
+- PostgreSQL CDS Data Ingestion: `backend/venv/bin/python data/cds/CollegeFlow_CDS/database/import_to_pg.py`.
+- PostgreSQL CDS Integrity Audit: `backend/venv/bin/python data/cds/CollegeFlow_CDS/database/verify_pg_integrity.py`.
 
 ## Coding Conventions
 - Keep frontend data types in sync with `src/types.ts`, Prisma models, seed data, and BFF response mapping.
@@ -82,6 +86,7 @@
 - If Gemini or another LLM parser is exhausted or rate-limited, trigger deterministic regex/heuristic parsing for course requirements and prerequisites.
 - For database-driven localization, query the DB for all unique lookup names and complete the dictionary for records that exist only in PostgreSQL.
 - When static university data changes, re-run `npx prisma db seed` if the UI is served from BFF/PostgreSQL-blended endpoints.
+- Dynamic CDS Schema Expansion: If a new canonical path appears in a target JSON tree during database ingestion but is missing from pre-seeded definitions, dynamically register it in `canonical_fields` to prevent constraint violations.
 
 ## Update Rules
 - Add only reusable, project-specific knowledge to this file: paths, commands, schemas, ports, source-of-truth rules, and recurring pitfalls.

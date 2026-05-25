@@ -6,12 +6,14 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [verificationEmail, setVerificationEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+    setVerificationEmail('');
     setLoading(true);
 
     // TODO: demo@college.edu bypass — remove after full session migration
@@ -32,7 +34,13 @@ export default function LoginPage() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError(data.message || 'Login failed. Check your credentials.');
+        const message = data.message || data.error || 'Login failed. Check your credentials.';
+        if (String(message).toLowerCase().includes('email not verified')) {
+          setVerificationEmail(email.trim().toLowerCase());
+          setError('Please verify your email before signing in.');
+        } else {
+          setError(message);
+        }
         return;
       }
 
@@ -65,6 +73,16 @@ export default function LoginPage() {
         {error && (
           <div className="mb-4 px-4 py-3 bg-rose-50 border border-rose-200 rounded-xl text-sm text-rose-700">
             {error}
+            {verificationEmail && (
+              <div className="mt-2">
+                <Link
+                  to={`/verify-email?email=${encodeURIComponent(verificationEmail)}`}
+                  className="font-semibold text-blue-700 hover:text-blue-800"
+                >
+                  Resend verification email
+                </Link>
+              </div>
+            )}
           </div>
         )}
 

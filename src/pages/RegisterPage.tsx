@@ -23,15 +23,16 @@ export default function RegisterPage() {
         body: JSON.stringify({ email, password, name }),
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setError(data.message || 'Registration failed. Please try again.');
+        setError(data.message || data.error || 'Registration failed. Please try again.');
         return;
       }
 
-      // Session cookie is set; redirect to home
-      navigate('/');
-      window.location.reload();
+      navigate(`/verify-email?email=${encodeURIComponent(email.trim().toLowerCase())}`, {
+        replace: true,
+      });
     } catch {
       setError('Network error. Please try again.');
     } finally {

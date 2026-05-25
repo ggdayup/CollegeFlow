@@ -4,7 +4,7 @@
 - Plane is the only task tracker for this project. Before code or planning work, list project issues and move the matched issue to `In Progress`; if none exists, create one in `In Progress`.
 - Plane metadata: workspace `sheenvita`, project `Collage Major`, project ID `15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
 - Plane state IDs: `Backlog` `e51c56b6-8ef9-4b10-baaf-37b05bc94925`, `Todo` `16406b06-6ecc-4701-b8fc-0e807f5b9e4c`, `In Progress` `c7701ec6-17bc-4b40-a72f-2970f96cdc9e`, `Done` `aa17c124-ecbb-4e70-bfde-7c607685f9f3`, `Cancelled` `08e8c222-091a-4597-9fd0-9969ceb12e5a`.
-- Plane CLI: `node /Users/ggdayup/.agent/skills/plane-api/scripts/plane-api.js list-issues sheenvita 15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
+- Plane CLI: `node /Users/ggdayup/.agents/skills/plane-api/scripts/plane-api.js list-issues sheenvita 15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
 - For Plane create/update payloads containing HTML or nested JSON, write a temporary JSON file, pass its path to the CLI, then delete the temp file. The CLI wraps responses as `{ success, data }`; extract issue fields from `data`. Issue lists are paginated under `data.results`.
 - At task completion, transition the Plane issue to `Done` and include modified files, key decisions, and verification results in `description_html`.
 - 必须及时提取对话中的用户新需求，整理并以 PRD 文档的形式记录到 `docs/prd/` 目录中，确保项目的需求追踪机制完整。

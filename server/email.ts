@@ -9,7 +9,8 @@ export function createTransporter(): {
   transporter: Transporter<SentMessageInfo>;
   isDevMode: boolean;
 } {
-  const isDevMode = process.env.EMAIL_DEV_MODE === 'true';
+  const isDevMode = process.env.EMAIL_DEV_MODE === 'true'
+    || (process.env.NODE_ENV !== 'production' && !process.env.EMAIL_HOST);
 
   if (isDevMode) {
     // Dev mode: use ethereal or fallback to a no-op transporter

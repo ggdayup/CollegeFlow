@@ -23,6 +23,7 @@ export default function VerifyEmailPage() {
   const [isResending, setIsResending] = useState(false);
 
   const token = searchParams.get('token');
+  const emailParam = searchParams.get('email')?.trim().toLowerCase() || '';
 
   // Auto-verify when token is present
   useEffect(() => {
@@ -80,6 +81,7 @@ export default function VerifyEmailPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
+        body: JSON.stringify({ email: userEmail }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -233,11 +235,10 @@ export default function VerifyEmailPage() {
   }
 
   // No token: check-email flow (user navigated directly, or expired link)
-  const userEmail = user?.email || '';
+  const userEmail = user?.email || emailParam;
   const isAlreadyVerified = !!(user as { emailVerified?: boolean } | null)?.emailVerified;
 
-  // If user is logged in with a session but no token, default to check-email
-  // If user is not logged in, show "not signed in"
+  // If user is logged in or the page has an email query, default to check-email.
   const showCheckEmail = !!userEmail && !isAlreadyVerified;
 
   return (
@@ -342,8 +343,12 @@ export default function VerifyEmailPage() {
 
               {!resendMessage && (
                 <button
-                  onClick={async () => {
-                    try {
+                onClick={async () => {
+                  if (!user) {
+                    window.location.href = '/login';
+                    return;
+                  }
+                  try {
                       const res = await fetch('/api/auth/sign-out', {
                         method: 'POST',
                         credentials: 'include',

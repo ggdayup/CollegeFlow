@@ -45,7 +45,7 @@ export const auth = betterAuth({
   ],
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: process.env.EMAIL_DEV_MODE === 'true' ? false : true,
     minPasswordLength: 8,
     resetPasswordTokenExpiresIn: 3600,
     revokeSessionsOnPasswordReset: true,

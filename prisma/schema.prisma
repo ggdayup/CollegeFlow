@@ -1,9 +1,9 @@
-datasource db {
-  provider = "postgresql"
-}
-
 generator client {
   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
 }
 
 model BroadField {
@@ -32,58 +32,54 @@ model DetailedField {
 }
 
 model Major {
-  id               String        @id
-  nameEn           String
-  nameZh           String
-  nameZht          String?
-  broadFieldId     String
-  broadField       BroadField    @relation(fields: [broadFieldId], references: [id])
-  detailedFieldId  String
-  detailedField    DetailedField @relation(fields: [detailedFieldId], references: [id])
-  specialTag       String? // 'highest', 'lowest', or null
-  earningsValue    Int? // Peak earnings if individual spotlighted major
-  mathDemand       String? // 'H', 'M', 'L'
-  physicsDemand    String? // 'H', 'M', 'L'
-  chemistryDemand  String? // 'H', 'M', 'L'
-  biologyDemand    String? // 'H', 'M', 'L'
-  humanitiesDemand String? // 'H', 'M', 'L'
-
-  // Linkages to custom university majors
-  universityAssociations   UniversityMajorAssociation[]
-  majorRankings            MajorRanking[]
-  cipMappings              MajorCipMapping[]
+  id                       String                       @id
+  nameEn                   String
+  nameZh                   String
+  nameZht                  String?
+  broadFieldId             String
+  detailedFieldId          String
+  specialTag               String?
+  earningsValue            Int?
+  mathDemand               String?
+  physicsDemand            String?
+  chemistryDemand          String?
+  biologyDemand            String?
+  humanitiesDemand         String?
   institutionProgramFields InstitutionProgramField[]
+  broadField               BroadField                   @relation(fields: [broadFieldId], references: [id])
+  detailedField            DetailedField                @relation(fields: [detailedFieldId], references: [id])
+  cipMappings              MajorCipMapping[]
+  majorRankings            MajorRanking[]
+  universityAssociations   UniversityMajorAssociation[]
 }
 
 model University {
-  id            String  @id @default(uuid())
-  nameEn        String  @unique
-  nameZh        String?
-  nameZht       String?
-  countryEn     String
-  countryZh     String?
-  logoUrl       String?
-  rankingQs     Int?
-  rankingUsNews Int?
-  latitude      Float?
-  longitude     Float?
-  wikidataId    String? @unique
-
-  // U.S. College Scorecard metrics
-  scorecardUnitId String? @unique // IPEDS UNITID
-  averageCost     Int?
-  gradRate        Float?
-  medianSalary    Int?
-
-  schools                  School[]
-  customMajors             UniversityMajorAssociation[]
-  rankingLineages          UniversityRankingLineage[]
-  majorRankings            MajorRanking[]
-  externalIdentifiers      UniversityExternalIdentifier[]
+  id                       String                         @id @default(uuid())
+  nameEn                   String                         @unique
+  nameZh                   String?
+  nameZht                  String?
+  countryEn                String
+  countryZh                String?
+  logoUrl                  String?
+  rankingQs                Int?
+  rankingUsNews            Int?
+  latitude                 Float?
+  longitude                Float?
+  wikidataId               String?                        @unique
+  scorecardUnitId          String?                        @unique
+  averageCost              Int?
+  gradRate                 Float?
+  medianSalary             Int?
+  comparisonOptions        ComparisonOption[]
+  institutionCandidates    InstitutionCandidate[]
   institutionMetrics       InstitutionMetric[]
   institutionProgramFields InstitutionProgramField[]
-  institutionCandidates    InstitutionCandidate[]
   publishDecisions         InstitutionPublishDecision[]
+  majorRankings            MajorRanking[]
+  schools                  School[]
+  externalIdentifiers      UniversityExternalIdentifier[]
+  customMajors             UniversityMajorAssociation[]
+  rankingLineages          UniversityRankingLineage[]
 }
 
 model School {
@@ -96,39 +92,36 @@ model School {
 }
 
 model UniversityMajorAssociation {
-  id           String     @id @default(uuid())
-  universityId String
-  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
-  schoolId     String?
-  school       School?    @relation(fields: [schoolId], references: [id], onDelete: SetNull)
-  customName   String // e.g. "Electrical & Computer Engineering with Honors"
-  customCode   String? // Specific school program code
-
-  // Standard major mapping
+  id              String     @id @default(uuid())
+  universityId    String
+  schoolId        String?
+  customName      String
+  customCode      String?
   standardMajorId String?
-  standardMajor   Major?  @relation(fields: [standardMajorId], references: [id])
-
-  mappingScore Float    @default(0.0) // Semantic / Lexical similarity score
-  isValidated  Boolean  @default(false) // Manual audit flag
-  degreeLevel  String   @default("BACHELOR") // 'BACHELOR' | 'MASTER' | 'DOCTORATE'
-  sourceUrl    String? // Reference verification URL to absolute official catalog handbook
-  createdAt    DateTime @default(now())
+  mappingScore    Float      @default(0.0)
+  isValidated     Boolean    @default(false)
+  degreeLevel     String     @default("BACHELOR")
+  sourceUrl       String?
+  createdAt       DateTime   @default(now())
+  school          School?    @relation(fields: [schoolId], references: [id])
+  standardMajor   Major?     @relation(fields: [standardMajorId], references: [id])
+  university      University @relation(fields: [universityId], references: [id], onDelete: Cascade)
 }
 
 model UniversityRankingLineage {
   id           String     @id @default(uuid())
   universityId String
-  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
   rankInteger  Int
   year         Int
-  source       String // 'QS', 'US_NEWS', 'DOE_SCORECARD'
+  source       String
   isGlobal     Boolean    @default(false)
   tieCount     Int        @default(0)
-  sourceUrl    String? // Reference verification URL
+  sourceUrl    String?
   isVerified   Boolean    @default(false)
-  verifiedBy   String? // Admin username or automation engine identifier
+  verifiedBy   String?
   verifiedAt   DateTime?
   createdAt    DateTime   @default(now())
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
 
   @@unique([universityId, year, source, isGlobal])
 }
@@ -142,28 +135,33 @@ model User {
   emailVerifiedAt       DateTime?
   lastLoginAt           DateTime?
   disabled              Boolean               @default(false)
-  role                  String                @default("FREE") // 'GUEST' | 'FREE' | 'PRO' | 'ADMIN'
-  userType              String                @default("STUDENT") // 'STUDENT' | 'TEACHER' | 'COUNSELOR' | 'PARENT' | 'OTHER'
+  role                  String                @default("FREE")
+  userType              String                @default("STUDENT")
   schoolName            String?
   gradYear              Int?
   counselorSpecialty    String?
   teacherSubject        String?
   customNote            String?
-  subscriptionStatus    String                @default("none") // 'active' | 'trialing' | 'canceled' | 'none'
+  subscriptionStatus    String                @default("none")
   subscriptionEndsAt    DateTime?
+  counselorInviteCode   String?               @unique
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
+  counselorNotes        CounselorNote[]
+  reportGenerations     ReportGeneration[]
   savedItems            SavedItem[]
+  counselorWorkspaces   StudentWorkspace[]    @relation("CounselorWorkspace")
+  studentWorkspaces     StudentWorkspace[]    @relation("StudentWorkspace")
   subscriptionHistories SubscriptionHistory[]
 }
 
 model SavedItem {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  itemType  String // 'MAJOR' | 'UNIVERSITY'
-  itemId    String // references standard Major.id or University.id
+  itemType  String
+  itemId    String
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, itemType, itemId])
 }
@@ -171,16 +169,15 @@ model SavedItem {
 model MajorRanking {
   id              String     @id @default(uuid())
   universityId    String
-  university      University @relation(fields: [universityId], references: [id], onDelete: Cascade)
   standardMajorId String
+  rankInteger     Int
+  year            Int
+  source          String
+  verificationId  String
+  sourceUrl       String?
+  createdAt       DateTime   @default(now())
   standardMajor   Major      @relation(fields: [standardMajorId], references: [id])
-
-  rankInteger    Int
-  year           Int
-  source         String // e.g. 'US_NEWS_CS', 'QS_CS', 'THE_CS', etc.
-  verificationId String // e.g. 'USN-2026-CS-001'
-  sourceUrl      String?
-  createdAt      DateTime @default(now())
+  university      University @relation(fields: [universityId], references: [id], onDelete: Cascade)
 
   @@unique([universityId, standardMajorId, year, source])
 }
@@ -188,12 +185,12 @@ model MajorRanking {
 model UniversityExternalIdentifier {
   id              String     @id @default(uuid())
   universityId    String
-  university      University @relation(fields: [universityId], references: [id], onDelete: Cascade)
-  identifierType  String // 'IPEDS_UNITID' | 'OPEID' | 'WIKIDATA_QID' | 'QS_ID' | 'ROR_ID'
+  identifierType  String
   identifierValue String
   sourceSystem    String
   verificationId  String?
   createdAt       DateTime   @default(now())
+  university      University @relation(fields: [universityId], references: [id], onDelete: Cascade)
 
   @@unique([identifierType, identifierValue])
   @@index([universityId, identifierType])
@@ -224,13 +221,11 @@ model MetricDefinition {
 model InstitutionMetric {
   id               String           @id @default(uuid())
   metricKey        String
-  metricDefinition MetricDefinition @relation(fields: [metricKey], references: [metricKey])
   universityId     String?
-  university       University?      @relation(fields: [universityId], references: [id], onDelete: SetNull)
-  unitId           String // IPEDS UNITID for U.S. institutions
+  unitId           String
   valueNumeric     Float?
   valueText        String?
-  valueStatus      String // 'REPORTED' | 'ZERO' | 'NOT_REPORTED' | 'NOT_APPLICABLE' | 'SUPPRESSED' | 'NOT_IN_UNIVERSE' | 'ERROR'
+  valueStatus      String
   missingReason    String?
   rawValue         String?
   denominator      Float?
@@ -242,6 +237,8 @@ model InstitutionMetric {
   releaseKey       String
   verificationId   String           @unique
   computedAt       DateTime         @default(now())
+  metricDefinition MetricDefinition @relation(fields: [metricKey], references: [metricKey])
+  university       University?      @relation(fields: [universityId], references: [id])
 
   @@index([unitId, metricKey])
   @@index([universityId, metricKey])
@@ -252,27 +249,27 @@ model CipCode {
   code                     String                    @id
   title                    String
   version                  String                    @default("CIP2020")
-  level                    String // '2_DIGIT' | '4_DIGIT' | '6_DIGIT'
+  level                    String
   parentCode               String?
   createdAt                DateTime                  @default(now())
-  mappings                 MajorCipMapping[]
   institutionProgramFields InstitutionProgramField[]
+  mappings                 MajorCipMapping[]
 }
 
 model MajorCipMapping {
   id             String    @id @default(uuid())
   majorId        String
-  major          Major     @relation(fields: [majorId], references: [id], onDelete: Cascade)
   cipCode        String
-  cip            CipCode   @relation(fields: [cipCode], references: [code], onDelete: Cascade)
   mappingScore   Float     @default(0)
   mappingMethod  String
-  status         String    @default("REVIEW_REQUIRED") // 'AUTO_VALIDATED' | 'REVIEW_REQUIRED' | 'REJECTED'
+  status         String    @default("REVIEW_REQUIRED")
   sourceSystem   String    @default("IPEDS")
   verificationId String?
   reviewedBy     String?
   reviewedAt     DateTime?
   createdAt      DateTime  @default(now())
+  cip            CipCode   @relation(fields: [cipCode], references: [code], onDelete: Cascade)
+  major          Major     @relation(fields: [majorId], references: [id], onDelete: Cascade)
 
   @@unique([majorId, cipCode])
   @@index([cipCode, status])
@@ -282,7 +279,6 @@ model InstitutionCandidate {
   id               String                       @id @default(uuid())
   unitId           String                       @unique
   universityId     String?
-  university       University?                  @relation(fields: [universityId], references: [id], onDelete: SetNull)
   nameEn           String
   state            String?
   control          String?
@@ -298,6 +294,7 @@ model InstitutionCandidate {
   computedAt       DateTime?
   createdAt        DateTime                     @default(now())
   updatedAt        DateTime                     @updatedAt
+  university       University?                  @relation(fields: [universityId], references: [id])
   publishDecisions InstitutionPublishDecision[]
 
   @@index([recommendation])
@@ -307,15 +304,12 @@ model InstitutionCandidate {
 model InstitutionProgramField {
   id               String      @id @default(uuid())
   universityId     String?
-  university       University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
   unitId           String
   cipCode          String
-  cip              CipCode     @relation(fields: [cipCode], references: [code], onDelete: Restrict)
   displayTitle     String
   standardMajorId  String?
-  standardMajor    Major?      @relation(fields: [standardMajorId], references: [id], onDelete: SetNull)
   degreeLevel      String
-  sourceType       String // 'IPEDS_PROGRAM_FIELD' | 'OFFICIAL_CATALOG_PROGRAM'
+  sourceType       String
   programOffered   Int?
   completionsTotal Int?
   activityStatus   String
@@ -326,6 +320,9 @@ model InstitutionProgramField {
   releaseKey       String
   verificationId   String      @unique
   computedAt       DateTime    @default(now())
+  cip              CipCode     @relation(fields: [cipCode], references: [code])
+  standardMajor    Major?      @relation(fields: [standardMajorId], references: [id])
+  university       University? @relation(fields: [universityId], references: [id])
 
   @@unique([unitId, cipCode, degreeLevel, releaseKey, sourceType])
   @@index([unitId, degreeLevel])
@@ -337,14 +334,14 @@ model InstitutionProgramField {
 model InstitutionPublishDecision {
   id           String               @id @default(uuid())
   candidateId  String
-  candidate    InstitutionCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   universityId String?
-  university   University?          @relation(fields: [universityId], references: [id], onDelete: SetNull)
-  status       String // 'DRAFT' | 'AUTO_RECOMMENDED' | 'PUBLISHED' | 'HIDDEN' | 'EXCLUDED'
+  status       String
   decidedBy    String?
   decidedAt    DateTime?
   reason       String?
   createdAt    DateTime             @default(now())
+  candidate    InstitutionCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  university   University?          @relation(fields: [universityId], references: [id])
 
   @@index([candidateId, status])
   @@index([universityId, status])
@@ -353,13 +350,109 @@ model InstitutionPublishDecision {
 model SubscriptionHistory {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  changedBy String // email of admin who made the change
-  field     String // 'subscriptionStatus' or 'subscriptionEndsAt'
+  changedBy String
+  field     String
   oldValue  String?
   newValue  String?
   reason    String?
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+}
+
+model StudentWorkspace {
+  id                 String              @id @default(uuid())
+  counselorId        String
+  studentId          String?
+  inviteEmail        String
+  inviteToken        String              @unique
+  inviteAccepted     Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  comparisonSessions ComparisonSession[]
+  counselorNotes     CounselorNote[]
+  decisionProfile    DecisionProfile?
+  counselor          User                @relation("CounselorWorkspace", fields: [counselorId], references: [id], onDelete: Cascade)
+  student            User?               @relation("StudentWorkspace", fields: [studentId], references: [id])
+
+  @@index([counselorId])
+  @@index([inviteToken])
+  @@index([studentId])
+}
+
+model DecisionProfile {
+  id              String           @id @default(uuid())
+  workspaceId     String           @unique
+  gpa             Float?
+  satScore        Int?
+  actScore        Int?
+  annualBudgetMin Int?
+  annualBudgetMax Int?
+  interestAreas   Json?
+  updatedAt       DateTime         @updatedAt
+  workspace       StudentWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  weights         ProfileWeight?
+}
+
+model ProfileWeight {
+  id             String          @id @default(uuid())
+  profileId      String          @unique
+  salaryWeight   Float           @default(0.25)
+  prestigeWeight Float           @default(0.25)
+  costWeight     Float           @default(0.25)
+  fitWeight      Float           @default(0.25)
+  profile        DecisionProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ComparisonSession {
+  id          String             @id @default(uuid())
+  workspaceId String
+  name        String
+  createdAt   DateTime           @default(now())
+  options     ComparisonOption[]
+  workspace   StudentWorkspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  reports     ReportGeneration[]
+
+  @@index([workspaceId])
+}
+
+model ComparisonOption {
+  id           String            @id @default(uuid())
+  sessionId    String
+  universityId String
+  majorId      String?
+  sortOrder    Int               @default(0)
+  session      ComparisonSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  university   University        @relation(fields: [universityId], references: [id])
+
+  @@index([sessionId])
+  @@index([universityId])
+}
+
+model CounselorNote {
+  id          String           @id @default(uuid())
+  workspaceId String
+  counselorId String
+  noteType    String           @default("other")
+  content     String
+  isShared    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  counselor   User             @relation(fields: [counselorId], references: [id], onDelete: Cascade)
+  workspace   StudentWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([counselorId])
+}
+
+model ReportGeneration {
+  id          String            @id @default(uuid())
+  sessionId   String
+  generatedBy String
+  pdfUrl      String?
+  generatedAt DateTime          @default(now())
+  generator   User              @relation(fields: [generatedBy], references: [id], onDelete: Cascade)
+  session     ComparisonSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([generatedBy])
 }

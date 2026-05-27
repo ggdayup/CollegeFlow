@@ -1835,6 +1835,847 @@ app.get('/api/admin/users/:id/subscription-history', requireAdmin, async (req, r
   }
 });
 
+import crypto from 'crypto';
+import { z } from 'zod';
+
+// ============================================
+// MVP: Counselor Workspace Routes
+// ============================================
+
+/** Middleware: require authenticated session */
+async function requireSession(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const session = await fetchSession(req);
+  if (!session?.email) {
+    return res.status(401).json({ error: 'UNAUTHORIZED' });
+  }
+  const user = await prisma.user.findUnique({
+    where: { email: session.email.toLowerCase() },
+    select: { id: true, email: true, name: true, role: true, userType: true, subscriptionStatus: true },
+  });
+  if (!user) return res.status(401).json({ error: 'UNAUTHORIZED' });
+  (req as express.Request & { user: typeof user }).user = user;
+  next();
+}
+
+/** Middleware: require counselor role */
+function requireCounselor(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const r = req as express.Request & { user?: { userType: string } };
+  if (r.user?.userType !== 'COUNSELOR') {
+    return res.status(403).json({ error: 'COUNSELOR_ACCESS_REQUIRED' });
+  }
+  next();
+}
+
+/** Middleware: require student role */
+function requireStudent(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const r = req as express.Request & { user?: { userType: string } };
+  if (r.user?.userType !== 'STUDENT') {
+    return res.status(403).json({ error: 'STUDENT_ACCESS_REQUIRED' });
+  }
+  next();
+}
+
+// ─── Counselor: Invite Student ───
+
+const inviteStudentSchema = z.object({
+  email: z.string().email(),
+});
+
+app.post('/api/counselor/invite', requireSession, requireCounselor, async (req, res) => {
+  try {
+    const parse = inviteStudentSchema.safeParse(req.body);
+    if (!parse.success) {
+      return res.status(400).json({ error: 'VALIDATION_ERROR', details: parse.error.errors });
+    }
+
+    const { user } = req as express.Request & { user: { id: string } };
+    const { email } = parse.data;
+
+    // Ensure counselor has an invite code
+    let counselor = await prisma.user.findUnique({ where: { id: user.id }, select: { counselorInviteCode: true } });
+    if (!counselor?.counselorInviteCode) {
+      const code = crypto.randomBytes(6).toString('hex');
+      await prisma.user.update({ where: { id: user.id }, data: { counselorInviteCode: code } });
+      counselor = { counselorInviteCode: code };
+    }
+
+    // Create StudentWorkspace + invite token
+    const inviteToken = crypto.randomBytes(16).toString('hex');
+    const workspace = await prisma.studentWorkspace.create({
+      data: {
+        counselorId: user.id,
+        inviteEmail: email.toLowerCase(),
+        inviteToken,
+      },
+    });
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:38030';
+    const inviteLink = `${frontendUrl}/join?token=${inviteToken}`;
+
+    res.json({
+      workspaceId: workspace.id,
+      inviteToken,
+      inviteLink,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error inviting student:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Counselor: List Students ───
+
+app.get('/api/counselor/students', requireSession, requireCounselor, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+
+    const workspaces = await prisma.studentWorkspace.findMany({
+      where: { counselorId: user.id },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        inviteEmail: true,
+        inviteAccepted: true,
+        createdAt: true,
+        student: { select: { name: true, email: true } },
+        decisionProfile: { select: { updatedAt: true, gpa: true, satScore: true, actScore: true } },
+        comparisonSessions: { select: { id: true, name: true, createdAt: true } },
+      },
+    });
+
+    const students = workspaces.map((w) => ({
+      workspaceId: w.id,
+      email: w.inviteEmail,
+      inviteAccepted: w.inviteAccepted,
+      profileComplete: w.decisionProfile !== null && w.decisionProfile.gpa !== null,
+      lastComparisonAt: w.comparisonSessions.length > 0
+        ? w.comparisonSessions[w.comparisonSessions.length - 1].createdAt
+        : null,
+    }));
+
+    res.json({ students });
+  } catch (e: unknown) {
+    console.error('[BFF] Error listing students:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Student: Accept Invite ───
+
+app.get('/api/student/invite/:token', async (req, res) => {
+  try {
+    const workspace = await prisma.studentWorkspace.findUnique({
+      where: { inviteToken: req.params.token },
+      include: { counselor: { select: { name: true, email: true, counselorSpecialty: true } } },
+    });
+
+    if (!workspace) {
+      return res.status(404).json({ error: 'NOT_FOUND' });
+    }
+
+    res.json({
+      workspaceId: workspace.id,
+      inviteAccepted: workspace.inviteAccepted,
+      counselorName: workspace.counselor.name,
+      counselorEmail: workspace.counselor.email,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error checking invite:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/student/invite/:token/accept', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string; userType: string } };
+
+    const workspace = await prisma.studentWorkspace.findUnique({
+      where: { inviteToken: req.params.token },
+    });
+
+    if (!workspace) {
+      return res.status(404).json({ error: 'NOT_FOUND' });
+    }
+
+    if (workspace.inviteAccepted) {
+      return res.status(400).json({ error: 'INVITE_ALREADY_ACCEPTED' });
+    }
+
+    await prisma.studentWorkspace.update({
+      where: { id: workspace.id },
+      data: {
+        studentId: user.id,
+        inviteAccepted: true,
+      },
+    });
+
+    // Update user type to student if not already
+    if (user.userType !== 'STUDENT') {
+      await prisma.user.update({ where: { id: user.id }, data: { userType: 'STUDENT' } });
+    }
+
+    res.json({ workspaceId: workspace.id, accepted: true });
+  } catch (e: unknown) {
+    console.error('[BFF] Error accepting invite:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Student: Decision Profile ───
+
+const profileWeightSchema = z.object({
+  salary: z.number().min(0).max(1).optional(),
+  prestige: z.number().min(0).max(1).optional(),
+  cost: z.number().min(0).max(1).optional(),
+  fit: z.number().min(0).max(1).optional(),
+});
+
+const updateProfileSchema = z.object({
+  gpa: z.number().min(0).max(4.0).optional(),
+  satScore: z.number().min(400).max(1600).optional(),
+  actScore: z.number().min(1).max(36).optional(),
+  annualBudgetMin: z.number().int().positive().optional(),
+  annualBudgetMax: z.number().int().positive().optional(),
+  interestAreas: z.array(z.string()).optional(),
+  weights: profileWeightSchema.optional(),
+});
+
+app.get('/api/student/profile', requireSession, requireStudent, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+
+    // Find workspace for this student
+    const workspace = await prisma.studentWorkspace.findFirst({
+      where: { studentId: user.id },
+      select: { id: true },
+    });
+
+    if (!workspace) {
+      return res.json({ profile: null, completeness: 0 });
+    }
+
+    const profile = await prisma.decisionProfile.findUnique({
+      where: { workspaceId: workspace.id },
+      include: { weights: true },
+    });
+
+    if (!profile) {
+      return res.json({ profile: null, completeness: 0 });
+    }
+
+    let completeness = 0;
+    if (profile.gpa) completeness += 25;
+    if (profile.annualBudgetMin != null) completeness += 25;
+    if (profile.interestAreas) completeness += 25;
+    if (profile.weights) completeness += 25;
+
+    const weights = profile.weights
+      ? {
+          salary: profile.weights.salaryWeight,
+          prestige: profile.weights.prestigeWeight,
+          cost: profile.weights.costWeight,
+          fit: profile.weights.fitWeight,
+        }
+      : undefined;
+
+    res.json({
+      profile: {
+        gpa: profile.gpa,
+        satScore: profile.satScore,
+        actScore: profile.actScore,
+        annualBudgetMin: profile.annualBudgetMin,
+        annualBudgetMax: profile.annualBudgetMax,
+        interestAreas: profile.interestAreas,
+        weights,
+      },
+      completeness,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error fetching profile:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/student/profile', requireSession, requireStudent, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+    const parse = updateProfileSchema.safeParse(req.body);
+    if (!parse.success) {
+      return res.status(400).json({ error: 'VALIDATION_ERROR', details: parse.error.errors });
+    }
+
+    const data = parse.data;
+
+    // Validate weights sum if provided
+    if (data.weights) {
+      const sum = (data.weights.salary ?? 0) + (data.weights.prestige ?? 0) + (data.weights.cost ?? 0) + (data.weights.fit ?? 0);
+      if (Math.abs(sum - 1.0) > 0.01 && sum > 0) {
+        // Normalize weights
+        data.weights.salary = (data.weights.salary ?? 0) / sum;
+        data.weights.prestige = (data.weights.prestige ?? 0) / sum;
+        data.weights.cost = (data.weights.cost ?? 0) / sum;
+        data.weights.fit = (data.weights.fit ?? 0) / sum;
+      }
+    }
+
+    const workspace = await prisma.studentWorkspace.findFirst({
+      where: { studentId: user.id },
+      select: { id: true },
+    });
+
+    if (!workspace) {
+      return res.status(404).json({ error: 'NO_WORKSPACE' });
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const profile = await tx.decisionProfile.upsert({
+        where: { workspaceId: workspace.id },
+        create: {
+          workspaceId: workspace.id,
+          gpa: data.gpa,
+          satScore: data.satScore,
+          actScore: data.actScore,
+          annualBudgetMin: data.annualBudgetMin,
+          annualBudgetMax: data.annualBudgetMax,
+          interestAreas: data.interestAreas ? JSON.parse(JSON.stringify(data.interestAreas)) : undefined,
+        },
+        update: {
+          ...(data.gpa !== undefined && { gpa: data.gpa }),
+          ...(data.satScore !== undefined && { satScore: data.satScore }),
+          ...(data.actScore !== undefined && { actScore: data.actScore }),
+          ...(data.annualBudgetMin !== undefined && { annualBudgetMin: data.annualBudgetMin }),
+          ...(data.annualBudgetMax !== undefined && { annualBudgetMax: data.annualBudgetMax }),
+          ...(data.interestAreas !== undefined && { interestAreas: JSON.parse(JSON.stringify(data.interestAreas)) }),
+        },
+      });
+
+      if (data.weights) {
+        await tx.profileWeight.upsert({
+          where: { profileId: profile.id },
+          create: {
+            profileId: profile.id,
+            salaryWeight: data.weights.salary ?? 0.25,
+            prestigeWeight: data.weights.prestige ?? 0.25,
+            costWeight: data.weights.cost ?? 0.25,
+            fitWeight: data.weights.fit ?? 0.25,
+          },
+          update: {
+            ...(data.weights.salary !== undefined && { salaryWeight: data.weights.salary }),
+            ...(data.weights.prestige !== undefined && { prestigeWeight: data.weights.prestige }),
+            ...(data.weights.cost !== undefined && { costWeight: data.weights.cost }),
+            ...(data.weights.fit !== undefined && { fitWeight: data.weights.fit }),
+          },
+        });
+      }
+
+      return profile;
+    });
+
+    res.json({ profile: result, updated: true });
+  } catch (e: unknown) {
+    console.error('[BFF] Error updating profile:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Comparison Engine ───
+
+const createComparisonSchema = z.object({
+  name: z.string().min(1).max(100),
+  options: z.array(z.object({
+    universityId: z.string(),
+    majorId: z.string().optional(),
+  })).min(2).max(4),
+});
+
+function getTierLimits(role: string) {
+  const limits: Record<string, { maxComparisonOptions: number }> = {
+    FREE: { maxComparisonOptions: 1 },
+    PRO: { maxComparisonOptions: 4 },
+    COUNSELOR: { maxComparisonOptions: 4 },
+  };
+  return limits[role] ?? limits.FREE;
+}
+
+app.post('/api/comparison', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string; role: string; userType: string } };
+    const parse = createComparisonSchema.safeParse(req.body);
+    if (!parse.success) {
+      return res.status(400).json({ error: 'VALIDATION_ERROR', details: parse.error.errors });
+    }
+
+    const { name, options } = parse.data;
+    const limits = getTierLimits(user.role);
+
+    // Find workspace
+    let workspaceId: string;
+    if (user.userType === 'COUNSELOR') {
+      // Counselors don't have workspaces; comparisons are per-student
+      return res.status(400).json({ error: 'COMPARISON_NOT_FOR_COUNSELOR' });
+    }
+
+    const workspace = await prisma.studentWorkspace.findFirst({
+      where: { studentId: user.id },
+      select: { id: true },
+    });
+
+    if (!workspace) {
+      return res.status(404).json({ error: 'NO_WORKSPACE' });
+    }
+    workspaceId = workspace.id;
+
+    // Check entitlement: free tier can only have 1 active comparison
+    if (user.role === 'FREE') {
+      const existingCount = await prisma.comparisonSession.count({
+        where: { workspaceId },
+      });
+      if (existingCount >= limits.maxComparisonOptions) {
+        return res.status(422).json({
+          error: 'COMPARISON_LIMIT',
+          max: limits.maxComparisonOptions,
+          current: existingCount,
+        });
+      }
+    }
+
+    // Verify all university IDs exist
+    const unis = await prisma.university.findMany({
+      where: { id: { in: options.map(o => o.universityId) } },
+      select: { id: true },
+    });
+    if (unis.length !== options.length) {
+      return res.status(400).json({ error: 'INVALID_UNIVERSITY_ID' });
+    }
+
+    const session = await prisma.comparisonSession.create({
+      data: {
+        workspaceId,
+        name,
+        options: {
+          create: options.map((o, i) => ({
+            universityId: o.universityId,
+            majorId: o.majorId || null,
+            sortOrder: i,
+          })),
+        },
+      },
+      include: { options: true },
+    });
+
+    res.json({ sessionId: session.id, created: true });
+  } catch (e: unknown) {
+    console.error('[BFF] Error creating comparison:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/comparison/:sessionId', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+
+    const session = await prisma.comparisonSession.findUnique({
+      where: { id: req.params.sessionId },
+      include: {
+        options: {
+          include: {
+            university: { select: { id: true, nameEn: true, nameZh: true } },
+          },
+        },
+        workspace: { select: { studentId: true } },
+      },
+    });
+
+    if (!session) {
+      return res.status(404).json({ error: 'NOT_FOUND' });
+    }
+
+    // Verify workspace ownership
+    if (session.workspace.studentId !== user.id) {
+      return res.status(403).json({ error: 'FORBIDDEN' });
+    }
+
+    // Fetch profile for fit scoring
+    const profile = await prisma.decisionProfile.findUnique({
+      where: { workspaceId: session.workspaceId },
+      include: { weights: true },
+    });
+
+    // Build comparison result with 4 lenses
+    const optionResults = await Promise.all(
+      session.options.map(async (opt) => {
+        // Fetch institution metrics
+        const metrics = await prisma.institutionMetric.findMany({
+          where: { universityId: opt.universityId },
+          include: { metricDefinition: true },
+        });
+
+        const metricMap = new Map<string, { valueNumeric: number | null; valueStatus: string }>();
+        for (const m of metrics) {
+          metricMap.set(m.metricKey, { valueNumeric: m.valueNumeric, valueStatus: m.valueStatus });
+        });
+
+        const getVal = (key: string) => {
+          const m = metricMap.get(key);
+          return m ? m.valueNumeric : null;
+        };
+        const getStatus = (key: string) => {
+          const m = metricMap.get(key);
+          return m ? m.valueStatus : 'NOT_IN_UNIVERSE';
+        };
+
+        const hasValue = (val: number | null) => val !== null && val > 0;
+        const confidence = (keys: string[]) => {
+          const filled = keys.filter(k => hasValue(getVal(k))).length;
+          if (filled === keys.length) return 'verified';
+          if (filled > 0) return 'stale';
+          return 'missing';
+        };
+
+        // Admissions lens
+        const admissions = {
+          acceptanceRate: getVal('ACCEPT_RATE'),
+          medianGpa: getVal('MEDIAN_GPA_X100') ? getVal('MEDIAN_GPA_X100')! / 100 : null,
+          sat25th: getVal('SAT_25TH'),
+          sat75th: getVal('SAT_75TH'),
+          act25th: getVal('ACT_25TH'),
+          act75th: getVal('ACT_75TH'),
+          confidence: confidence(['ACCEPT_RATE', 'SAT_25TH', 'SAT_75TH']),
+        };
+
+        // Outcomes lens
+        const outcomes = {
+          medianSalary2yr: getVal('MEDIAN_EARNINGS_2YR'),
+          medianDebt: getVal('MEDIAN_DEBT'),
+          gradRate: getVal('GRAD_RATE'),
+          confidence: confidence(['MEDIAN_EARNINGS_2YR', 'MEDIAN_DEBT', 'GRAD_RATE']),
+        };
+
+        // Cost lens
+        const tuitionInState = getVal('TUITION_IN_STATE');
+        const tuitionOutState = getVal('TUITION_OUT_STATE');
+        const roomBoard = getVal('ROOM_BOARD');
+        const totalCost = hasValue(tuitionOutState) && hasValue(roomBoard)
+          ? (tuitionOutState ?? 0) + (roomBoard ?? 0)
+          : (hasValue(tuitionOutState) ? tuitionOutState : (hasValue(roomBoard) ? roomBoard : null));
+
+        const cost = {
+          tuitionInState,
+          tuitionOutState,
+          roomBoard,
+          totalCost,
+          confidence: confidence(['TUITION_OUT_STATE', 'ROOM_BOARD']),
+        };
+
+        // Fit lens (rule-based scoring)
+        let fitScore = 0;
+        let academicScore = 0;
+        let financialScore = 0;
+        let interestScore = 0;
+        const explanation: string[] = [];
+
+        if (profile) {
+          // Academic fit: GPA distance from median
+          if (profile.gpa && hasValue(getVal('MEDIAN_GPA_X100'))) {
+            const medianGpa = getVal('MEDIAN_GPA_X100')! / 100;
+            const diff = Math.abs(profile.gpa - medianGpa);
+            academicScore = diff < 0.2 ? 100 : diff < 0.5 ? 70 : diff < 1.0 ? 40 : 20;
+            if (profile.gpa >= medianGpa) {
+              explanation.push('GPA above school median');
+            } else {
+              explanation.push('GPA below school median');
+            }
+          }
+
+          // Financial fit: budget match
+          if (profile.annualBudgetMin != null && profile.annualBudgetMax != null && totalCost) {
+            if (totalCost >= profile.annualBudgetMin && totalCost <= profile.annualBudgetMax) {
+              financialScore = 100;
+              explanation.push('Total cost within budget');
+            } else if (totalCost < profile.annualBudgetMin) {
+              financialScore = 80;
+              explanation.push('Total cost below budget range');
+            } else {
+              financialScore = 30;
+              explanation.push('Total cost exceeds budget');
+            }
+          }
+
+          // Interest fit
+          if (profile.interestAreas && Array.isArray(profile.interestAreas)) {
+            const areas = profile.interestAreas as string[];
+            // Check if the university offers programs in the interest areas
+            const programs = await prisma.institutionProgramField.findMany({
+              where: { universityId: opt.universityId, degreeLevel: 'BACHELOR' },
+              include: { standardMajor: { select: { id: true, broadFieldId: true } } },
+            });
+            const broadFields = new Set(programs.map(p => p.standardMajor?.broadFieldId).filter(Boolean));
+            const overlap = areas.filter(a => broadFields.has(a)).length;
+            interestScore = areas.length > 0 ? Math.round((overlap / areas.length) * 100) : 0;
+            if (overlap > 0) {
+              explanation.push(`${overlap} interest area(s) matched`);
+            }
+          }
+
+          const w = profile.weights;
+          const salaryW = w?.salaryWeight ?? 0.25;
+          const prestigeW = w?.prestigeWeight ?? 0.25;
+          const costW = w?.costWeight ?? 0.25;
+          const fitW = w?.fitWeight ?? 0.25;
+
+          fitScore = Math.round(
+            academicScore * 0.3 + financialScore * 0.3 + interestScore * 0.2 +
+            (hasValue(getVal('GRAD_RATE')) ? getVal('GRAD_RATE')! : 50) * 0.2
+          );
+        }
+
+        const fit = {
+          overallScore: fitScore,
+          breakdown: { academic: academicScore, financial: financialScore, interest: interestScore },
+          explanation: explanation.join('. ') || 'Insufficient profile data for fit scoring',
+        };
+
+        return {
+          universityId: opt.universityId,
+          universityName: opt.university.nameEn,
+          majorName: null,
+          lenses: { admissions, outcomes, cost, fit },
+        };
+      })
+    );
+
+    // Detect trade-offs
+    const tradeoffs: Array<{ description: string; options: string[] }> = [];
+    if (optionResults.length >= 2) {
+      const costs = optionResults.map(o => o.lenses.cost.totalCost).filter((v): v is number => v !== null);
+      const salaries = optionResults.map(o => o.lenses.outcomes.medianSalary2yr).filter((v): v is number => v !== null);
+
+      if (costs.length >= 2 && Math.max(...costs) - Math.min(...costs) > 10000) {
+        tradeoffs.push({
+          description: 'Significant cost difference between options ($10K+)',
+          options: optionResults.filter(o => o.lenses.cost.totalCost !== null).map(o => o.universityName),
+        });
+      }
+      if (salaries.length >= 2 && Math.max(...salaries) - Math.min(...salaries) > 10000) {
+        tradeoffs.push({
+          description: 'Significant salary outcome difference ($10K+)',
+          options: optionResults.filter(o => o.lenses.outcomes.medianSalary2yr !== null).map(o => o.universityName),
+        });
+      }
+    }
+
+    res.json({
+      sessionId: session.id,
+      name: session.name,
+      options: optionResults,
+      tradeoffs,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error fetching comparison:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/comparison/list', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+
+    const workspace = await prisma.studentWorkspace.findFirst({
+      where: { studentId: user.id },
+      select: { id: true },
+    });
+
+    if (!workspace) {
+      return res.json({ sessions: [] });
+    }
+
+    const sessions = await prisma.comparisonSession.findMany({
+      where: { workspaceId: workspace.id },
+      select: { id: true, name: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    res.json({ sessions });
+  } catch (e: unknown) {
+    console.error('[BFF] Error listing comparisons:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Report Generation ───
+
+app.post('/api/report/generate', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string; role: string } };
+    const { sessionId } = req.body;
+
+    if (!sessionId) {
+      return res.status(400).json({ error: 'SESSION_ID_REQUIRED' });
+    }
+
+    // Check entitlement: only PRO/COUNSELOR can generate reports
+    if (user.role === 'FREE' || user.role === 'GUEST') {
+      return res.status(403).json({
+        error: 'UPGRADE_REQUIRED',
+        currentTier: user.role,
+        requiredTier: 'PRO',
+      });
+    }
+
+    const session = await prisma.comparisonSession.findUnique({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      return res.status(404).json({ error: 'NOT_FOUND' });
+    }
+
+    const report = await prisma.reportGeneration.create({
+      data: {
+        sessionId,
+        generatedBy: user.id,
+      },
+    });
+
+    res.json({
+      reportId: report.id,
+      pdfUrl: `/api/report/${report.id}/download`,
+      generatedAt: report.generatedAt,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error generating report:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/report/list', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+
+    const reports = await prisma.reportGeneration.findMany({
+      where: { generatedBy: user.id },
+      include: {
+        session: { select: { name: true } },
+      },
+      orderBy: { generatedAt: 'desc' },
+    });
+
+    res.json({
+      reports: reports.map(r => ({
+        id: r.id,
+        sessionName: r.session.name,
+        pdfUrl: r.pdfUrl,
+        generatedAt: r.generatedAt,
+      })),
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error listing reports:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Counselor Notes ───
+
+const createNoteSchema = z.object({
+  workspaceId: z.string(),
+  noteType: z.enum(['essay', 'interview', 'financial', 'strategy', 'other']).optional(),
+  content: z.string().min(1),
+  isShared: z.boolean().optional(),
+});
+
+app.post('/api/counselor/note', requireSession, requireCounselor, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+    const parse = createNoteSchema.safeParse(req.body);
+    if (!parse.success) {
+      return res.status(400).json({ error: 'VALIDATION_ERROR', details: parse.error.errors });
+    }
+
+    const { workspaceId, noteType, content, isShared } = parse.data;
+
+    // Verify workspace belongs to counselor
+    const workspace = await prisma.studentWorkspace.findUnique({
+      where: { id: workspaceId },
+    });
+
+    if (!workspace || workspace.counselorId !== user.id) {
+      return res.status(403).json({ error: 'FORBIDDEN' });
+    }
+
+    const note = await prisma.counselorNote.create({
+      data: {
+        workspaceId,
+        counselorId: user.id,
+        noteType: noteType || 'other',
+        content,
+        isShared: isShared ?? false,
+      },
+    });
+
+    res.json({ note, created: true });
+  } catch (e: unknown) {
+    console.error('[BFF] Error creating note:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/counselor/notes/:workspaceId', requireSession, requireCounselor, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+
+    const workspace = await prisma.studentWorkspace.findUnique({
+      where: { id: req.params.workspaceId },
+    });
+
+    if (!workspace || workspace.counselorId !== user.id) {
+      return res.status(403).json({ error: 'FORBIDDEN' });
+    }
+
+    const notes = await prisma.counselorNote.findMany({
+      where: { workspaceId: req.params.workspaceId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    res.json({ notes });
+  } catch (e: unknown) {
+    console.error('[BFF] Error listing notes:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Student: Get Workspace Info ───
+
+app.get('/api/student/workspace', requireSession, requireStudent, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+
+    const workspace = await prisma.studentWorkspace.findFirst({
+      where: { studentId: user.id },
+      include: {
+        counselor: { select: { name: true, email: true, counselorSpecialty: true } },
+      },
+    });
+
+    if (!workspace) {
+      return res.json({ workspace: null });
+    }
+
+    res.json({
+      workspace: {
+        id: workspace.id,
+        counselorName: workspace.counselor.name,
+        counselorEmail: workspace.counselor.email,
+        counselorSpecialty: workspace.counselor.counselorSpecialty,
+        inviteAccepted: workspace.inviteAccepted,
+        createdAt: workspace.createdAt,
+      },
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error fetching workspace:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Serve static assets in production mode
 const distPath = path.resolve(__dirname, '../dist');
 app.use(express.static(distPath));

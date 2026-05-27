@@ -2313,7 +2313,7 @@ app.get('/api/comparison/:sessionId', requireSession, async (req, res) => {
         const metricMap = new Map<string, { valueNumeric: number | null; valueStatus: string }>();
         for (const m of metrics) {
           metricMap.set(m.metricKey, { valueNumeric: m.valueNumeric, valueStatus: m.valueStatus });
-        });
+        }
 
         const getVal = (key: string) => {
           const m = metricMap.get(key);

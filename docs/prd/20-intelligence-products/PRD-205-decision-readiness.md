@@ -111,13 +111,20 @@ Risk Awareness helps users understand what could make a direction weaker, uncert
 
 ## Outcome 4: Parent-readable Report
 
-The parent-readable report converts workspace analysis into a tangible decision artifact.
+The parent-readable report converts workspace analysis into a tangible decision artifact that both student and parent can discuss using shared, data-backed information.
+
+### Research Context
+
+Customer research reveals parents feel "zero training on how to support their kids" and fear "watched the ROI evaporate." The report must address parent anxiety with data while preserving the student's agency in the decision.
 
 ### Product Rules
 
 - The report should explain direction, comparison, evidence, risks, and next steps in language a parent can understand.
 - The report should preserve data confidence and source limitations.
 - The report should support both self-guided and counselor-guided usage.
+- The report should include a "Passion vs. Money Trade-off Summary" section that shows what the student values most and how it compares to financial outcomes — presented without judgment.
+- The report should include a "Cost Transparency" section showing total cost of attendance, expected financial aid, and projected debt-to-income ratio for each Decision Option.
+- The report should include a "Risk Summary" written in family-friendly language: what could go wrong, how likely, and what the contingency plan could be.
 
 ## Outcome 5: Action Readiness
 

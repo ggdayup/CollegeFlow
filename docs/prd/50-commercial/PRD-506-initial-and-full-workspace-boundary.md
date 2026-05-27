@@ -1,14 +1,8 @@
 # PRD-506: Initial and Full Workspace Boundary
 
-Status: Draft
+**Status**: Approved (Aligned via /grill-me interactive session)
 
-## Purpose
-
-Define the product boundary between the free Initial Workspace and the paid Full Decision Workspace.
-
-This boundary controls the most important conversion moment in the product: the user should see enough value to trust the platform, but the complete decision workflow should remain paid.
-
-## Depends On
+## Downstream Consumers
 
 - [PRD-000: Commercial Thesis](../00-charter/PRD-000-commercial-thesis.md)
 - [PRD-200: Decision Profile](../20-intelligence-products/PRD-200-decision-profile.md)
@@ -18,109 +12,96 @@ This boundary controls the most important conversion moment in the product: the 
 - [PRD-500: Entitlement Model](PRD-500-entitlement-model.md)
 - [PRD-505: Invited User Conversion Path](PRD-505-invited-user-conversion-path.md)
 
+---
+
 ## Core Boundary Principle
 
-The Initial Workspace proves that the decision work is worth continuing.
+The **Initial Workspace (初级预览工作台)** proves that the decision work is worth continuing.
 
-The Full Decision Workspace delivers enough evidence, explanation, reporting, and next-step workflow for the student, parent, counselor, or institution to act on the decision. This paid outcome is defined by [PRD-205: Decision Readiness](../20-intelligence-products/PRD-205-decision-readiness.md).
-
-In short:
+The **Full Decision Workspace (深度决策工作台)** delivers enough evidence, explanation, reporting, risk mitigation, and next-step actions for the student, parent, or counselor to act on the decision.
 
 ```text
-Initial Workspace: worth continuing
-Full Decision Workspace: ready to decide and act
+Initial Workspace: worth continuing (Free / Preview)
+Full Decision Workspace: ready to decide and act (Paid Pro Upgrade)
 ```
 
-## Initial Workspace
+---
 
-The Initial Workspace is the free or pre-unlock workspace. It should make the product feel personal, credible, and worth continuing without completing the full decision workflow.
+## Product Requirements
 
-### Free Value
+### 1. Dual Conversion Pathways (双重支付转化路径)
 
-The Initial Workspace may include:
+When a user hits a Pro premium gating barrier in the Initial Workspace, the system provides **two distinct conversion pathways** to cater to all user roles:
 
-- basic Decision Profile summary;
-- high-level initial insight;
-- top decision risk previews;
-- major, school, or program direction preview;
-- visible data gap or uncertainty previews;
-- locked comparison, report, checklist, and collaboration previews;
-- parent unlock call to action when a student starts alone.
+#### Pathway A: Direct Checkout (一键直接升级)
+- **Target**: Independent students with their own credit cards, parents using their own accounts, or professional counselors purchasing platform tools.
+- **Action**: Direct access to credit card payment form / Stripe QR Code to instantly upgrade the active account to Pro Unlimited ($19/mo).
 
-### Product Requirements
+#### Pathway B: Ask Parent to Unlock (发送家长代付简报)
+- **Target**: Students dependent on family financing who do not own credit cards.
+- **Action**: Clicking "Ask Parent to Unlock" opens a quick form where the student inputs the parent's email/contact.
+- **Outcome**: The system generates a personalized, highly professional **Parent Teaser Portal URL (家长代付决策邀请信与简报)** sent directly to the parent.
 
-- The user should understand that the workspace is based on their own profile, not generic content.
-- The user should see that deeper analysis exists.
-- The user should see why paying unlocks meaningful decision progress.
-- The Initial Workspace should not provide a complete school, major, program, or report-level decision package.
-- The Initial Workspace should avoid unsupported certainty and should show missing or uncertain data honestly.
+---
 
-## Full Decision Workspace
+### 2. Parent Teaser Portal & Decision Readiness Matrix (家长代付简报页信息架构)
 
-The Full Decision Workspace is the core paid product.
+The generated Parent Teaser Portal is a web view tailored specifically to the psychological concerns of college-paying parents (Return on Investment, Risk Aversion, and Academic Security):
 
-It should help users complete a decision cycle:
+#### A. Decision Readiness Matrix (决策就绪度评估矩阵)
+At the top of the portal, render a high-premium diagnostic matrix outlining the student's current status:
+- **🎯 方向清晰度 (Direction Clarity)**: `🟢 High` (Shows student has completed onboarding and established a baseline Major direction, e.g. US Computer Science).
+- **📊 数据对比度 (Data-backed Comparison)**: `🟡 Pending Activation` (Alerts parent that UMich vs. Rice program cost/salary comparisons are pre-calculated and awaiting unlock).
+- **⚠️ 风险防范度 (Risk Awareness)**: `🔴 Salient Risk Warnings Found` (Alerts parent that the system has detected **2 Critical Graduation / Saturated Market Risks** for the child's chosen path. Detail is locked).
+- **📝 行动就绪度 (Action Readiness)**: `🔴 Action Pending` (Alerts parent that a 4-year prerequisite scheduling checklist is prepared to avoid graduation delay, awaiting unlock).
 
-```text
-Direction Clarity
-  -> Data-backed Comparison
-    -> Risk Awareness
-      -> Parent-readable Report
-        -> Action Readiness
-```
+#### B. The Credibility Anchors (信任锚点与真数据)
+- The page displays actual, authenticated starting salary figures for their child's target school (e.g. UMich CS: $78,000) with official USN/IPEDS verification codes to build maximum data trust.
 
-### Paid Unlock Value
+#### C. The Conversion Goad (风险厌恶升级诱饵)
+- Detailed risk explanations and the graduation checklist are teasingly locked.
+- **CTA 文案**: `"🔒 Upgrade for $19 (the price of a cup of coffee) to instantly reveal the 2 Critical Graduation Risks, unlock 40-year ROI salary trends, and protect your child's educational yield."`
+- Parent pays via one-click checkout, instantly unlocking the parent portal and upgrading the student's main workspace to Pro in real-time.
 
-The Full Decision Workspace may unlock:
+---
 
-- full Decision Profile;
-- full insight explanation;
-- major, school, or program direction analysis;
-- School / Program Decision Option comparisons;
-- source and confidence cues;
-- detailed risk and gap explanations;
-- parent-readable report;
-- next-step checklist;
-- optional counselor or institution collaboration layer;
-- workspace updates as the user's decision evolves.
+### 3. Dynamic Teaser Gating (真数据动态脱敏预览与精准模糊)
 
-### Product Requirements
+To hook user curiosity without appearing cold or generic, premium components in the Initial Workspace implement **Dynamic Teaser Gating** instead of static locked cards:
 
-- The user should understand what changed after unlock.
-- The workspace should support both self-guided and guided usage.
-- Direction Clarity and Data-backed Comparison should be the highest-priority paid workspace outcomes.
-- The first paid comparison should focus on School / Program Decision Options.
-- The parent-readable report should make payment feel like a tangible decision deliverable.
-- Data-backed comparisons should connect the product's data assets to user-perceived value.
-- Next-step checklists should convert analysis into progress.
-- Collaboration should enhance channel-led workflows without making counselor service mandatory.
+#### A. The 40-Year ROI Chart Gating
+- **Free Visibility**: The chart displays real, interactive data for the **first 5 years (Recent Grad start years)**. Users can hover and see real salary points.
+- **Paid Gating**: The remaining 35 years (Prime-Age & Peak Earnings cohorts) and the Cost-of-Living adjustment toggle are elegantly blurred behind a high-premium frosted-glass overlay with the label:
+  - `"🔒 Pro Unlimited unlocks the full 40-year occupational yield and Cost-of-Living adjustment."`
 
-## Usage Modes After Unlock
+#### B. The Prerequisite Course Flow Gating
+- **Free Visibility**: Renders the first 2 core introductory requirement courses (e.g. CS 101, Data Structures) showing actual title cards.
+- **Paid Gating**: All advanced 300/400 level electives and the final graduation milestone nodes are blurred behind a misty overlay with interactive click triggers:
+  - `"🔒 Unlock full curriculum sequence, 152 credits, and graduation bottleneck warning rules."`
 
-### Self-guided
+---
 
-The student or parent uses the full workspace independently and acts as their own counselor.
+## Acceptance Criteria
 
-### Counselor-guided
+- **Given** a guest or free user visits the 40-Year ROI Chart, **when** they interact with it, **then** they can view and hover over the first 5 years of salary data, while the remaining 35 years are blurred with a frosted-glass overlay.
+- **Given** a free student hits a locked Pro feature, **when** the payment modal is triggered, **then** they are presented with both "Direct Upgrade" and "Ask Parent to Unlock" conversion pathways.
+- **Given** a student sends a Parent Teaser link, **when** the parent opens it, **then** they see a customized diagnostic "Decision Readiness Matrix" displaying `🔴 Salient Risks` and UMich CS's verified salary starting stats, completely free.
+- **Given** the parent attempts to view the specific 2 Critical Graduation Risks on the teaser portal, **when** clicked, **then** it prompts the parent with a $19 one-click代付 checkout.
+- **Given** a parent completes payment on the teaser portal, **when** successful, **then** both the parent's portal and the student's primary workspace are instantly upgraded to Pro status.
 
-An attached counselor uses the workspace to review profile data, add recommendations, interpret risks, prepare reports, and continue service delivery.
+---
 
-### Institution-guided
+## Depends On
 
-A school, agency, or institution uses the workspace as part of a broader student service workflow.
+- [PRD-000: Commercial Thesis](../00-charter/PRD-000-commercial-thesis.md)
+- [PRD-200: Decision Profile](../20-intelligence-products/PRD-200-decision-profile.md)
+- [PRD-205: Decision Readiness](../20-intelligence-products/PRD-205-decision-readiness.md)
+- [PRD-206: School / Program Comparison](../20-intelligence-products/PRD-206-school-program-comparison.md)
+- [PRD-300: Onboarding](../30-user-experience/PRD-300-onboarding.md)
+- [PRD-500: Entitlement Model](PRD-500-entitlement-model.md)
 
-## Product Rules
+## Does Not Own
 
-- Do not frame the paid unlock as merely a subscription upgrade.
-- Do not frame the paid unlock as mandatory counselor continuation.
-- Do not give away the complete decision package in the Initial Workspace.
-- Do not hide uncertainty or missing data to make the paid unlock look stronger.
-- Do make the paid unlock feel like access to a complete decision environment.
-- Do preserve self-guided value even when the user arrived through a counselor or institution.
-
-## Open Questions
-
-- How much initial insight is enough to establish trust without weakening paid conversion?
-- Which locked previews should appear first for students versus parents?
-- Should the Initial Workspace differ when the invite comes from a required workspace channel?
-- Should workspace updates be part of the first paid tier or a higher tier?
+- Raw data crawl policies or ranking math pipelines.
+- Stripe payment SDK configurations.
+- Counselor CRM administrative dashboards.

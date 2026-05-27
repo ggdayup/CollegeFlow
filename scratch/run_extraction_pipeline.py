@@ -159,10 +159,10 @@ Return ONLY the JSON within a ```json code block.
         except Exception as e:
             err_msg = str(e)
             print(f"  ❌ Gemini Error on attempt {attempt+1}: {err_msg}")
-            if "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "503" in err_msg or "UNAVAILABLE" in err_msg or "500" in err_msg:
+            if "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "503" in err_msg or "UNAVAILABLE" in err_msg or "500" in err_msg or "timeout" in err_msg.lower() or "time out" in err_msg.lower():
                 if attempt < max_retries - 1:
                     delay = retry_delays[attempt]
-                    print(f"  ⏳ Rate limit/Server error encountered. Backing off for {delay} seconds...")
+                    print(f"  ⏳ Rate limit/Server/Timeout error encountered. Backing off for {delay} seconds...")
                     time.sleep(delay)
                     continue
             raise e

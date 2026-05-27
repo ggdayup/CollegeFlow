@@ -1,0 +1,82 @@
+{
+  "18_dartmouth": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779728905.9928908
+  },
+  "20_notredame": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779730990.269088
+  },
+  "21_michigan": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779732501.1575701
+  },
+  "22_georgetown": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779734482.201952
+  },
+  "23_unc": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779736528.084212
+  },
+  "24_cmu": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779738229.4614599
+  },
+  "25_emory": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779740858.58714
+  },
+  "26_uva": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779743299.476646
+  },
+  "27_washu": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779744770.840487
+  },
+  "28_ucdavis": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779746064.166639
+  },
+  "28_usc": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779747899.237992
+  },
+  "29_ucsd": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779749307.0138109
+  },
+  "30_florida": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779751584.343424
+  },
+  "30_utaustin": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779753576.6301062
+  },
+  "31_amherst": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779753816.970709
+  },
+  "32_bowdoin": {
+    "completed": true,
+    "step": "done",
+    "timestamp": 1779756138.864526
+  }
+}

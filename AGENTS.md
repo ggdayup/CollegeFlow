@@ -76,6 +76,9 @@
 - For cross-widget state such as landing-page search and dashboard search, lift state to the nearest common parent and pass explicit props.
 - For university school/category filters, compute visible categories from the active filtered majors and render a polished empty state when a degree level has no programs.
 - For coordinate-based diagrams such as prerequisite paths, calculate SVG links from container-relative `getBoundingClientRect()` values on resize, scroll, and drag.
+- When packaging repository scripts into an autonomous AI agent skill directory (under `.agents/skills/`), copy all parent/sibling dependencies (helpers, configurations, schemas) to maintain import integrity. Update all script command paths in the skill's `SKILL.md` to reference the localized files under the skill's subdirectory, ensuring absolute self-containment.
+- The verification script `verify_canonical.py` expects lowercase snake_case second-level keys (e.g., `c1_applications`, `c9_test_scores`) in `CDS_canonical.json`. Keep the top-level keys in PascalCase (e.g., `C_Admissions`), but ensure all nested keys are lowercase snake_case to match both value range checks and completeness schemas.
+
 
 ## Ingestion And Matching Pitfalls
 - Public Wikidata SPARQL can time out or rate-limit. Use small batches, strict HTTP timeouts, exponential backoff, and local fallback seed data.

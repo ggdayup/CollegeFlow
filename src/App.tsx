@@ -25,6 +25,10 @@ import VerifyEmailPage from './pages/VerifyEmailPage';
 import OnboardingPage from './pages/OnboardingPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import JoinPage from './pages/JoinPage';
+import CounselorDashboardPage from './pages/CounselorDashboardPage';
+import StudentProfilePage from './pages/StudentProfilePage';
+import ComparisonPage from './pages/ComparisonPage';
 import {
   Cpu,
   TrendingUp,
@@ -688,6 +692,14 @@ export default function App() {
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/join" element={<JoinPage />} />
+
+        {/* MVP: Counselor & Student routes */}
+        <Route path="/dashboard/counselor" element={<CounselorDashboardPage />} />
+        <Route path="/dashboard/counselor/student/:workspaceId" element={<CounselorDashboardPage />} />
+        <Route path="/dashboard/student/profile" element={<StudentProfilePage />} />
+        <Route path="/dashboard/student/compare" element={<ComparisonPage />} />
+        <Route path="/dashboard/student/results/:sessionId" element={<ComparisonPage />} />
 
         {/* Admin-only routes */}
         <Route

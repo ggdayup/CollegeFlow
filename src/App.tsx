@@ -29,6 +29,9 @@ import JoinPage from './pages/JoinPage';
 import CounselorDashboardPage from './pages/CounselorDashboardPage';
 import StudentProfilePage from './pages/StudentProfilePage';
 import ComparisonPage from './pages/ComparisonPage';
+import UniversityDetailPage from './pages/UniversityDetailPage';
+import SubscriptionPage from './pages/SubscriptionPage';
+import PaywallModal from './components/PaywallModal';
 import {
   Cpu,
   TrendingUp,
@@ -693,6 +696,8 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/join" element={<JoinPage />} />
+        <Route path="/university/:universityId" element={<UniversityDetailPage />} />
+        <Route path="/subscription" element={<SubscriptionPage />} />
 
         {/* MVP: Counselor & Student routes */}
         <Route path="/dashboard/counselor" element={<CounselorDashboardPage />} />

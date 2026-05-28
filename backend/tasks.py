@@ -1,9 +1,9 @@
 import os
 import json
 import subprocess
-from celery_app import celery_app
-from parser import prune_html
-from gemini_parser import parse_curriculum_text
+from backend.celery_app import celery_app
+from backend.parser import prune_html
+from backend.gemini_parser import parse_curriculum_text
 
 def update_local_task_status(task_id: str, state: str, progress: int, message: str, result: dict = None):
     """

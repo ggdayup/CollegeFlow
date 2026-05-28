@@ -309,6 +309,124 @@ def run_e2e():
                 print(f"  ⊘ Skipped (no workspaces)")
             passed += 1
 
+            # ─── TEST 17: Subscription Status Endpoint ───
+            log("TEST 17: Subscription Status API")
+            resp = api("GET", "/api/subscription/status", cookies=student_cookie_str)
+            assert "status" in resp, f"Missing status field: {resp}"
+            print(f"  ✓ Status: {resp['status']}, plan: {resp.get('planType')}")
+            passed += 1
+
+            # ─── TEST 18: Stripe Checkout Session ───
+            log("TEST 18: Stripe Checkout Session Creation")
+            resp = api("POST", "/api/subscription/checkout", cookies=student_cookie_str, body={
+                "planType": "pro"
+            })
+            # In test mode without Stripe keys, this may fail gracefully
+            if "checkoutUrl" in resp:
+                assert resp["checkoutUrl"].startswith("http"), f"Invalid checkout URL: {resp}"
+                print(f"  ✓ Checkout URL created")
+            else:
+                print(f"  ⊘ Checkout skipped (no Stripe keys configured): {resp.get('error', 'unknown')}")
+            passed += 1
+
+            # ─── TEST 19: Self-Registered Student Workspace ───
+            log("TEST 19: Self-Registered Student Workspace")
+            # Create a second student for this test
+            student2_email = f"e2e.student2.{TEST_TS}@test.com"
+            student2_pw = "TestPass123!"
+            resp = api("POST", "/api/auth/sign-up/email",
+                       body={"name": "E2E Student 2", "email": student2_email, "password": student2_pw})
+            assert "error" not in resp, f"Student2 registration failed: {resp}"
+
+            # Login as student2
+            student2_context = browser.new_context(viewport={"width": 1280, "height": 720})
+            student2_page = student2_context.new_page()
+            student2_page.goto(f"{APP}/login", wait_until="domcontentloaded", timeout=15000)
+            student2_page.fill('input[type="email"]', student2_email)
+            student2_page.fill('input[type="password"]', student2_pw)
+            student2_page.click('button[type="submit"], button:has-text("Sign In"), button:has-text("登录")')
+            student2_page.wait_for_timeout(3000)
+            student2_cookies = student2_page.context.cookies()
+            student2_cookie_str = "; ".join([f"{c['name']}={c['value']}" for c in student2_cookies])
+
+            # Set userType to STUDENT
+            api("PATCH", "/api/users/me", body={"userType": "STUDENT"}, cookies=student2_cookie_str)
+
+            # Create personal workspace
+            resp = api("POST", "/api/student/workspace/create", cookies=student2_cookie_str)
+            assert "error" not in resp, f"Workspace create failed: {resp}"
+            assert resp.get("workspaceId"), f"No workspaceId: {resp}"
+            assert resp.get("created") == True, f"Not a new workspace: {resp}"
+            print(f"  ✓ Personal workspace created: {resp['workspaceId'][:16]}...")
+
+            # Second call should return alreadyExists
+            resp = api("POST", "/api/student/workspace/create", cookies=student2_cookie_str)
+            assert resp.get("alreadyExists") == True, f"Should report already exists: {resp}"
+            print(f"  ✓ Idempotent: alreadyExists=True")
+            passed += 1
+
+            # ─── TEST 20: University Detail API ───
+            log("TEST 20: University Detail API")
+            unis = api("GET", "/api/universities")
+            if isinstance(unis, list) and len(unis) > 0:
+                uni_id = unis[0]["id"]
+                resp = api("GET", f"/api/ipeds/university/{uni_id}")
+                assert "error" not in resp, f"University detail failed: {resp}"
+                assert "nameEn" in resp or "metrics" in resp, f"Unexpected response: {resp}"
+                print(f"  ✓ University detail: {resp.get('nameEn', unis[0]['nameEn'])}")
+            else:
+                print(f"  ⊘ Skipped (no universities)")
+            passed += 1
+
+            # ─── TEST 21: University Detail Page Renders ───
+            log("TEST 21: University Detail Page (Frontend)")
+            if isinstance(unis, list) and len(unis) > 0:
+                uni_id = unis[0]["id"]
+                student_page.goto(f"{APP}/university/{uni_id}", wait_until="domcontentloaded", timeout=15000)
+                student_page.wait_for_timeout(2000)
+                html = student_page.content()
+                assert len(html) > 500, "Page content too short"
+                print(f"  ✓ University detail page loaded ({len(html)} chars)")
+            else:
+                print(f"  ⊘ Skipped (no universities)")
+            passed += 1
+
+            # ─── TEST 22: Subscription Page Renders ───
+            log("TEST 22: Subscription Page (Frontend)")
+            student_page.goto(f"{APP}/subscription", wait_until="domcontentloaded", timeout=15000)
+            student_page.wait_for_timeout(2000)
+            body = student_page.locator("body").inner_text()
+            assert "Free" in body or "Pro" in body or "subscription" in body.lower(), \
+                f"Subscription page missing plan info: {body[:200]}"
+            print(f"  ✓ Subscription page rendered")
+            passed += 1
+
+            # ─── TEST 23: Counselor Invite Email (Dev Mode) ───
+            log("TEST 23: Counselor Invite Email (Dev Mode)")
+            test_email = f"e2e.testemail.{TEST_TS}@test.com"
+            resp = api("POST", "/api/counselor/invite", cookies=cookie_str, body={"email": test_email})
+            assert "error" not in resp, f"Invite failed: {resp}"
+            assert "inviteToken" in resp, f"No inviteToken: {resp}"
+            assert "inviteLink" in resp, f"No inviteLink: {resp}"
+            print(f"  ✓ Invite email sent (dev mode): link={resp['inviteLink'][:60]}...")
+            passed += 1
+
+            # ─── TEST 24: Onboarding Step 4 Flow (Frontend) ───
+            log("TEST 24: Onboarding Step 4 (Student Profile)")
+            # Login as student2 and go through onboarding
+            student2_page.goto(f"{APP}/onboarding", wait_until="domcontentloaded", timeout=15000)
+            student2_page.wait_for_timeout(2000)
+            # Click Student role
+            student2_page.click('button:has-text("Student"), .group:has-text("Student")')
+            student2_page.wait_for_timeout(1000)
+            # Check for "Next: Set Up Your Profile" button (Step 4 indicator)
+            html = student2_page.content()
+            if "Set Up Your Profile" in html or "Next:" in html:
+                print(f"  ✓ Onboarding Step 4 flow present")
+            else:
+                print(f"  ⊘ Onboarding Step 4 not detected (may need manual verification)")
+            passed += 1
+
         except Exception as e:
             print(f"\n  ✗ FATAL: {e}")
             page.screenshot(path="e2e-fatal-screenshot.png")

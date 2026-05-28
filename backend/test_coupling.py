@@ -2,7 +2,7 @@
 import os
 import sys
 import psycopg2
-from matcher import get_connection, couple_custom_programs
+from backend.matcher import get_connection, couple_custom_programs
 
 def run_integration_test():
     print("🧪 Running Integration Test for Automatic Coupling of Custom Programs...")

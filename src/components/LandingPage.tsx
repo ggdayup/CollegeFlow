@@ -1,21 +1,19 @@
 import { toTraditional } from '../utils/chineseLocalization';
-import React, { useState } from 'react';
-import { 
-  Search, 
-  TrendingUp, 
-  School, 
-  Trophy, 
-  AlertTriangle, 
-  Sparkles, 
-  ArrowRight, 
-  CheckCircle2, 
-  DollarSign, 
-  X, 
-  Cpu, 
-  Compass, 
-  BookOpen, 
-  HelpCircle,
-  HelpCircle as QuestionIcon
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  Search,
+  TrendingUp,
+  School,
+  Trophy,
+  AlertTriangle,
+  Sparkles,
+  ArrowRight,
+  CheckCircle2,
+  DollarSign,
+  X,
+  Cpu,
+  Compass,
+  BookOpen,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -28,13 +26,18 @@ interface LandingPageProps {
   onTriggerMajorLink: (majorId: string) => void;
 }
 
+interface SuggestionTag {
+  label: string;
+  value: string;
+}
+
 export default function LandingPage({
   language,
   isLoggedIn,
   onTriggerAuth,
   onSearch,
   onNavigateToDashboard,
-  onTriggerMajorLink
+  onTriggerMajorLink,
 }: LandingPageProps) {
   const t = (zh: string, en: string) => {
     if (language === 'zh') return zh;
@@ -45,22 +48,61 @@ export default function LandingPage({
   const [searchQuery, setSearchQuery] = useState('');
   const [showPricingModal, setShowPricingModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [inputFocused, setInputFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const suggestionTagGroups: { label: string; tags: SuggestionTag[] }[] = [
+    {
+      label: t('你想去哪个国家', 'Country'),
+      tags: [
+        { label: t('美', 'US'), value: t('美国', 'United States') },
+        { label: t('加', 'CA'), value: t('加拿大', 'Canada') },
+        { label: t('英', 'UK'), value: t('英国', 'United Kingdom') },
+        { label: t('澳', 'AU'), value: t('澳洲', 'Australia') },
+      ],
+    },
+    {
+      label: t('你想学什么专业', 'Major'),
+      tags: [
+        { label: t('计算机', 'CS'), value: t('计算机', 'Computer Science') },
+        { label: t('经济', 'Economics'), value: t('经济', 'Economics') },
+      ],
+    },
+    {
+      label: t('你想去哪个学校', 'University'),
+      tags: [
+        { label: t('哈佛', 'Harvard'), value: t('哈佛', 'Harvard') },
+        { label: t('斯坦福', 'Stanford'), value: t('斯坦福', 'Stanford') },
+      ],
+    },
+  ];
+
+  const salaryExplorerTag: SuggestionTag = {
+    label: t('我想看看这个专业赚多少钱', 'Salary Explorer'),
+    value: t('薪资探索', 'Salary Explorer'),
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoggedIn) {
-      onTriggerAuth();
-      return;
-    }
     if (searchQuery.trim()) {
       onSearch(searchQuery);
-      // Smooth scroll to step 2 majors directory
-      const el = document.getElementById('majors-directory-heading');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
     }
   };
+
+  const handleTagClick = (tagValue: string) => {
+    if (inputFocused && searchQuery.trim()) {
+      setSearchQuery((prev) => prev.trim() + ' ' + tagValue);
+      inputRef.current?.focus();
+    } else {
+      onSearch(tagValue);
+    }
+  };
+
+  useEffect(() => {
+    if (searchQuery && !inputFocused) {
+      onSearch(searchQuery);
+    }
+  }, []);
 
   const handleStatCardClick = (target: 'national' | 'benchmark' | 'roi' | 'course') => {
     if (!isLoggedIn) {
@@ -70,14 +112,14 @@ export default function LandingPage({
     if (target === 'national' || target === 'benchmark') {
       onNavigateToDashboard(target);
     }
-    const elementId = target === 'national' 
-      ? 'broad-fields-heading' 
-      : target === 'benchmark' 
-        ? 'university-navigator-heading' 
-        : target === 'roi' 
+    const elementId = target === 'national'
+      ? 'broad-fields-heading'
+      : target === 'benchmark'
+        ? 'university-navigator-heading'
+        : target === 'roi'
           ? 'roi-charts-heading'
           : 'prerequisite-flow-heading';
-          
+
     const el = document.getElementById(elementId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -95,147 +137,96 @@ export default function LandingPage({
 
   return (
     <div className="relative overflow-hidden bg-slate-50">
-      
-      {/* Background Decorative Blob Effects */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none -z-10 opacity-60">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse" />
-        <div className="absolute top-40 right-10 w-72 h-72 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-pulse delay-700" />
-        <div className="absolute top-96 left-1/3 w-80 h-80 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-1000" />
-        <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '40px 40px', opacity: 0.2 }} />
-      </div>
 
-      {/* Hero Section */}
-      <header className="relative pt-16 pb-20 lg:pt-24 lg:pb-28">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          
-          {/* Animated Promo Badge */}
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-800 text-xs sm:text-sm font-semibold mb-8 shadow-xs"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
-            <span>
-              {t('已更新：2026 全美毕业生起薪与职场回报数据库', 'Updated: 2026 Grad Outcome & Lifetime Yield Index')}
-            </span>
-          </motion.div>
+      {/* Google-Simple 100vh Hero */}
+      <header className="min-h-screen flex flex-col items-center justify-center px-4 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight">
+            CollegeFlow
+          </h1>
+          <p className="text-sm text-slate-400 mt-2">
+            {t('高校毕业生薪资与行业人才供求透视', 'College Major ROI & Career Intelligence')}
+          </p>
+        </motion.div>
 
-          {/* Title */}
-          <motion.h1 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-7xl font-black font-outfit tracking-tight text-slate-900 mb-6 leading-tight"
-          >
-            {t('高校毕业生薪资与行业人才供求透视', 'Unlock College Major Lifetime ROI & Salaries')}
-            <span className="bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent text-3xl sm:text-4xl lg:text-5xl mt-2 block font-extrabold tracking-normal">
-              {t('MajorAnalytics 智能学术与职场分析系统', 'Careers Selection & Industry Dynamics Engine')}
-            </span>
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed font-normal"
-          >
-            {t('基于全球毕业生追踪报告与多层级权威模型，为新一代学者、高中升学者及高校规划者提供高保真的投资回报（ROI）与课程学分拓扑透视。', 'High-fidelity analytics for the modern student and academic planner. Make data-driven decisions about your educational future with precision.')}
-          </motion.p>
-
-          {/* Interactive Search Bar Form */}
-          <motion.form 
-            onSubmit={handleSearchSubmit}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 0.3 }}
-            className="max-w-2xl mx-auto mb-16 relative"
-          >
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        {/* Search Bar */}
+        <motion.form
+          onSubmit={handleSearchSubmit}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
+          className="w-full max-w-2xl mb-6"
+        >
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
               <Search className="w-5 h-5 text-slate-400" />
             </div>
-            <input 
+            <input
+              ref={inputRef}
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-12 pr-28 py-4 sm:py-5 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 sm:text-lg shadow-md hover:shadow-lg transition-all"
-              placeholder={t('搜索大学专业、标杆院校或职业方向...', 'Search major, university, or career path...')}
+              onFocus={() => setInputFocused(true)}
+              onBlur={() => setTimeout(() => setInputFocused(false), 200)}
+              className="block w-full pl-14 pr-6 py-4 bg-white border border-slate-200 rounded-full text-lg text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-lg hover:shadow-xl transition-all"
+              placeholder={t('搜索大学、专业或职业方向...', 'Search university, major, or career path...')}
             />
-            <div className="absolute inset-y-0 right-2 flex items-center">
-              <button 
-                type="submit"
-                className="bg-blue-700 text-white px-6 py-2.5 sm:py-3 rounded-xl text-sm font-semibold hover:bg-blue-600 transition-colors shadow-sm cursor-pointer"
-              >
-                {t('立即探索', 'Explore')}
-              </button>
-            </div>
-          </motion.form>
+          </div>
+        </motion.form>
 
-          {/* Bento Stat Summary Cards Row */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto text-left"
-          >
-            {/* Stat Card 1 */}
-            <div 
-              onClick={() => handleStatCardClick('national')}
-              className="bg-white border border-slate-200 hover:border-blue-400/80 p-6 flex flex-col justify-between h-36 rounded-2xl shadow-xs relative overflow-hidden group cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md"
-            >
-              <div className="absolute -right-4 -top-4 w-20 h-20 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out opacity-60 -z-10" />
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">{t('数据库容量', 'Database')}</p>
-              <div className="flex items-baseline gap-1 mt-auto">
-                <span className="text-3xl font-extrabold font-outfit text-blue-800">152</span>
-                <span className="text-slate-500 text-xs font-semibold">{t('本科专业', 'Majors')}</span>
+        {/* Suggestion Tags */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          className="max-w-2xl w-full space-y-3"
+        >
+          {suggestionTagGroups.map((group) => (
+            <div key={group.label} className="flex items-center gap-2 text-sm">
+              <span className="text-xs text-slate-400 shrink-0 w-24 text-right">{group.label}</span>
+              <div className="flex gap-2 flex-wrap">
+                {group.tags.map((tag) => (
+                  <button
+                    key={tag.value}
+                    onClick={() => handleTagClick(tag.value)}
+                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all cursor-pointer"
+                  >
+                    {tag.label}
+                  </button>
+                ))}
               </div>
             </div>
-
-            {/* Stat Card 2 */}
-            <div 
-              onClick={() => handleStatCardClick('benchmark')}
-              className="bg-white border border-slate-200 hover:border-blue-400/80 p-6 flex flex-col justify-between h-36 rounded-2xl shadow-xs relative overflow-hidden group cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md"
+          ))}
+          {/* Salary Explorer */}
+          <div className="flex items-center gap-2 text-sm justify-center pt-1">
+            <button
+              onClick={() => handleTagClick(salaryExplorerTag.value)}
+              className="px-4 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs font-semibold text-amber-700 hover:border-amber-400 hover:bg-amber-100 transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <div className="absolute -right-4 -top-4 w-20 h-20 bg-amber-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out opacity-60 -z-10" />
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">{t('标杆名校', 'Coverage')}</p>
-              <div className="flex items-baseline gap-1 mt-auto">
-                <span className="text-3xl font-extrabold font-outfit text-slate-900">200+</span>
-                <span className="text-slate-500 text-xs font-semibold">{t('美/全球名校', 'Elite Univs')}</span>
-              </div>
-            </div>
+              <DollarSign className="w-3 h-3" />
+              {salaryExplorerTag.label}
+            </button>
+          </div>
+        </motion.div>
 
-            {/* Stat Card 3 */}
-            <div 
-              onClick={() => handleStatCardClick('national')}
-              className="bg-white border border-slate-200 hover:border-emerald-400 p-6 flex flex-col justify-between h-36 rounded-2xl shadow-xs relative overflow-hidden group cursor-pointer transition-all hover:-translate-y-1 hover:shadow-md"
-            >
-              <div className="absolute -right-4 -top-4 w-20 h-20 bg-emerald-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out opacity-60 -z-10" />
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">{t('增长最剧烈', 'STEM Trend')}</p>
-              <div className="flex items-baseline gap-1 mt-auto">
-                <span className="text-3xl font-extrabold font-outfit text-emerald-600">+159%</span>
-                <span className="text-slate-500 text-xs font-semibold">{t('CS & 数理', 'CS Growth')}</span>
-              </div>
-            </div>
-
-            {/* Stat Card 4 */}
-            <div 
-              onClick={() => handleStatCardClick('roi')}
-              className="bg-blue-900 border-none text-white p-6 flex flex-col justify-between h-36 rounded-2xl shadow-md relative overflow-hidden group cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg"
-            >
-              <div className="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out -z-10" />
-              <p className="text-xs font-bold uppercase tracking-wider text-blue-200">{t('起步天花板', 'Benchmark')}</p>
-              <div className="flex items-baseline gap-1 mt-auto">
-                <span className="text-3xl font-extrabold font-outfit text-white">$146k</span>
-                <span className="text-blue-200 text-xs font-semibold">{t('石油工程', 'Peak Sal')}</span>
-              </div>
-            </div>
-          </motion.div>
-
-        </div>
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className="absolute bottom-8 flex flex-col items-center gap-1 text-slate-300"
+        >
+          <span className="text-xs">{t('向下探索更多', 'Explore more below')}</span>
+          <ArrowRight className="w-4 h-4 rotate-90" />
+        </motion.div>
       </header>
 
-      {/* Product Bento Showcase */}
+      {/* Product Bento Showcase — below fold, unchanged */}
       <section className="py-20 bg-white border-y border-slate-200/60">
         <div className="max-w-7xl mx-auto px-6">
           
@@ -478,38 +469,46 @@ export default function LandingPage({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-center">
-            
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
+
             {/* Free Plan */}
             <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm flex flex-col h-full hover:border-slate-350 transition-all hover:shadow-md">
               <h3 className="text-xl sm:text-2xl font-bold font-outfit text-slate-900">
-                {t('标准免费版', 'Standard Free')}
+                {t('标准免费版', 'Free')}
               </h3>
               <div className="text-4xl font-black font-outfit text-slate-900 my-6">
                 $0<span className="text-base sm:text-lg font-medium text-slate-400">/mo</span>
               </div>
               <p className="text-slate-500 text-xs sm:text-sm mb-8 border-b border-slate-100 pb-6">
-                {t('提供大学基础学费与起薪门槛的初级概览，适合自主择业摸底。', 'Basic access for high school students starting their search.')}
+                {t('适合学生探索基础数据', 'For students exploring college options.')}
               </p>
-              <ul className="space-y-4 mb-8 flex-grow">
+              <ul className="space-y-3 mb-8 flex-grow">
                 <li className="flex items-start gap-3 text-slate-600 text-xs sm:text-sm">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <span>{t('20 大热门专业起薪概览', 'Top 20 Majors Overview')}</span>
+                  <span>{t('1 次学校对比', '1 school comparison')}</span>
                 </li>
                 <li className="flex items-start gap-3 text-slate-600 text-xs sm:text-sm">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <span>{t('全美州立院校基础档案数据', 'State University Baseline Data')}</span>
+                  <span>{t('Top 50 美国院校基础数据', 'Top 50 US baseline data')}</span>
                 </li>
-                <li className="flex items-start gap-3 text-slate-400 text-xs sm:text-sm line-through">
+                <li className="flex items-start gap-3 text-slate-600 text-xs sm:text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                  <span>{t('薪资与录取率概览', 'Salary & admissions overview')}</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-400 text-xs sm:text-sm">
                   <X className="w-4 h-4 text-slate-350 shrink-0 mt-0.5" />
-                  <span>{t('152个学科完整收益及课程流', 'All 152 majors & Prerequisite flow')}</span>
+                  <span>{t('PDF 报告生成', 'PDF report generation')}</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-400 text-xs sm:text-sm">
+                  <X className="w-4 h-4 text-slate-350 shrink-0 mt-0.5" />
+                  <span>{t('完整 ROI 分析', 'Full ROI analysis')}</span>
                 </li>
               </ul>
-              <button 
-                onClick={() => handleUpgradeClick(t('免费版', 'Free Standard'))}
+              <button
+                onClick={() => handleUpgradeClick(t('免费版', 'Free'))}
                 className="w-full py-3 px-4 rounded-xl font-bold border border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
               >
-                {t('开启免费使用', 'Start Free')}
+                {t('开始使用', 'Get Started Free')}
               </button>
             </div>
 
@@ -518,41 +517,78 @@ export default function LandingPage({
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500 text-blue-950 text-[10px] font-bold uppercase tracking-widest py-1 px-3.5 rounded-full shadow-md">
                 {t('最受欢迎', 'Most Popular')}
               </div>
-              
+
               <h3 className="text-xl sm:text-2xl font-bold font-outfit text-white">
-                {t('专业无限版', 'Pro Unlimited')}
+                {t('专业版', 'Pro')}
               </h3>
               <div className="text-4xl font-black font-outfit text-white my-6">
                 $19<span className="text-base sm:text-lg font-medium text-blue-300">/mo</span>
               </div>
               <p className="text-blue-200 text-xs sm:text-sm mb-8 border-b border-blue-900 pb-6">
-                {t('解锁完整的多维排名净化档案、课程拓扑构建器，支持多维报表导出。', 'Comprehensive analytics for serious planners and counselors.')}
+                {t('无限对比，完整数据，品牌报告', 'Unlimited comparisons with full data & reports.')}
               </p>
-              
-              <ul className="space-y-4 mb-8 flex-grow">
+
+              <ul className="space-y-3 mb-8 flex-grow">
                 <li className="flex items-start gap-3 text-white text-xs sm:text-sm">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>{t('解锁全部 152 个专业的统计数据', 'All 152 Majors Data Unlocked')}</span>
+                  <span>{t('无限学校与专业对比', 'Unlimited school & major comparisons')}</span>
                 </li>
                 <li className="flex items-start gap-3 text-white text-xs sm:text-sm">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>{t('标杆院校 (UMich / Rice) 深度网络地图', 'UMich/Rice Network Maps')}</span>
+                  <span>{t('完整薪资、录取、成本数据', 'Full salary, admissions & cost data')}</span>
                 </li>
                 <li className="flex items-start gap-3 text-white text-xs sm:text-sm">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>{t('连线交互式课程学分拓扑图', 'Course Topology Builder')}</span>
+                  <span>{t('40年 ROI 分析与课程流', '40-year ROI & prerequisite flow')}</span>
                 </li>
                 <li className="flex items-start gap-3 text-white text-xs sm:text-sm">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <span>{t('支持导出 PDF 研判报告与 CSV 格式', 'Export CSV & PDF Reports')}</span>
+                  <span>{t('品牌化 PDF 报告', 'Branded PDF reports')}</span>
                 </li>
               </ul>
-              
-              <button 
-                onClick={() => handleUpgradeClick(t('专业版', 'Pro Unlimited'))}
+
+              <button
+                onClick={() => handleUpgradeClick(t('专业版', 'Pro'))}
                 className="w-full py-3 px-4 rounded-xl font-bold bg-amber-500 text-blue-950 hover:bg-amber-400 transition-all shadow-[0_0_15px_rgba(245,158,11,0.4)] hover:shadow-[0_0_20px_rgba(245,158,11,0.6)] cursor-pointer"
               >
-                {t('立即升级 / Upgrade Now', 'Upgrade Now')}
+                {t('升级到 Pro', 'Upgrade to Pro')}
+              </button>
+            </div>
+
+            {/* Counselor Plan */}
+            <div className="bg-white rounded-2xl p-8 border border-purple-200 shadow-sm flex flex-col h-full hover:border-purple-350 transition-all hover:shadow-md">
+              <h3 className="text-xl sm:text-2xl font-bold font-outfit text-slate-900">
+                {t('顾问版', 'Counselor')}
+              </h3>
+              <div className="text-4xl font-black font-outfit text-slate-900 my-6">
+                $49<span className="text-base sm:text-lg font-medium text-slate-400">/mo</span>
+              </div>
+              <p className="text-slate-500 text-xs sm:text-sm mb-8 border-b border-slate-100 pb-6">
+                {t('为升学顾问打造的家庭会议工具', 'Built for counselors running family meetings.')}
+              </p>
+              <ul className="space-y-3 mb-8 flex-grow">
+                <li className="flex items-start gap-3 text-slate-600 text-xs sm:text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 mt-0.5" />
+                  <span>{t('最多 50 名学生管理', 'Up to 50 students')}</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-600 text-xs sm:text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 mt-0.5" />
+                  <span>{t('学生邀请与进度追踪', 'Student invites & progress tracking')}</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-600 text-xs sm:text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 mt-0.5" />
+                  <span>{t('品牌化对比报告', 'Branded comparison reports')}</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-600 text-xs sm:text-sm">
+                  <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0 mt-0.5" />
+                  <span>{t('Pro 版全部功能', 'All Pro features included')}</span>
+                </li>
+              </ul>
+              <button
+                onClick={() => handleUpgradeClick(t('顾问版', 'Counselor'))}
+                className="w-full py-3 px-4 rounded-xl font-bold bg-purple-700 hover:bg-purple-600 text-white transition-colors cursor-pointer"
+              >
+                {t('升级到 Counselor', 'Upgrade to Counselor')}
               </button>
             </div>
 

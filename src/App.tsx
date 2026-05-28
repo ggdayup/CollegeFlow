@@ -31,6 +31,7 @@ import StudentProfilePage from './pages/StudentProfilePage';
 import ComparisonPage from './pages/ComparisonPage';
 import UniversityDetailPage from './pages/UniversityDetailPage';
 import SubscriptionPage from './pages/SubscriptionPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import PaywallModal from './components/PaywallModal';
 import {
   Cpu,
@@ -125,6 +126,7 @@ function AppContent({
   const [selectedBroadField, setSelectedBroadField] = useState<string | null>(null);
   const [selectedDetailedField, setSelectedDetailedField] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResultsQuery, setSearchResultsQuery] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -277,41 +279,26 @@ function AppContent({
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-10">
 
         {!isLoggedIn ? (
-          <>
-            {/* Brand Landing Page Entry Portal */}
+          searchResultsQuery ? (
+            <SearchResultsPage
+              query={searchResultsQuery}
+              isLoggedIn={isLoggedIn}
+              language={language}
+              onBack={() => setSearchResultsQuery(null)}
+              onTriggerAuth={() => navigate('/login')}
+              onNavigateToMajor={(majorId) => setSearchResultsQuery(majorId)}
+              onNavigateToUniversity={(universityId) => navigate(`/university/${universityId}`)}
+            />
+          ) : (
             <LandingPage
               language={language}
               isLoggedIn={isLoggedIn}
               onTriggerAuth={() => navigate('/login')}
-              onSearch={setSearchQuery}
+              onSearch={setSearchResultsQuery}
               onNavigateToDashboard={(view) => setActiveView(view)}
               onTriggerMajorLink={handleLinkNationalMajor}
             />
-
-            {/* Locked State paywall visual lock overlay */}
-            <div className="relative border-t border-slate-200/60 pt-16 pb-20 text-center bg-slate-100/35 rounded-2xl border border-slate-200">
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-50/90 to-transparent pointer-events-none -mt-40" />
-              <div className="max-w-md mx-auto space-y-6 relative z-10 px-4">
-                <div className="w-14 h-14 bg-amber-50 border border-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto shadow-xs">
-                  <TrendingUp className="w-7 h-7 text-amber-500 animate-bounce" />
-                </div>
-                <h3 className="text-2xl font-extrabold text-slate-900 font-outfit">
-                  {language === 'zh' ? '🔑 登录解锁完整多维分析大厅' : '🔑 Log In to Unlock Interactive Dashboards'}
-                </h3>
-                <p className="text-slate-550 text-slate-500 text-sm leading-relaxed">
-                  {language === 'zh'
-                    ? '我们的全美专业透视、标杆院校地图（UMich / Rice）、学分课程依赖流及折线收益 ROI 工具仅限注册用户使用。您可以一键登录体验完整版！'
-                    : 'Access to detailed major comparisons, UMich/Rice network maps, lifecycle curves and credit bento flows requires a free account.'}
-                </p>
-                <button
-                  onClick={() => navigate('/login')}
-                  className="px-8 py-3.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
-                >
-                  {language === 'zh' ? '一键登录体验' : 'Sign In Now'}
-                </button>
-              </div>
-            </div>
-          </>
+          )
         ) : (
           <>
             <div id="interactive-dashboard-anchor" className="pt-4 border-t border-slate-200" />

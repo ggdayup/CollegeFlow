@@ -5,13 +5,19 @@ dist/
 # Python/runtime generated files
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 backend/venv/
+**/venv/
+**/.venv/
 
 # Local environment and OS files
 .env
 .env.local
 .env.*.local
 .DS_Store
+*.swp
+*.swo
 
 # Local large data artifacts
 data/ipeds/
@@ -19,3 +25,25 @@ data/ipeds/
 *.mdb
 *.csv
 *.parquet
+
+# IDE and AI assistant tool directories
+.agents/
+.claude/
+.codebuddy/
+.qoder/
+.qwen/
+.trae/
+.idea/
+.vscode/
+
+# Working/scratch directories
+scratch/
+issue/
+skills/
+skills-lock.json
+
+# Submodule local data (keep submodule structure, ignore generated data)
+data/cds/CollegeFlow_CDS/cds_data/
+data/cds/CollegeFlow_CDS/database/
+data/cds/CollegeFlow_CDS/pdf-parse/
+data/cds/CollegeFlow_CDS/scratch/

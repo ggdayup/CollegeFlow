@@ -49,6 +49,13 @@ export const auth = betterAuth({
     process.env.FRONTEND_URL || 'http://localhost:38030',
     'http://127.0.0.1:38030',
   ],
+  // Unified: use Prisma's User model directly (no separate better-auth "user" table)
+  user: {
+    modelName: 'User',
+    fields: {
+      emailVerified: 'emailVerified',
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: process.env.EMAIL_DEV_MODE === 'true' ? false : true,
@@ -83,7 +90,7 @@ export const auth = betterAuth({
       );
     },
     async afterEmailVerification(user) {
-      await syncAppUserFromAuthUser(user, true);
+      // User model unified — better-auth writes directly to Prisma User
     },
   },
   session: {
@@ -93,31 +100,6 @@ export const auth = betterAuth({
     },
   },
 });
-
-async function syncAppUserFromAuthUser(
-  user: { email: string; name?: string | null },
-  emailVerified: boolean,
-) {
-  await prisma.user.upsert({
-    where: { email: user.email.toLowerCase() },
-    create: {
-      email: user.email.toLowerCase(),
-      name: user.name || null,
-      role: 'FREE',
-      userType: 'STUDENT',
-      subscriptionStatus: 'none',
-      passwordHash: '',
-      emailVerified,
-      emailVerifiedAt: emailVerified ? new Date() : null,
-    },
-    update: {
-      ...(user.name !== undefined && { name: user.name || null }),
-      emailVerified,
-      emailVerifiedAt: emailVerified ? new Date() : null,
-      disabled: false,
-    },
-  });
-}
 
 // ============================================
 // Auth Routes
@@ -190,41 +172,32 @@ app.get('/api/auth/me', async (req, res) => {
       return res.status(401).json({ error: 'Account has been disabled' });
     }
 
-    if (!dbUser || (baUser.emailVerified && !dbUser.emailVerified)) {
-      await syncAppUserFromAuthUser(
-        { email: baUser.email, name: baUser.name || null },
-        !!baUser.emailVerified,
-      );
-    }
-
-    if (dbUser) {
+    // If the Prisma User doesn't exist yet (legacy account), create it
+    if (!dbUser) {
+      const newUser = await prisma.user.create({
+        data: {
+          email: baUser.email.toLowerCase(),
+          name: baUser.name || null,
+          role: 'FREE',
+          userType: 'STUDENT',
+          subscriptionStatus: 'none',
+          passwordHash: '',
+          emailVerified: !!baUser.emailVerified,
+          emailVerifiedAt: baUser.emailVerified ? new Date() : null,
+        },
+      });
       return res.json({
-        ...dbUser,
-        emailVerified: baUser.emailVerified || dbUser.emailVerified,
-        emailVerifiedAt: baUser.emailVerified && !dbUser.emailVerifiedAt
-          ? new Date()
-          : dbUser.emailVerifiedAt,
+        ...newUser,
+        emailVerified: baUser.emailVerified || newUser.emailVerified,
       });
     }
 
-    // Fallback: return Better Auth user data directly
-    res.json({
-      id: baUser.id,
-      email: baUser.email,
-      name: baUser.name,
-      emailVerified: baUser.emailVerified || false,
-      role: 'FREE',
-      userType: 'STUDENT',
-      schoolName: null,
-      gradYear: null,
-      counselorSpecialty: null,
-      teacherSubject: null,
-      customNote: null,
-      subscriptionStatus: 'none',
-      subscriptionEndsAt: null,
-      disabled: false,
-      lastLoginAt: null,
-      createdAt: (baUser as Record<string, unknown>).createdAt || new Date().toISOString(),
+    return res.json({
+      ...dbUser,
+      emailVerified: baUser.emailVerified || dbUser.emailVerified,
+      emailVerifiedAt: baUser.emailVerified && !dbUser.emailVerifiedAt
+        ? new Date()
+        : dbUser.emailVerifiedAt,
     });
   } catch (e: unknown) {
     console.error('[BFF] Error fetching session:', e);
@@ -303,21 +276,13 @@ app.use('/api/auth', async (req, res, next) => {
     }
   }
 
-  if (isSignUp && response.ok && responseJson && typeof responseJson === 'object') {
-    const authUser = (responseJson as { user?: { email?: string; name?: string | null; emailVerified?: boolean } }).user;
-    if (authUser?.email) {
-      await syncAppUserFromAuthUser(authUser as { email: string; name?: string | null }, !!authUser.emailVerified);
-    }
-  }
-
-  // After successful sign-in, update lastLoginAt
-  if (isSignIn && response.ok && req.body?.email) {
+  // After successful sign-up or sign-in, update lastLoginAt
+  if ((isSignUp || isSignIn) && response.ok && req.body?.email) {
     const email = req.body.email as string;
-    await syncAppUserFromAuthUser({ email }, true);
     prisma.user.update({
       where: { email: email.toLowerCase() },
       data: { lastLoginAt: new Date() },
-    }).catch(() => { /* ignore - user may not exist in Prisma table */ });
+    }).catch(() => { /* ignore - user may not exist yet */ });
   }
 
   res.status(response.status);
@@ -366,9 +331,6 @@ app.get('/api/auth/verify-status', async (req, res) => {
     // demo@college.edu bypass
     const isDemoEmail = session.email.toLowerCase() === 'demo@college.edu';
     const isVerified = isDemoEmail || !!session.emailVerified || !!dbUser?.emailVerified;
-    if (session.emailVerified && !dbUser?.emailVerified) {
-      await syncAppUserFromAuthUser(session, true);
-    }
 
     res.json({
       emailVerified: isVerified,

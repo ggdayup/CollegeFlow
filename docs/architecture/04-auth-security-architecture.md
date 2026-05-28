@@ -123,13 +123,26 @@ Backend middleware exists for **role checks** but not **entitlement checks**:
 
 The `/api/comparison` endpoint does check FREE tier limits internally, but there is no general entitlement middleware. Per [ADR-004](../adr/ADR-004-saas-entitlement-boundary.md), entitlement enforcement must happen at the backend before any billing integration.
 
-### Target State
+### Target State — Implemented ✅
+
+Backend entitlement middleware now enforces feature gates at the route level:
 
 ```
 Client → BFF → [Auth Middleware] → [Entitlement Middleware] → Route Handler
                               ↑                        ↑
                         Is user logged in?       Has feature access?
 ```
+
+| Middleware | Checks | Example |
+|------------|--------|---------|
+| `requireSession` | Has valid session | Most MVP routes |
+| `requireEntitlement('PRO')` | role >= PRO | PDF report generation |
+| `requireEntitlement('COUNSELOR')` | role >= COUNSELOR | Counselor CRM routes |
+| `requireAdmin` | role === ADMIN | Admin console routes |
+
+The `requireEntitlement` middleware uses tier ordering: `GUEST < FREE < PRO < COUNSELOR < ADMIN`. A user with role `ADMIN` can access all features; `FREE` is blocked from PRO+ features.
+
+Comparison limit enforcement remains inline in the `/api/comparison` POST handler (workspace-specific quota check, not a simple tier gate).
 
 ## Route Access Matrix
 
@@ -150,7 +163,7 @@ Client → BFF → [Auth Middleware] → [Entitlement Middleware] → Route Hand
 | `/api/student/profile` | Yes | STUDENT | — | No |
 | `/api/comparison` (POST) | Yes | — | — | Yes (FREE tier: max 1) |
 | `/api/comparison/:id` (GET) | Yes | — | — | No |
-| `/api/report/generate` | Yes | — | — | Yes (PRO/COUNSELOR only) |
+| `/api/report/generate` | Yes | — | PRO+ | Yes (`requireEntitlement('PRO')`) |
 
 ## Security Boundaries
 

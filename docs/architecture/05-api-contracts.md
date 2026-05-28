@@ -105,10 +105,12 @@ Returns rich university data including hand-crafted metadata for 16 premium univ
 
 | Method | Path | Auth | Entitlement | Description |
 |--------|------|------|-------------|-------------|
-| `POST` | `/api/report/generate` | Required | PRO or COUNSELOR | Generate PDF report for comparison |
+| `POST` | `/api/report/generate` | Required | PRO+ | Generate PDF report for comparison |
 | `GET` | `/api/report/list` | Required | — | List generated reports |
 
 FREE tier receives `403 { error: "UPGRADE_REQUIRED", currentTier: "FREE", requiredTier: "PRO" }`.
+
+Entitlement middleware (`requireEntitlement('PRO')`) enforces this at the route level.
 
 ## Admin Routes
 

@@ -512,6 +512,37 @@ async function requireAdmin(req: express.Request, res: express.Response, next: e
   next();
 }
 
+/**
+ * Backend entitlement enforcement (PRD-500, ADR-004).
+ * Checks user.role against required tier before allowing feature access.
+ */
+function requireEntitlement(requiredRole: 'PRO' | 'COUNSELOR') {
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const session = await fetchSession(req);
+    if (!session?.email) {
+      return res.status(401).json({ error: 'UNAUTHORIZED' });
+    }
+    const user = await prisma.user.findUnique({
+      where: { email: session.email.toLowerCase() },
+      select: { role: true, disabled: true },
+    });
+    if (!user || user.disabled) {
+      return res.status(401).json({ error: 'UNAUTHORIZED' });
+    }
+    const tierOrder = ['GUEST', 'FREE', 'PRO', 'COUNSELOR', 'ADMIN'];
+    const userIdx = tierOrder.indexOf(user.role);
+    const requiredIdx = tierOrder.indexOf(requiredRole);
+    if (userIdx < requiredIdx) {
+      return res.status(403).json({
+        error: 'UPGRADE_REQUIRED',
+        currentTier: user.role,
+        requiredTier: requiredRole,
+      });
+    }
+    next();
+  };
+}
+
 // ============================================
 // Existing Routes
 // ============================================
@@ -2745,21 +2776,13 @@ app.get('/api/subscription/status', requireSession, async (req, res) => {
 
 // ─── Report: Generate PDF ───
 
-app.post('/api/report/generate', requireSession, async (req, res) => {
+app.post('/api/report/generate', requireSession, requireEntitlement('PRO'), async (req, res) => {
   try {
     const { user } = req as express.Request & { user: { id: string; role: string } };
     const { sessionId } = req.body;
 
     if (!sessionId) {
       return res.status(400).json({ error: 'SESSION_ID_REQUIRED' });
-    }
-
-    if (user.role === 'FREE' || user.role === 'GUEST') {
-      return res.status(403).json({
-        error: 'UPGRADE_REQUIRED',
-        currentTier: user.role,
-        requiredTier: 'PRO',
-      });
     }
 
     const session = await prisma.comparisonSession.findUnique({ where: { id: sessionId } });

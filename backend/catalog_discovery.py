@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 # Add current directory to path so we can import from matcher
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from matcher import get_connection, couple_custom_programs
+from backend.matcher import get_connection, couple_custom_programs
 
 def slugify(text):
     """

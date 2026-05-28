@@ -8,6 +8,8 @@ export interface Entitlements {
   showPremiumAdBlockers: boolean;
   tierName: string;
   tierColor: string;
+  maxComparisons: number;
+  canGenerateReports: boolean;
 }
 
 const GUEST_ENTITLEMENTS: Entitlements = {
@@ -17,6 +19,8 @@ const GUEST_ENTITLEMENTS: Entitlements = {
   showPremiumAdBlockers: false,
   tierName: 'Guest Mode',
   tierColor: 'from-slate-500 to-slate-700',
+  maxComparisons: 0,
+  canGenerateReports: false,
 };
 
 const FREE_ENTITLEMENTS: Entitlements = {
@@ -26,6 +30,8 @@ const FREE_ENTITLEMENTS: Entitlements = {
   showPremiumAdBlockers: false,
   tierName: 'Free Account',
   tierColor: 'from-blue-500 to-indigo-600',
+  maxComparisons: 1,
+  canGenerateReports: false,
 };
 
 const PRO_ENTITLEMENTS: Entitlements = {
@@ -35,6 +41,8 @@ const PRO_ENTITLEMENTS: Entitlements = {
   showPremiumAdBlockers: true,
   tierName: 'Premium Pro',
   tierColor: 'from-amber-500 via-orange-600 to-rose-600 shadow-amber-500/20',
+  maxComparisons: 999,
+  canGenerateReports: true,
 };
 
 const ADMIN_ENTITLEMENTS: Entitlements = {
@@ -44,6 +52,19 @@ const ADMIN_ENTITLEMENTS: Entitlements = {
   showPremiumAdBlockers: true,
   tierName: 'Administrator',
   tierColor: 'from-purple-600 to-indigo-700 shadow-purple-600/20',
+  maxComparisons: 999,
+  canGenerateReports: true,
+};
+
+const COUNSELOR_ENTITLEMENTS: Entitlements = {
+  canViewRadarChart: true,
+  canCreatePrerequisiteLinks: true,
+  maxBookmarksCount: 9999,
+  showPremiumAdBlockers: true,
+  tierName: 'Counselor',
+  tierColor: 'from-purple-600 to-indigo-700 shadow-purple-600/20',
+  maxComparisons: 999,
+  canGenerateReports: true,
 };
 
 /**
@@ -52,8 +73,16 @@ const ADMIN_ENTITLEMENTS: Entitlements = {
  */
 export function computeEntitlements(user: SessionUser | null): Entitlements {
   if (!user) return GUEST_ENTITLEMENTS;
+
+  // Check subscription status for active/trialing subscribers
+  const isActiveSub = user.subscriptionStatus === 'active' || user.subscriptionStatus === 'trialing';
+  if (isActiveSub && user.role !== 'ADMIN') {
+    return user.role === 'COUNSELOR' ? COUNSELOR_ENTITLEMENTS : PRO_ENTITLEMENTS;
+  }
+
   switch (user.role) {
     case 'ADMIN': return ADMIN_ENTITLEMENTS;
+    case 'COUNSELOR': return COUNSELOR_ENTITLEMENTS;
     case 'PRO': return PRO_ENTITLEMENTS;
     case 'FREE': return FREE_ENTITLEMENTS;
     default: return GUEST_ENTITLEMENTS;

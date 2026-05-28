@@ -153,6 +153,7 @@ model User {
   counselorWorkspaces   StudentWorkspace[]    @relation("CounselorWorkspace")
   studentWorkspaces     StudentWorkspace[]    @relation("StudentWorkspace")
   subscriptionHistories SubscriptionHistory[]
+  stripeSubscriptions   StripeSubscription[]
 }
 
 model SavedItem {
@@ -453,6 +454,24 @@ model ReportGeneration {
   generator   User              @relation(fields: [generatedBy], references: [id], onDelete: Cascade)
   session     ComparisonSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
+  @@unique([sessionId, generatedBy])
   @@index([sessionId])
   @@index([generatedBy])
+}
+
+model StripeSubscription {
+  id                     String   @id @default(uuid())
+  userId                 String
+  stripeCustomerId       String   @unique
+  stripeSubscriptionId   String?  @unique
+  planType               String
+  status                 String
+  currentPeriodEnd       DateTime?
+  cancelAtPeriodEnd      Boolean  @default(false)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
 }

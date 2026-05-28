@@ -4,7 +4,7 @@ export interface SessionUser {
   id: string;
   email: string;
   name: string;
-  role: 'GUEST' | 'FREE' | 'PRO' | 'ADMIN';
+  role: 'GUEST' | 'FREE' | 'PRO' | 'COUNSELOR' | 'ADMIN';
   userType?: string;
   schoolName?: string | null;
   gradYear?: number | null;

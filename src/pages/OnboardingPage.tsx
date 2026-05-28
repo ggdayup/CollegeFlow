@@ -14,8 +14,12 @@ import {
   List,
   ArrowRight,
   Loader2,
+  DollarSign,
+  Target,
+  BarChart3,
 } from 'lucide-react';
 import { useSession } from '../utils/useSession';
+import { broadFields } from '../data/majorsData';
 
 type Role = 'STUDENT' | 'TEACHER' | 'COUNSELOR' | 'PARENT' | 'OTHER';
 
@@ -117,7 +121,7 @@ export default function OnboardingPage() {
   const { user, loading } = useSession();
   const navigate = useNavigate();
 
-  const [step, setStep] = useState<'select' | 'form'>('select');
+  const [step, setStep] = useState<'select' | 'form' | 'profile'>('select');
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -128,6 +132,15 @@ export default function OnboardingPage() {
   const [teacherSubject, setTeacherSubject] = useState('');
   const [counselorSpecialty, setCounselorSpecialty] = useState('');
   const [customNote, setCustomNote] = useState('');
+
+  // Step 4: Student profile fields
+  const [gpa, setGpa] = useState('');
+  const [satScore, setSatScore] = useState('');
+  const [actScore, setActScore] = useState('');
+  const [budgetMin, setBudgetMin] = useState('');
+  const [budgetMax, setBudgetMax] = useState('');
+  const [interestAreas, setInterestAreas] = useState<string[]>([]);
+  const [weights, setWeights] = useState({ salary: 25, prestige: 25, cost: 25, fit: 25 });
 
   // Redirect if not logged in
   useEffect(() => {
@@ -182,6 +195,12 @@ export default function OnboardingPage() {
       return;
     }
 
+    // For STUDENT role, go to profile step instead of submitting
+    if (selectedRole === 'STUDENT' && step === 'form') {
+      setStep('profile');
+      return;
+    }
+
     setSubmitting(true);
 
     const body: Record<string, string | number | null> = {
@@ -220,12 +239,50 @@ export default function OnboardingPage() {
         return;
       }
 
+      // For STUDENT role in profile step, also save decision profile
+      if (selectedRole === 'STUDENT' && step === 'profile') {
+        await saveDecisionProfile();
+      }
+
       navigate('/');
       window.location.reload();
     } catch {
       setError('Network error. Please try again.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const saveDecisionProfile = async () => {
+    // Create personal workspace if none exists
+    try {
+      const wsRes = await fetch('/api/student/workspace/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      const wsData = await wsRes.json();
+      const workspaceId = wsData.workspaceId;
+
+      if (workspaceId && (gpa || satScore || actScore || budgetMin || budgetMax || interestAreas.length > 0)) {
+        await fetch('/api/student/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            workspaceId,
+            gpa: gpa ? parseFloat(gpa) : null,
+            satScore: satScore ? parseInt(satScore, 10) : null,
+            actScore: actScore ? parseInt(actScore, 10) : null,
+            annualBudgetMin: budgetMin ? parseInt(budgetMin, 10) : null,
+            annualBudgetMax: budgetMax ? parseInt(budgetMax, 10) : null,
+            interestAreas: interestAreas.length > 0 ? interestAreas : null,
+            weights,
+          }),
+        });
+      }
+    } catch {
+      // Non-critical: profile save failure shouldn't block onboarding
     }
   };
 
@@ -433,7 +490,129 @@ export default function OnboardingPage() {
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      Continue to Dashboard
+                      {selectedRole === 'STUDENT' ? 'Next: Set Up Your Profile' : 'Continue to Dashboard'}
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </motion.form>
+            )}
+
+            {step === 'profile' && selectedRole === 'STUDENT' && (
+              <motion.form
+                key="profile"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+                {/* Back button */}
+                <button
+                  type="button"
+                  onClick={() => setStep('form')}
+                  className="text-xs text-slate-500 hover:text-slate-700 font-semibold flex items-center gap-1 cursor-pointer"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                  Back
+                </button>
+
+                <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <Target className="w-5 h-5 text-blue-600" />
+                  <span className="font-bold text-slate-900 text-sm">Student Profile</span>
+                  <span className="ml-auto text-xs text-slate-500">Step 4 of 4</span>
+                </div>
+
+                {/* Academic */}
+                <div>
+                  <h3 className="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4" /> Academic Info
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs text-slate-500 mb-1">GPA (0.0-4.0)</label>
+                      <input type="number" step="0.01" min="0" max="4" value={gpa} onChange={(e) => setGpa(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500" placeholder="3.5" />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-slate-500 mb-1">SAT Score</label>
+                      <input type="number" min="400" max="1600" value={satScore} onChange={(e) => setSatScore(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500" placeholder="1200" />
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <label className="block text-xs text-slate-500 mb-1">ACT Score (optional)</label>
+                    <input type="number" min="1" max="36" value={actScore} onChange={(e) => setActScore(e.target.value)}
+                      className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500" placeholder="26" />
+                  </div>
+                </div>
+
+                {/* Budget */}
+                <div>
+                  <h3 className="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
+                    <DollarSign className="w-4 h-4" /> Annual Budget
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs text-slate-500 mb-1">Min ($)</label>
+                      <input type="number" min="0" value={budgetMin} onChange={(e) => setBudgetMin(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500" placeholder="20000" />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-slate-500 mb-1">Max ($)</label>
+                      <input type="number" min="0" value={budgetMax} onChange={(e) => setBudgetMax(e.target.value)}
+                        className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500" placeholder="80000" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Interest Areas */}
+                <div>
+                  <h3 className="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4" /> Interest Areas
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {broadFields.map((bf) => (
+                      <label key={bf.id} className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50">
+                        <input type="checkbox" checked={interestAreas.includes(bf.id)}
+                          onChange={(e) => setInterestAreas(prev => e.target.checked ? [...prev, bf.id] : prev.filter(id => id !== bf.id))}
+                          className="w-4 h-4 text-blue-600 rounded border-slate-300" />
+                        <span className="text-sm">{bf.nameEn}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Profile Weights */}
+                <div>
+                  <h3 className="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
+                    <Target className="w-4 h-4" /> Decision Priorities
+                  </h3>
+                  {(['salary', 'prestige', 'cost', 'fit'] as const).map((key) => (
+                    <div key={key} className="mb-2">
+                      <div className="flex justify-between text-xs mb-1">
+                        <span className="capitalize text-slate-600">{key}</span>
+                        <span className="text-slate-500">{weights[key]}%</span>
+                      </div>
+                      <input type="range" min="0" max="100" value={weights[key]}
+                        onChange={(e) => setWeights(prev => ({ ...prev, [key]: parseInt(e.target.value, 10) }))}
+                        className="w-full accent-blue-600" />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Submit button */}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-3 bg-blue-700 hover:bg-blue-600 disabled:opacity-50 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {submitting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      Complete Onboarding
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}

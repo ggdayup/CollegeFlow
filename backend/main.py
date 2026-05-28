@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from typing import Optional
 
-from tasks import run_pipeline, crawl_and_parse_curriculum_task, update_local_task_status
+from backend.tasks import run_pipeline, crawl_and_parse_curriculum_task, update_local_task_status
 
 app = FastAPI(
     title="College Major Catalog Crawler API",

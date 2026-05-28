@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSession } from '../utils/useSession';
-import { Search, X, Plus, Loader2, BarChart3, Shield, DollarSign, TrendingUp, Target, FileText, AlertTriangle } from 'lucide-react';
+import { Search, X, Plus, Loader2, BarChart3, Shield, DollarSign, TrendingUp, Target, FileText, AlertTriangle, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
 
 interface University {
   id: string;
@@ -28,16 +28,40 @@ interface ComparisonOption {
 }
 
 function ConfidenceBadge({ state }: { state: string }) {
-  const colors: Record<string, string> = {
-    verified: 'bg-green-100 text-green-700',
-    stale: 'bg-amber-100 text-amber-700',
-    missing: 'bg-slate-100 text-slate-500',
-    conflicting: 'bg-red-100 text-red-700',
+  const config: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
+    verified: { color: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: <CheckCircle2 className="w-3 h-3" />, label: 'Verified' },
+    stale: { color: 'bg-amber-50 text-amber-700 border-amber-200', icon: <Clock className="w-3 h-3" />, label: 'Stale' },
+    missing: { color: 'bg-slate-50 text-slate-500 border-slate-200', icon: <AlertCircle className="w-3 h-3" />, label: 'No Data' },
+    conflicting: { color: 'bg-red-50 text-red-700 border-red-200', icon: <AlertTriangle className="w-3 h-3" />, label: 'Conflict' },
   };
+  const c = config[state] || config.missing;
   return (
-    <span className={`text-xs px-1.5 py-0.5 rounded ${colors[state] || colors.missing}`}>
-      {state}
+    <span className={`inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border ${c.color}`} title={`${c.label}: Data ${state === 'verified' ? 'from authoritative source' : state === 'stale' ? 'older than 2 years' : 'not available'}`}>
+      {c.icon} {c.label}
     </span>
+  );
+}
+
+function DataGapWarning({ options }: { options: ComparisonOption[] }) {
+  const missingFields: string[] = [];
+  for (const opt of options) {
+    if (opt.lenses.admissions.confidence === 'missing') missingFields.push(`${opt.universityName}: Admissions data`);
+    if (opt.lenses.outcomes.confidence === 'missing') missingFields.push(`${opt.universityName}: Outcomes data`);
+    if (opt.lenses.cost.confidence === 'missing') missingFields.push(`${opt.universityName}: Cost data`);
+  }
+  if (missingFields.length === 0) return null;
+  return (
+    <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
+      <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+      <div>
+        <h4 className="font-semibold text-amber-900 text-sm">Data Gaps Detected</h4>
+        <p className="text-xs text-amber-700 mt-1">Some data points are unavailable for the selected schools.</p>
+        <ul className="mt-2 text-xs text-amber-600 space-y-0.5">
+          {missingFields.slice(0, 5).map((f, i) => <li key={i}>• {f}</li>)}
+          {missingFields.length > 5 && <li>...and {missingFields.length - 5} more</li>}
+        </ul>
+      </div>
+    </div>
   );
 }
 
@@ -301,6 +325,9 @@ export default function ComparisonPage() {
             </button>
           ))}
         </div>
+
+        {/* Data Gap Warning */}
+        <DataGapWarning options={options} />
 
         {/* Comparison Table */}
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">

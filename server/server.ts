@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import pg from 'pg';
@@ -7,6 +8,8 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import { betterAuth } from 'better-auth';
 import { createTransporter, sendVerificationEmail, sendResetPasswordEmail } from './email';
+import { createCheckoutSession, createBillingPortalSession, handleWebhookEvent, setPrisma } from './stripe';
+import { generateComparisonPdf } from './pdfGenerator';
 import { universities as staticUnis } from '../src/data/universitiesData.ts';
 import { expressProxyMiddleware } from '../src/utils/apiProxy.ts';
 import bcrypt from 'bcryptjs';
@@ -27,6 +30,9 @@ const pool = new pg.Pool({
 });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
+
+// Share Prisma client with Stripe module
+setPrisma(prisma);
 
 // ============================================
 // Better Auth Configuration
@@ -1912,6 +1918,50 @@ app.post('/api/counselor/invite', requireSession, requireCounselor, async (req, 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:38030';
     const inviteLink = `${frontendUrl}/join?token=${inviteToken}`;
 
+    // Send invite email
+    const counselorUser = await prisma.user.findUnique({ where: { id: user.id }, select: { name: true } });
+    const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;padding:40px 0;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+<tr><td style="background:linear-gradient(135deg,#1e40af,#3b82f6);padding:32px 24px;text-align:center;">
+<h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:800;">CollegeFlow</h1>
+<p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">Counselor-Invited Student Workspace</p>
+</td></tr>
+<tr><td style="padding:40px 32px;">
+<h2 style="margin:0 0 16px;color:#0f172a;font-size:20px;font-weight:700;">You've been invited!</h2>
+<p style="margin:0 0 24px;color:#475569;font-size:16px;line-height:1.6;">
+Your counselor${counselorUser?.name ? ` (${counselorUser.name})` : ''} has invited you to CollegeFlow. Click below to accept the invite and set up your student workspace.
+</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:32px 0;">
+<tr><td style="border-radius:12px;background:linear-gradient(135deg,#2563eb,#1d4ed8);">
+<a href="${inviteLink}" style="display:inline-block;padding:14px 32px;color:#ffffff;font-size:16px;font-weight:700;text-decoration:none;border-radius:12px;">Accept Invite</a>
+</td></tr></table>
+<p style="margin:0 0 8px;color:#94a3b8;font-size:13px;">Or copy this link: ${inviteLink}</p>
+</td></tr>
+<tr><td style="padding:24px 32px;background-color:#f1f5f9;text-align:center;border-top:1px solid #e2e8f0;">
+<p style="margin:0;color:#94a3b8;font-size:11px;">CollegeFlow &copy; 2026. All rights reserved.</p>
+</td></tr>
+</table></td></tr></table></body></html>`.trim();
+
+    if (!emailIsDevMode) {
+      await emailTransporter.sendMail({
+        from: process.env.EMAIL_FROM || 'noreply@collegeflow.edu',
+        to: email.toLowerCase(),
+        subject: 'You have been invited to CollegeFlow',
+        html,
+        text: `Your counselor has invited you to CollegeFlow. Accept here: ${inviteLink}`,
+      });
+    } else {
+      console.log(`[Email] ===== DEV MODE: Counselor invite email for ${email} =====`);
+      console.log(`[Email] Invite link: ${inviteLink}`);
+      console.log(`[Email] =====================================================`);
+    }
+
     res.json({
       workspaceId: workspace.id,
       inviteToken,
@@ -2504,50 +2554,6 @@ app.get('/api/comparison/list', requireSession, async (req, res) => {
 
 // ─── Report Generation ───
 
-app.post('/api/report/generate', requireSession, async (req, res) => {
-  try {
-    const { user } = req as express.Request & { user: { id: string; role: string } };
-    const { sessionId } = req.body;
-
-    if (!sessionId) {
-      return res.status(400).json({ error: 'SESSION_ID_REQUIRED' });
-    }
-
-    // Check entitlement: only PRO/COUNSELOR can generate reports
-    if (user.role === 'FREE' || user.role === 'GUEST') {
-      return res.status(403).json({
-        error: 'UPGRADE_REQUIRED',
-        currentTier: user.role,
-        requiredTier: 'PRO',
-      });
-    }
-
-    const session = await prisma.comparisonSession.findUnique({
-      where: { id: sessionId },
-    });
-
-    if (!session) {
-      return res.status(404).json({ error: 'NOT_FOUND' });
-    }
-
-    const report = await prisma.reportGeneration.create({
-      data: {
-        sessionId,
-        generatedBy: user.id,
-      },
-    });
-
-    res.json({
-      reportId: report.id,
-      pdfUrl: `/api/report/${report.id}/download`,
-      generatedAt: report.generatedAt,
-    });
-  } catch (e: unknown) {
-    console.error('[BFF] Error generating report:', e);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 app.get('/api/report/list', requireSession, async (req, res) => {
   try {
     const { user } = req as express.Request & { user: { id: string } };
@@ -2672,6 +2678,185 @@ app.get('/api/student/workspace', requireSession, requireStudent, async (req, re
     });
   } catch (e: unknown) {
     console.error('[BFF] Error fetching workspace:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Student: Create Personal Workspace ───
+
+app.post('/api/student/workspace/create', requireSession, requireStudent, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string; email: string } };
+
+    const existing = await prisma.studentWorkspace.findFirst({ where: { studentId: user.id } });
+    if (existing) {
+      return res.json({ workspaceId: existing.id, alreadyExists: true });
+    }
+
+    const workspace = await prisma.studentWorkspace.create({
+      data: {
+        counselorId: user.id,
+        studentId: user.id,
+        inviteEmail: user.email.toLowerCase(),
+        inviteToken: crypto.randomBytes(16).toString('hex'),
+        inviteAccepted: true,
+      },
+    });
+
+    res.json({ workspaceId: workspace.id, created: true });
+  } catch (e: unknown) {
+    console.error('[BFF] Error creating personal workspace:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Stripe: Webhook ───
+
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'] as string;
+  try {
+    await handleWebhookEvent(req.body, sig);
+    res.json({ received: true });
+  } catch (err: unknown) {
+    console.error('[BFF] Stripe webhook error:', err);
+    res.status(400).json({ error: 'Webhook signature verification failed' });
+  }
+});
+
+// ─── Stripe: Checkout Session ───
+
+app.post('/api/subscription/checkout', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string; email: string } };
+    const { planType } = req.body;
+    if (!['pro', 'counselor'].includes(planType)) {
+      return res.status(400).json({ error: 'INVALID_PLAN' });
+    }
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:38030';
+    const checkoutUrl = await createCheckoutSession(
+      user.id,
+      user.email,
+      planType as 'pro' | 'counselor',
+      `${frontendUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      `${frontendUrl}/subscription/cancel`,
+    );
+    res.json({ checkoutUrl });
+  } catch (e: unknown) {
+    console.error('[BFF] Error creating checkout session:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Stripe: Billing Portal ───
+
+app.post('/api/subscription/manage', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+    const sub = await prisma.stripeSubscription.findUnique({ where: { userId: user.id } });
+    if (!sub?.stripeCustomerId) {
+      return res.status(404).json({ error: 'NO_SUBSCRIPTION' });
+    }
+    const manageUrl = await createBillingPortalSession(sub.stripeCustomerId);
+    res.json({ manageUrl });
+  } catch (e: unknown) {
+    console.error('[BFF] Error creating billing portal session:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Stripe: Subscription Status ───
+
+app.get('/api/subscription/status', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+    const sub = await prisma.stripeSubscription.findUnique({ where: { userId: user.id } });
+    res.json({
+      status: sub?.status || 'none',
+      planType: sub?.planType || null,
+      currentPeriodEnd: sub?.currentPeriodEnd?.toISOString() || null,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error fetching subscription status:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Report: Generate PDF ───
+
+app.post('/api/report/generate', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string; role: string } };
+    const { sessionId } = req.body;
+
+    if (!sessionId) {
+      return res.status(400).json({ error: 'SESSION_ID_REQUIRED' });
+    }
+
+    if (user.role === 'FREE' || user.role === 'GUEST') {
+      return res.status(403).json({
+        error: 'UPGRADE_REQUIRED',
+        currentTier: user.role,
+        requiredTier: 'PRO',
+      });
+    }
+
+    const session = await prisma.comparisonSession.findUnique({ where: { id: sessionId } });
+    if (!session) {
+      return res.status(404).json({ error: 'NOT_FOUND' });
+    }
+
+    const pdfBuffer = await generateComparisonPdf(sessionId, prisma);
+    const reportsDir = path.join(__dirname, '../reports');
+    await fs.mkdir(reportsDir, { recursive: true });
+    const pdfPath = path.join(reportsDir, `${sessionId}.pdf`);
+    await fs.writeFile(pdfPath, pdfBuffer);
+
+    const report = await prisma.reportGeneration.upsert({
+      where: { sessionId_generatedBy: { sessionId, generatedBy: user.id } },
+      create: { sessionId, generatedBy: user.id, pdfUrl: `/api/report/${sessionId}/download` },
+      update: { pdfUrl: `/api/report/${sessionId}/download`, generatedAt: new Date() },
+    });
+
+    res.json({
+      reportId: report.id,
+      pdfUrl: report.pdfUrl,
+      generatedAt: report.generatedAt,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error generating report:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Report: Download PDF ───
+
+app.get('/api/report/:reportId/download', requireSession, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+    const report = await prisma.reportGeneration.findUnique({
+      where: { id: req.params.reportId },
+      include: { session: { include: { workspace: true } } },
+    });
+    if (!report) {
+      return res.status(404).json({ error: 'NOT_FOUND' });
+    }
+    if (report.generatedBy !== user.id && report.session.workspace.studentId !== user.id) {
+      return res.status(403).json({ error: 'FORBIDDEN' });
+    }
+    if (!/^[0-9a-f-]{36}$/.test(report.sessionId)) {
+      return res.status(400).json({ error: 'INVALID_SESSION_ID' });
+    }
+    const pdfPath = path.join(__dirname, '../reports', `${report.sessionId}.pdf`);
+    try {
+      await fs.access(pdfPath);
+    } catch {
+      return res.status(404).json({ error: 'PDF_NOT_FOUND' });
+    }
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="CollegeFlow-${report.sessionId}.pdf"`);
+    res.sendFile(pdfPath);
+  } catch (e: unknown) {
+    console.error('[BFF] Error downloading report:', e);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

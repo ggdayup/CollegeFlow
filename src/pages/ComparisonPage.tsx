@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSession } from '../utils/useSession';
 import { Search, X, Plus, Loader2, BarChart3, Shield, DollarSign, TrendingUp, Target, FileText, AlertTriangle, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
+import ConfidenceBadge from '../components/ConfidenceBadge';
 
 interface University {
   id: string;
@@ -20,26 +21,11 @@ interface ComparisonOption {
   universityId: string;
   universityName: string;
   lenses: {
-    admissions: { acceptanceRate: number | null; sat25th: number | null; sat75th: number | null; act25th: number | null; act75th: number | null; medianGpa: number | null; confidence: string };
-    outcomes: { medianSalary2yr: number | null; medianDebt: number | null; gradRate: number | null; confidence: string };
-    cost: { tuitionInState: number | null; tuitionOutState: number | null; roomBoard: number | null; totalCost: number | null; confidence: string };
+    admissions: { acceptanceRate: number | null; sat25th: number | null; sat75th: number | null; act25th: number | null; act75th: number | null; medianGpa: number | null; confidence: string; verificationId?: string };
+    outcomes: { medianSalary2yr: number | null; medianDebt: number | null; gradRate: number | null; confidence: string; verificationId?: string };
+    cost: { tuitionInState: number | null; tuitionOutState: number | null; roomBoard: number | null; totalCost: number | null; confidence: string; verificationId?: string };
     fit: { overallScore: number; breakdown: { academic: number; financial: number; interest: number }; explanation: string };
   };
-}
-
-function ConfidenceBadge({ state }: { state: string }) {
-  const config: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
-    verified: { color: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: <CheckCircle2 className="w-3 h-3" />, label: 'Verified' },
-    stale: { color: 'bg-amber-50 text-amber-700 border-amber-200', icon: <Clock className="w-3 h-3" />, label: 'Stale' },
-    missing: { color: 'bg-slate-50 text-slate-500 border-slate-200', icon: <AlertCircle className="w-3 h-3" />, label: 'No Data' },
-    conflicting: { color: 'bg-red-50 text-red-700 border-red-200', icon: <AlertTriangle className="w-3 h-3" />, label: 'Conflict' },
-  };
-  const c = config[state] || config.missing;
-  return (
-    <span className={`inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-full border ${c.color}`} title={`${c.label}: Data ${state === 'verified' ? 'from authoritative source' : state === 'stale' ? 'older than 2 years' : 'not available'}`}>
-      {c.icon} {c.label}
-    </span>
-  );
 }
 
 function DataGapWarning({ options }: { options: ComparisonOption[] }) {
@@ -92,7 +78,7 @@ export default function ComparisonPage() {
 
   useEffect(() => {
     if (!sessionLoading && !user) { navigate('/login'); return; }
-    if (user?.userType !== 'STUDENT') { navigate('/'); return; }
+    if (user && user.userType !== 'STUDENT') { navigate('/'); return; }
     loadData();
   }, [user, sessionLoading, navigate]);
 
@@ -350,7 +336,7 @@ export default function ComparisonPage() {
                     {options.map(opt => (
                       <td key={opt.universityId} className="px-6 py-3 text-center">
                         {opt.lenses.admissions.acceptanceRate ? `${opt.lenses.admissions.acceptanceRate}%` : '—'}
-                        <ConfidenceBadge state={opt.lenses.admissions.confidence} />
+                        <ConfidenceBadge state={opt.lenses.admissions.confidence} verificationId={opt.lenses.admissions.verificationId} />
                       </td>
                     ))}
                   </tr>
@@ -383,7 +369,7 @@ export default function ComparisonPage() {
                     {options.map(opt => (
                       <td key={opt.universityId} className="px-6 py-3 text-center">
                         {formatCurrency(opt.lenses.outcomes.medianSalary2yr)}
-                        <ConfidenceBadge state={opt.lenses.outcomes.confidence} />
+                        <ConfidenceBadge state={opt.lenses.outcomes.confidence} verificationId={opt.lenses.outcomes.verificationId} />
                       </td>
                     ))}
                   </tr>
@@ -420,7 +406,7 @@ export default function ComparisonPage() {
                     {options.map(opt => (
                       <td key={opt.universityId} className="px-6 py-3 text-center">
                         {formatCurrency(opt.lenses.cost.tuitionOutState)}
-                        <ConfidenceBadge state={opt.lenses.cost.confidence} />
+                        <ConfidenceBadge state={opt.lenses.cost.confidence} verificationId={opt.lenses.cost.verificationId} />
                       </td>
                     ))}
                   </tr>

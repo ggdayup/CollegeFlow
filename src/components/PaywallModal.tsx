@@ -1,14 +1,53 @@
-import { X, Check, ArrowRight } from 'lucide-react';
+import { X, Check, ArrowRight, Users } from 'lucide-react';
 
 interface PaywallModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUpgrade: (plan: 'pro' | 'counselor') => void;
+  onAskParent?: () => void;
   featureName?: string;
+  triggerContext?: 'comparison' | 'roi' | 'prerequisite' | 'report' | 'student_limit';
+  userRole?: string;
+  userType?: string;
 }
 
-export default function PaywallModal({ isOpen, onClose, onUpgrade, featureName = 'this feature' }: PaywallModalProps) {
+const ROLE_MESSAGES: Record<string, Record<string, string>> = {
+  student: {
+    title: 'Unlock {feature}',
+    subtitle: 'Ask a parent to upgrade your workspace',
+  },
+  counselor: {
+    title: 'Upgrade to serve more students',
+    subtitle: 'Your students and families will benefit from these features',
+  },
+  default: {
+    title: 'Unlock {feature}',
+    subtitle: 'Upgrade your plan to access this feature',
+  },
+};
+
+const CONTEXT_MESSAGES: Record<string, string> = {
+  comparison: 'Create unlimited school comparisons',
+  roi: 'View full 40-year ROI projections',
+  prerequisite: 'Explore complete prerequisite pathways',
+  report: 'Generate branded PDF reports',
+  student_limit: 'Invite more students to your workspace',
+};
+
+export default function PaywallModal({
+  isOpen, onClose, onUpgrade, onAskParent,
+  featureName = 'this feature',
+  triggerContext,
+  userRole = 'student',
+  userType = 'STUDENT',
+}: PaywallModalProps) {
   if (!isOpen) return null;
+
+  const isStudent = userRole === 'FREE' && userType === 'STUDENT';
+  const messageKey = isStudent ? 'student' : 'counselor';
+  const messages = ROLE_MESSAGES[messageKey] || ROLE_MESSAGES.default;
+  const title = messages.title.replace('{feature}', featureName);
+  const contextHint = triggerContext ? CONTEXT_MESSAGES[triggerContext] : null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -18,12 +57,13 @@ export default function PaywallModal({ isOpen, onClose, onUpgrade, featureName =
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Unlock {featureName}</h2>
-        <p className="text-sm text-slate-500 mb-6">Upgrade your plan to access this feature and more.</p>
+        <h2 className="text-xl font-bold text-slate-900 mb-1">{title}</h2>
+        {contextHint && <p className="text-sm text-indigo-600 font-medium mb-1">{contextHint}</p>}
+        <p className="text-sm text-slate-500 mb-6">{messages.subtitle}</p>
 
         <div className="space-y-3 mb-6">
           {[
-            { plan: 'Pro', price: '$19/mo', features: ['Unlimited students', 'Unlimited comparisons', 'Branded PDF reports'] },
+            { plan: 'Pro', price: '$19/mo', features: ['Unlimited comparisons', 'Branded PDF reports', 'Full ROI analysis'] },
             { plan: 'Counselor', price: '$49/mo', features: ['Up to 50 students', 'Branded reports', 'CRM dashboard', 'Priority support'] },
           ].map(tier => (
             <div key={tier.plan} className="border border-slate-200 rounded-xl p-4">
@@ -43,9 +83,20 @@ export default function PaywallModal({ isOpen, onClose, onUpgrade, featureName =
         </div>
 
         <div className="flex gap-3">
-          <button onClick={() => onUpgrade('pro')} className="flex-1 py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-1 cursor-pointer">
+          <button
+            onClick={() => onUpgrade('pro')}
+            className="flex-1 py-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-1 cursor-pointer"
+          >
             Upgrade to Pro <ArrowRight className="w-4 h-4" />
           </button>
+          {isStudent && onAskParent && (
+            <button
+              onClick={onAskParent}
+              className="py-2.5 px-4 bg-purple-100 hover:bg-purple-200 text-purple-800 rounded-xl text-sm font-bold flex items-center gap-1.5 cursor-pointer"
+            >
+              <Users className="w-4 h-4" /> Ask Parent
+            </button>
+          )}
           <button onClick={onClose} className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold cursor-pointer">
             Maybe Later
           </button>

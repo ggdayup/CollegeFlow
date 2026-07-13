@@ -43,6 +43,8 @@ Returns rich university data including hand-crafted metadata for 16 premium univ
 |--------|------|------|----------|-------------|
 | `POST` | `/api/counselor/invite` | Required | COUNSELOR | Invite student by email, creates StudentWorkspace + invite token |
 | `GET` | `/api/counselor/students` | Required | COUNSELOR | List all invited students with status |
+| `GET` | `/api/counselor/student/:workspaceId` | Required | COUNSELOR | Get complete workspace details for a specific student |
+| `GET` | `/api/counselor/workspace/limits` | Required | COUNSELOR | Get current student count vs tier limit |
 | `POST` | `/api/counselor/note` | Required | COUNSELOR | Create counselor note for a workspace |
 | `GET` | `/api/counselor/notes/:workspaceId` | Required | COUNSELOR | List notes for a workspace |
 
@@ -50,6 +52,17 @@ Returns rich university data including hand-crafted metadata for 16 premium univ
 ```json
 { "workspaceId": "uuid", "inviteToken": "hex", "inviteLink": "http://localhost:38030/join?token=..." }
 ```
+
+### Student Limit Exceeded (403)
+```json
+{ "error": "STUDENT_LIMIT_EXCEEDED", "current": 3, "limit": 3, "upgradeTo": "COUNSELOR" }
+```
+
+### Workspace Limits Response
+```json
+{ "currentStudents": 2, "maxStudents": 3, "tier": "FREE", "canInviteMore": true }
+```
+- `maxStudents: -1` indicates unlimited (PRO/ADMIN tiers)
 
 ### Students List Response
 ```json

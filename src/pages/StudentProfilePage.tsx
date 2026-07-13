@@ -48,7 +48,7 @@ export default function StudentProfilePage() {
       navigate('/login');
       return;
     }
-    if (user?.userType !== 'STUDENT') {
+    if (user && user.userType !== 'STUDENT') {
       navigate('/');
       return;
     }

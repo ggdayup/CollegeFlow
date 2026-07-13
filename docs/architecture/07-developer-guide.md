@@ -137,6 +137,28 @@ When `EMAIL_DEV_MODE=true`, verification links are logged to the BFF terminal, n
 
 In dev mode, Vite proxies `/api/*` to `localhost:38090`. If you get 404 on API calls, check that the BFF is running on port 38090.
 
+### 7. Route Guard Null User Redirect
+
+When writing route guards, use `user && user.userType !== 'STUDENT'` instead of `user?.userType !== 'STUDENT'`. The optional chaining form returns `undefined !== 'STUDENT'` which is `true`, causing premature redirects when the session is still loading:
+
+```typescript
+// WRONG: redirects while loading
+useEffect(() => {
+  if (user?.userType !== 'STUDENT') { navigate('/'); return; }
+  loadData();
+}, [user, sessionLoading, navigate]);
+
+// CORRECT: waits for user to resolve
+useEffect(() => {
+  if (user && user.userType !== 'STUDENT') { navigate('/'); return; }
+  loadData();
+}, [user, sessionLoading, navigate]);
+```
+
+### 8. Better Auth Session emailVerified Column
+
+Better Auth stores sessions in raw PostgreSQL (not Prisma). The `session` table does **not** have an `emailVerified` column by default. To mark a user as verified after registration, update the `User` table directly — do not try to modify the Better Auth session table.
+
 ## Project Structure Quick Reference
 
 ```

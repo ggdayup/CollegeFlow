@@ -31,6 +31,7 @@ Dependencies should move from the commercial thesis and stable upstream product 
 | `PRD-205-decision-readiness` | `PRD-000`, `PRD-100`, `PRD-200`, `PRD-203`, `PRD-204`, `PRD-206` | Full workspace boundary, invited conversion, reports, comparisons |
 | `PRD-206-school-program-comparison` | `PRD-000`, `PRD-100`, `PRD-120`, `PRD-200`, `PRD-203`, `PRD-204`, `PRD-205` | Full workspace boundary, invited conversion, reports |
 | `PRD-305-search-entry-experience` | `PRD-001`, `PRD-002`, `PRD-200`, `PRD-206`, `PRD-301`, `PRD-302`, `PRD-500`, `PRD-506` | Onboarding, major discovery, university discovery, program comparison |
+| `PRD-306-student-personal-dashboard` | `PRD-200`, `PRD-300`, `PRD-301`, `PRD-304`, `PRD-500`, `PRD-506` | Student personal dashboard experience |
 | `PRD-500-entitlement-model` | Charter, user segment, and experience PRDs | Commercial PRDs |
 | `PRD-504-channel-partner-and-revenue-share` | `PRD-000`, `PRD-001`, `PRD-500`, `PRD-503` | Invited conversion, paywall, sponsored access |
 | `PRD-505-invited-user-conversion-path` | `PRD-000`, `PRD-200`, `PRD-205`, `PRD-206`, `PRD-300`, `PRD-500`, `PRD-504`, `PRD-506` | Onboarding, paywall, collaboration, reports |

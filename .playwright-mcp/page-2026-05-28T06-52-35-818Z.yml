@@ -1,0 +1,43 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "← Back to Home" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - heading "Counselor Dashboard" [level=1] [ref=e7]
+      - generic [ref=e8]: test-counselor-2026@example.com
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - generic [ref=e18]: Total Invited
+        - paragraph [ref=e19]: "1"
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - img [ref=e22]
+          - generic [ref=e25]: Accepted
+        - paragraph [ref=e26]: "0"
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - img [ref=e29]
+          - generic [ref=e32]: Profiles Complete
+        - paragraph [ref=e33]: "0"
+    - generic [ref=e35]: 1 / 50 students
+    - generic [ref=e36]:
+      - heading "Invite a Student" [level=2] [ref=e37]:
+        - img [ref=e38]
+        - text: Invite a Student
+      - generic [ref=e41]:
+        - textbox "student@email.com" [ref=e42]
+        - button "Send Invite" [disabled] [ref=e43]:
+          - img [ref=e44]
+          - text: Send Invite
+    - generic [ref=e45]:
+      - heading "Students" [level=2] [ref=e47]
+      - generic [ref=e50]:
+        - generic [ref=e52]: T
+        - generic [ref=e53]:
+          - paragraph [ref=e54]: test-student@example.com
+          - generic [ref=e56]:
+            - img [ref=e57]
+            - text: Pending

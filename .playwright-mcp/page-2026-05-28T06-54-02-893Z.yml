@@ -1,0 +1,13 @@
+- generic [ref=e30]:
+  - generic [ref=e31]:
+    - img [ref=e33]
+    - heading "Welcome to College Majors DB" [level=1] [ref=e36]
+    - paragraph [ref=e37]: Tell us about yourself to get started
+  - generic [ref=e200]:
+    - img [ref=e202]
+    - generic [ref=e205]:
+      - heading "Your Personalized Insight" [level=2] [ref=e206]
+      - paragraph [ref=e207]: Based on your profile, you're competitive at approximately 25 of our 50 top US schools.
+    - button "Start Exploring" [ref=e208] [cursor=pointer]:
+      - text: Start Exploring
+      - img [ref=e209]

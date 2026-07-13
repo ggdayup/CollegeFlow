@@ -21,19 +21,63 @@ interface NavItem {
 
 const t = (zh: string, en: string, lang: 'zh' | 'zht' | 'en') => (lang === 'en' ? en : zh);
 
-function getNavItems(userType: string | null): NavItem[] {
-  const base: NavItem[] = [
-    {
-      labelZh: '概览',
-      labelEn: 'Dashboard',
-      path: '/dashboard/student',
-      icon: <LayoutDashboard className="w-5 h-5" />,
-    },
+function getNavItems(userType: string | null, role: string | null): NavItem[] {
+  const isCounselor = userType === 'COUNSELOR' || role === 'COUNSELOR';
+  const isParent = userType === 'PARENT' || role === 'PARENT';
+
+  if (isCounselor) {
+    return [
+      {
+        labelZh: '探索',
+        labelEn: 'Explore',
+        path: '/dashboard/counselor',
+        icon: <Compass className="w-5 h-5" />,
+      },
+      {
+        labelZh: '学生管理',
+        labelEn: 'Students',
+        path: '/dashboard/counselor/students',
+        icon: <LayoutDashboard className="w-5 h-5" />,
+      },
+      {
+        labelZh: '工具',
+        labelEn: 'Tools',
+        path: '/dashboard/counselor/tools',
+        icon: <BarChart3 className="w-5 h-5" />,
+      },
+    ];
+  }
+
+  if (isParent) {
+    return [
+      {
+        labelZh: '探索',
+        labelEn: 'Explore',
+        path: '/dashboard/parent',
+        icon: <Compass className="w-5 h-5" />,
+      },
+      {
+        labelZh: '院校筛选',
+        labelEn: 'Schools',
+        path: '/dashboard/parent/schools',
+        icon: <LayoutDashboard className="w-5 h-5" />,
+      },
+    ];
+  }
+
+  // Base is Student
+  return [
     {
       labelZh: '探索',
       labelEn: 'Explore',
-      path: '/dashboard/student/explore',
+      path: '/dashboard/student',
       icon: <Compass className="w-5 h-5" />,
+    },
+    {
+      labelZh: '个性化概览',
+      labelEn: 'Overview',
+      path: '/dashboard/student/overview',
+      icon: <LayoutDashboard className="w-5 h-5" />,
     },
     {
       labelZh: '收藏',
@@ -48,49 +92,13 @@ function getNavItems(userType: string | null): NavItem[] {
       icon: <BarChart3 className="w-5 h-5" />,
     },
   ];
-
-  if (userType === 'COUNSELOR') {
-    return [
-      {
-        labelZh: '学生管理',
-        labelEn: 'Students',
-        path: '/dashboard/counselor',
-        icon: <LayoutDashboard className="w-5 h-5" />,
-      },
-      {
-        labelZh: '工具',
-        labelEn: 'Tools',
-        path: '/dashboard/counselor/tools',
-        icon: <BarChart3 className="w-5 h-5" />,
-      },
-    ];
-  }
-
-  if (userType === 'PARENT') {
-    return [
-      {
-        labelZh: '概览',
-        labelEn: 'Dashboard',
-        path: '/dashboard/parent',
-        icon: <LayoutDashboard className="w-5 h-5" />,
-      },
-      {
-        labelZh: '院校筛选',
-        labelEn: 'Schools',
-        path: '/dashboard/parent/schools',
-        icon: <Compass className="w-5 h-5" />,
-      },
-    ];
-  }
-
-  return base;
 }
 
 export default function Sidebar({ language, onNavigateToSettings }: SidebarProps) {
   const location = useLocation();
   const { user } = useSession();
 
-  const items = getNavItems(user?.userType ?? null);
+  const items = getNavItems(user?.userType ?? null, user?.role ?? null);
   const currentPath = location.pathname;
 
   const isActive = (path: string) => currentPath === path || currentPath.startsWith(path + '/');

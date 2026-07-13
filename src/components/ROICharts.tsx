@@ -22,9 +22,12 @@ import { motion } from 'motion/react';
 import { DollarSign, Landmark, TrendingUp, Info, RefreshCw } from 'lucide-react';
 
 import { toTraditional } from '../utils/chineseLocalization';
+import FrostedGlass from './FrostedGlass';
 
 interface ROIChartsProps {
   language: 'zh' | 'zht' | 'en';
+  isEntitled?: boolean;
+  onUpgrade?: () => void;
 }
 
 interface CareerCurvePoint {
@@ -37,7 +40,7 @@ interface CareerCurvePoint {
   average: number;
 }
 
-export default function ROICharts({ language }: ROIChartsProps) {
+export default function ROICharts({ language, isEntitled = true, onUpgrade }: ROIChartsProps) {
   const [selectedColRegion, setSelectedColRegion] = useState<'national' | 'high' | 'med' | 'low'>('national');
   const [activeField, setActiveField] = useState<'all' | 'stem' | 'business' | 'healthcare' | 'humanities'>('all');
 
@@ -119,7 +122,8 @@ export default function ROICharts({ language }: ROIChartsProps) {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-xs relative overflow-hidden" id="roi-charts-panel">
+    <FrostedGlass isEntitled={isEntitled} blurAmount="heavy" upgradeMessage="Upgrade to view full 40-year ROI projections" onUpgrade={onUpgrade}>
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-xs relative overflow-hidden" id="roi-charts-panel">
       <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-[50px] pointer-events-none" />
 
       {/* 1. Dashboard Header */}
@@ -361,5 +365,6 @@ export default function ROICharts({ language }: ROIChartsProps) {
         </div>
       </div>
     </div>
+    </FrostedGlass>
   );
 }

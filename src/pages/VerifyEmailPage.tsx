@@ -100,7 +100,11 @@ export default function VerifyEmailPage() {
   };
 
   const maskedEmail = (email: string) => {
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
+      return email || '';
+    }
     const [local, domain] = email.split('@');
+    if (!local || !domain) return email;
     if (local.length <= 2) return email;
     return `${local[0]}***${local[local.length - 1]}@${domain}`;
   };

@@ -144,6 +144,29 @@ The `requireEntitlement` middleware uses tier ordering: `GUEST < FREE < PRO < CO
 
 Comparison limit enforcement remains inline in the `/api/comparison` POST handler (workspace-specific quota check, not a simple tier gate).
 
+### Student Limit Enforcement (PRD-506)
+
+Backend enforces counselor student count limits per tier:
+
+| Tier | maxStudents |
+|------|-------------|
+| FREE | 3 (counselor starter) |
+| PRO | unlimited |
+| COUNSELOR | 50 |
+| ADMIN | unlimited |
+
+- `POST /api/counselor/invite` checks count before creating workspace; returns `403 STUDENT_LIMIT_EXCEEDED` with `{current, limit, upgradeTo}` on violation
+- `GET /api/counselor/workspace/limits` returns current count vs limit for dashboard indicator
+- Helper: `getMaxStudentsForRole(role)` in `server/server.ts`
+
+### Frontend Teaser Gating (PRD-501)
+
+`FrostedGlass` component provides blur overlay for free-tier users:
+- ROI charts (`ROICharts.tsx`) — blurred for FREE tier, upgrade CTA overlay
+- Prerequisite flow (`UniversityNavigator.tsx`) — blurred for FREE tier
+- Entitlements checked via `useEntitlements(user).entitlements`
+- Backend data masking deferred to v1.1; frosted glass is frontend-only UX
+
 ## Route Access Matrix
 
 | Route Pattern | Requires Session | Requires userType | Requires role | Entitlement Check |
@@ -156,8 +179,9 @@ Comparison limit enforcement remains inline in the `/api/comparison` POST handle
 | `/api/users/me/saved-items` | Yes | — | — | No (FREE tier limit implicit) |
 | `/api/admin/*` | Yes | — | ADMIN | No |
 | `/api/admin/ipeds/*` | Yes | — | ADMIN | No |
-| `/api/counselor/invite` | Yes | COUNSELOR | — | No |
+| `/api/counselor/invite` | Yes | COUNSELOR | — | Yes (maxStudents per tier) |
 | `/api/counselor/students` | Yes | COUNSELOR | — | No |
+| `/api/counselor/workspace/limits` | Yes | COUNSELOR | — | No (informational) |
 | `/api/counselor/note/*` | Yes | COUNSELOR | — | No |
 | `/api/student/invite/:token` | No (GET) / Yes (POST) | — | — | No |
 | `/api/student/profile` | Yes | STUDENT | — | No |
@@ -173,8 +197,8 @@ Comparison limit enforcement remains inline in the `/api/comparison` POST handle
 - Counselor routes gated by `requireCounselor`
 - Student routes gated by `requireStudent`
 
-### What is NOT Yet Protected
-- Entitlement enforcement is client-side (FREE users can bypass UI limits)
+### What is Partially Protected
+- Entitlement enforcement: `requireEntitlement('PRO')` on report generation; comparison limit inline; frosted glass frontend-only
 - Workspace ownership checks are partial (comparison checks workspace, but not all routes)
 - No rate limiting
 - No CORS configuration beyond Better Auth `trustedOrigins`

@@ -1,7 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSession } from '../utils/useSession';
-import { Users, Mail, Plus, Loader2, CheckCircle, Clock, UserPlus } from 'lucide-react';
+import { 
+  Users, 
+  Mail, 
+  Plus, 
+  Loader2, 
+  CheckCircle, 
+  Clock, 
+  UserPlus, 
+  Calendar, 
+  ChevronRight,
+  TrendingUp,
+  Activity
+} from 'lucide-react';
+import StudentLimitIndicator from '../components/StudentLimitIndicator';
+import PaywallModal from '../components/PaywallModal';
 
 interface StudentRow {
   workspaceId: string;
@@ -20,13 +34,14 @@ export default function CounselorDashboardPage() {
   const [inviting, setInviting] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   useEffect(() => {
     if (!sessionLoading && !user) {
       navigate('/login');
       return;
     }
-    if (user?.userType !== 'COUNSELOR') {
+    if (user && user.userType !== 'COUNSELOR') {
       navigate('/');
       return;
     }
@@ -61,7 +76,10 @@ export default function CounselorDashboardPage() {
         body: JSON.stringify({ email: inviteEmail }),
       });
       const data = await res.json();
-      if (data.error) {
+      if (data.error === 'STUDENT_LIMIT_EXCEEDED') {
+        setShowPaywall(true);
+        setError(`You've invited the maximum ${data.limit} students. Upgrade to invite more.`);
+      } else if (data.error) {
         setError(data.error);
       } else {
         setInviteLink(data.inviteLink);
@@ -78,136 +96,285 @@ export default function CounselorDashboardPage() {
   const acceptedCount = students.filter(s => s.inviteAccepted).length;
   const profileCompleteCount = students.filter(s => s.profileComplete).length;
 
+  // Mock static college application deadlines for counselor deadline widget
+  const deadlines = [
+    { school: 'CMU / Stanford (Early Action)', date: 'Nov 1', daysLeft: 'Nov 1 Deadline' },
+    { school: 'UC Berkeley (Regular)', date: 'Nov 30', daysLeft: 'Nov 30 Deadline' },
+    { school: 'Harvard / Rice (Regular Decision)', date: 'Jan 1', daysLeft: 'Jan 1 Deadline' }
+  ];
+
+  // Dynamically compute student activity logs based on DB state to show authentic activity feed
+  const activityLogs = students.flatMap(s => {
+    const logs = [];
+    if (s.inviteAccepted) {
+      logs.push({
+        email: s.email,
+        text: 'accepted the counselor invitation.',
+        time: 'Active student',
+        icon: <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+      });
+    } else {
+      logs.push({
+        email: s.email,
+        text: 'invitation is pending acceptance.',
+        time: 'Pending invite',
+        icon: <Clock className="w-3.5 h-3.5 text-amber-600" />
+      });
+    }
+    if (s.profileComplete) {
+      logs.push({
+        email: s.email,
+        text: 'completed their Decision Profile & priorities.',
+        time: 'Profile updated',
+        icon: <UserPlus className="w-3.5 h-3.5 text-indigo-600" />
+      });
+    }
+    if (s.lastComparisonAt) {
+      logs.push({
+        email: s.email,
+        text: 'performed a new university major comparison.',
+        time: new Date(s.lastComparisonAt).toLocaleDateString(),
+        icon: <TrendingUp className="w-3.5 h-3.5 text-blue-600" />
+      });
+    }
+    return logs;
+  }).slice(0, 5); // Limit to top 5 logs
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white/95 backdrop-blur-xl sticky top-0 z-50 shadow-xs">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link to="/" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
-            ← Back to Home
-          </Link>
-          <h1 className="font-semibold text-slate-900">Counselor Dashboard</h1>
-          <div className="text-sm text-slate-500">{user?.email}</div>
-        </div>
-      </header>
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="border-b border-slate-200 pb-4">
+        <h2 className="text-2xl font-bold text-slate-900">Student Management</h2>
+        <p className="text-sm text-slate-500 mt-1">Monitor student onboarding status, academic profiles and comparison workflows.</p>
+      </div>
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
-            <div className="flex items-center gap-3 mb-2">
-              <Users className="w-5 h-5 text-indigo-600" />
-              <span className="text-sm font-medium text-slate-600">Total Invited</span>
-            </div>
-            <p className="text-3xl font-bold text-slate-900">{students.length}</p>
+      {/* Student Limit Warning Indicator Banner */}
+      <StudentLimitIndicator onUpgradeClick={() => setShowPaywall(true)} />
+
+      {/* Stats KPI Ribbon */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Invited</span>
+            <p className="text-3xl font-black text-slate-900 mt-1">{students.length}</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
-            <div className="flex items-center gap-3 mb-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="text-sm font-medium text-slate-600">Accepted</span>
-            </div>
-            <p className="text-3xl font-bold text-slate-900">{acceptedCount}</p>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
-            <div className="flex items-center gap-3 mb-2">
-              <UserPlus className="w-5 h-5 text-purple-600" />
-              <span className="text-sm font-medium text-slate-600">Profiles Complete</span>
-            </div>
-            <p className="text-3xl font-bold text-slate-900">{profileCompleteCount}</p>
+          <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl">
+            <Users className="w-6 h-6 text-blue-600" />
           </div>
         </div>
 
-        {/* Invite Student */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <Mail className="w-5 h-5" /> Invite a Student
-          </h2>
-          <form onSubmit={handleInvite} className="flex gap-3">
-            <input
-              type="email"
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              placeholder="student@email.com"
-              className="flex-1 px-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            />
-            <button
-              type="submit"
-              disabled={inviting || !inviteEmail.trim()}
-              className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center gap-2"
-            >
-              {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-              Send Invite
-            </button>
-          </form>
-          {inviteLink && (
-            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-800 font-medium mb-1">Invite created! Share this link:</p>
-              <code className="text-xs bg-white px-3 py-1.5 rounded border border-green-200 block break-all">
-                {inviteLink}
-              </code>
-            </div>
-          )}
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          )}
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Invites Accepted</span>
+            <p className="text-3xl font-black text-slate-900 mt-1">{acceptedCount}</p>
+          </div>
+          <div className="p-3 bg-green-50 border border-green-100 rounded-xl">
+            <CheckCircle className="w-6 h-6 text-green-600" />
+          </div>
         </div>
 
-        {/* Student List */}
-        <div className="bg-white rounded-xl border border-slate-200">
-          <div className="px-6 py-4 border-b border-slate-200">
-            <h2 className="text-lg font-semibold text-slate-900">Students</h2>
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Profiles Complete</span>
+            <p className="text-3xl font-black text-slate-900 mt-1">{profileCompleteCount}</p>
           </div>
-          {loading ? (
-            <div className="p-8 text-center text-slate-500">Loading...</div>
-          ) : students.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
-              No students invited yet. Send an invite to get started.
+          <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-xl">
+            <UserPlus className="w-6 h-6 text-indigo-600" />
+          </div>
+        </div>
+      </div>
+
+      {/* 3-Column Bento Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Left & Middle Column (2/3 Width): Invite Student & Students List */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* Invite Student Card */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+            <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider flex items-center gap-2">
+              <Mail className="w-4 h-4 text-blue-600" />
+              Invite a Student
+            </h3>
+            
+            <form onSubmit={handleInvite} className="flex gap-3">
+              <input
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="student@email.com"
+                className="flex-1 px-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent text-sm"
+                required
+              />
+              <button
+                type="submit"
+                disabled={inviting || !inviteEmail.trim()}
+                className="px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold text-sm disabled:opacity-50 flex items-center gap-2 cursor-pointer shadow-xs"
+              >
+                {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                Send Invite
+              </button>
+            </form>
+
+            {inviteLink && (
+              <div className="mt-4 p-3.5 bg-green-50 border border-green-200 rounded-xl">
+                <p className="text-xs text-green-800 font-bold mb-1">Invite link generated! Share it with the student:</p>
+                <code className="text-xs bg-white px-3 py-2 rounded-lg border border-green-200 block break-all font-mono font-bold select-all">
+                  {inviteLink}
+                </code>
+              </div>
+            )}
+            
+            {error && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-xs text-red-700 font-semibold">{error}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Students List Table */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Assigned Students</h3>
+              <span className="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded border border-blue-150 font-mono">
+                {students.length} TOTAL
+              </span>
             </div>
-          ) : (
-            <div className="divide-y divide-slate-100">
-              {students.map((s) => (
-                <div key={s.workspaceId} className="px-6 py-4 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-medium text-slate-600">
-                        {s.email.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-medium text-slate-900">{s.email}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        {s.inviteAccepted ? (
-                          <span className="inline-flex items-center gap-1 text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
-                            <CheckCircle className="w-3 h-3" /> Accepted
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                            <Clock className="w-3 h-3" /> Pending
-                          </span>
-                        )}
-                        {s.profileComplete && (
-                          <span className="text-xs text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
-                            Profile Complete
-                          </span>
-                        )}
-                      </div>
-                    </div>
+
+            {loading ? (
+              <div className="p-12 text-center">
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto mb-2" />
+                <span className="text-xs text-slate-400">Loading student roster...</span>
+              </div>
+            ) : students.length === 0 ? (
+              <div className="p-12 text-center text-slate-400 text-sm italic">
+                No students invited yet. Use the invitation card above to onboard your first student.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50/20">
+                      <th className="px-5 py-3">Student Email</th>
+                      <th className="px-5 py-3">Status</th>
+                      <th className="px-5 py-3">Decisions Profile</th>
+                      <th className="px-5 py-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-sm">
+                    {students.map((s) => (
+                      <tr key={s.workspaceId} className="hover:bg-slate-50/50 transition-colors">
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-blue-50 border border-blue-100 rounded-full flex items-center justify-center font-bold text-blue-700 text-xs shadow-xs">
+                              {s.email.charAt(0).toUpperCase()}
+                            </div>
+                            <span className="font-semibold text-slate-800">{s.email}</span>
+                          </div>
+                        </td>
+                        <td className="px-5 py-4">
+                          {s.inviteAccepted ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full">
+                              <CheckCircle className="w-3 h-3" /> Active
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
+                              <Clock className="w-3 h-3" /> Pending
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-5 py-4">
+                          {s.profileComplete ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full">
+                              Profile Complete
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-400 bg-slate-100 px-2.5 py-0.5 rounded-full">
+                              Pending Setup
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-5 py-4 text-right">
+                          {s.inviteAccepted ? (
+                            <button
+                              onClick={() => navigate(`/dashboard/counselor/student/${s.workspaceId}`)}
+                              className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+                            >
+                              View Progress <ChevronRight className="w-3.5 h-3.5" />
+                            </button>
+                          ) : (
+                            <span className="text-xs text-slate-400 italic">No workspace yet</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column (1/3 Width): Deadlines & Dynamic Activity Feed */}
+        <div className="space-y-6">
+          
+          {/* Deadlines Widget Card */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+            <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-rose-600" />
+              Upcoming Deadlines
+            </h3>
+
+            <div className="space-y-3">
+              {deadlines.map((dl, idx) => (
+                <div key={idx} className="border-l-2 border-rose-500 pl-3 py-1 bg-slate-50/50 rounded-r-lg p-2.5">
+                  <h4 className="text-xs font-bold text-slate-800">{dl.school}</h4>
+                  <div className="flex justify-between items-center mt-1 text-[10px] text-slate-500">
+                    <span>Deadline: {dl.date}</span>
+                    <span className="font-semibold text-rose-600">{dl.daysLeft}</span>
                   </div>
-                  {s.inviteAccepted && (
-                    <Link
-                      to={`/dashboard/counselor/student/${s.workspaceId}`}
-                      className="text-sm text-indigo-600 hover:text-indigo-800 transition-colors"
-                    >
-                      View Progress →
-                    </Link>
-                  )}
                 </div>
               ))}
             </div>
-          )}
+          </div>
+
+          {/* Activity Feed Widget Card */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col min-h-[300px]">
+            <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider flex items-center gap-2">
+              <Activity className="w-4 h-4 text-indigo-600" />
+              Activity Logs
+            </h3>
+
+            {activityLogs.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center text-center py-6 text-slate-400 text-xs italic">
+                No recent activity logged.
+              </div>
+            ) : (
+              <div className="space-y-4 flex-1">
+                {activityLogs.map((log, idx) => (
+                  <div key={idx} className="flex gap-3 text-xs leading-relaxed">
+                    <div className="mt-0.5 shrink-0">{log.icon}</div>
+                    <div>
+                      <span className="font-bold text-slate-800">{log.email}</span>{' '}
+                      <span className="text-slate-500">{log.text}</span>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">{log.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </main>
+
+      </div>
+
+      {showPaywall && (
+        <PaywallModal
+          isOpen={showPaywall}
+          onClose={() => setShowPaywall(false)}
+          onUpgrade={() => {}}
+        />
+      )}
     </div>
   );
 }

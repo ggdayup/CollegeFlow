@@ -1,0 +1,28 @@
+- generic [ref=e285]:
+  - generic [ref=e286]:
+    - img [ref=e288]
+    - heading "欢迎回来" [level=1] [ref=e291]
+    - paragraph [ref=e292]: Sign in to your account
+  - generic [ref=e293]:
+    - generic [ref=e294]:
+      - generic [ref=e295]: Email
+      - generic [ref=e296]:
+        - img [ref=e297]
+        - textbox "name@example.com" [ref=e300]: test-counselor-2026@example.com
+    - generic [ref=e301]:
+      - generic [ref=e302]:
+        - generic [ref=e303]: Password
+        - link "Forgot Password?" [ref=e304] [cursor=pointer]:
+          - /url: /forgot-password
+      - generic [ref=e305]:
+        - img [ref=e306]
+        - textbox "Your password" [ref=e309]: TestPass123!
+    - button "Sign In" [ref=e310] [cursor=pointer]:
+      - text: Sign In
+      - img [ref=e311]
+  - generic [ref=e313]:
+    - text: Don't have an account?
+    - link "Create one" [ref=e314] [cursor=pointer]:
+      - /url: /register
+  - link "Continue as Guest" [ref=e316] [cursor=pointer]:
+    - /url: /

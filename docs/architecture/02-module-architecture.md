@@ -74,17 +74,20 @@ src/
 │   ├── SubscriptionPage.tsx
 │   ├── UniversityDetailPage.tsx
 │   ├── JoinPage.tsx             # Accept counselor invite
-│   ├── CounselorDashboardPage.tsx  # Counselor CRM
-│   ├── StudentProfilePage.tsx   # 3-step onboarding wizard
-│   └── ComparisonPage.tsx       # Comparison builder + 4-lens results
-├── components/                  # Shared UI components (15 files)
+│   ├── CounselorDashboardPage.tsx  # Counselor CRM + StudentLimitIndicator
+│   ├── StudentProfilePage.tsx   # Decision profile (3-step, with Skip buttons)
+│   └── ComparisonPage.tsx       # Comparison builder + 4-lens results + source verification
+├── components/                  # Shared UI components
 │   ├── LandingPage.tsx
 │   ├── MajorsDirectory.tsx
 │   ├── UniversityNavigator.tsx
 │   ├── AnalyticsCharts.tsx
 │   ├── ROICharts.tsx
+│   ├── FrostedGlass.tsx         # Entitlement-aware blur overlay for teaser gating
+│   ├── StudentLimitIndicator.tsx # Counselor student count vs tier limit
+│   ├── ConfidenceBadge.tsx      # Data confidence state + source verification ID
 │   ├── SubjectRadarChart.tsx
-│   ├── PaywallModal.tsx
+│   ├── PaywallModal.tsx         # Role-aware paywall with triggerContext prop
 │   ├── CreditBento.tsx
 │   ├── PrerequisiteFlow.tsx
 │   ├── ProtectedRoute.tsx

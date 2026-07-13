@@ -1,0 +1,38 @@
+- generic [ref=e30]:
+  - generic [ref=e31]:
+    - img [ref=e33]
+    - heading "Welcome to College Majors DB" [level=1] [ref=e36]
+    - paragraph [ref=e37]: Tell us about yourself to get started
+  - generic [ref=e39]:
+    - heading "Which best describes you?" [level=2] [ref=e40]
+    - generic [ref=e41]:
+      - button "Student I'm currently studying or planning to study" [ref=e42] [cursor=pointer]:
+        - generic [ref=e43]:
+          - img [ref=e45]
+          - generic [ref=e48]:
+            - heading "Student" [level=3] [ref=e49]
+            - paragraph [ref=e50]: I'm currently studying or planning to study
+      - button "Teacher I teach at a school or institution" [ref=e51] [cursor=pointer]:
+        - generic [ref=e52]:
+          - img [ref=e54]
+          - generic [ref=e56]:
+            - heading "Teacher" [level=3] [ref=e57]
+            - paragraph [ref=e58]: I teach at a school or institution
+      - button "Counselor I'm an academic counselor or advisor" [ref=e59] [cursor=pointer]:
+        - generic [ref=e60]:
+          - img [ref=e62]
+          - generic [ref=e65]:
+            - heading "Counselor" [level=3] [ref=e66]
+            - paragraph [ref=e67]: I'm an academic counselor or advisor
+      - button "Parent I'm helping my child with college planning" [ref=e68] [cursor=pointer]:
+        - generic [ref=e69]:
+          - img [ref=e71]
+          - generic [ref=e73]:
+            - heading "Parent" [level=3] [ref=e74]
+            - paragraph [ref=e75]: I'm helping my child with college planning
+      - button "Other None of the above" [ref=e76] [cursor=pointer]:
+        - generic [ref=e77]:
+          - img [ref=e79]
+          - generic [ref=e80]:
+            - heading "Other" [level=3] [ref=e81]
+            - paragraph [ref=e82]: None of the above

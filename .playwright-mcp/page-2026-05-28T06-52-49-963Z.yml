@@ -1,0 +1,15 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - img [ref=e7]
+    - heading "You've Been Invited!" [level=1] [ref=e12]
+    - paragraph [ref=e13]: Test Counselor has invited you to CollegeFlow
+  - generic [ref=e14]:
+    - generic [ref=e15]:
+      - img [ref=e17]
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: Test Counselor
+        - paragraph [ref=e23]: test-counselor-2026@example.com
+    - paragraph [ref=e25]: Accept this invite to start building your college comparison workspace. You'll be guided through a quick onboarding to set up your preferences.
+  - button "Accept Invite" [ref=e26]:
+    - text: Accept Invite
+    - img [ref=e27]

@@ -7,6 +7,9 @@ import CreditBento from './CreditBento';
 import PrerequisiteFlow from './PrerequisiteFlow';
 import SubjectRadarChart from './SubjectRadarChart';
 import { useUniversityNavigator } from './useUniversityNavigator';
+import { useEntitlements } from '../utils/useEntitlements';
+import { useSession } from '../utils/useSession';
+import FrostedGlass from './FrostedGlass';
 import { toTraditional } from '../utils/chineseLocalization';
 import { 
   Search, 
@@ -120,6 +123,10 @@ const US_STATE_ZH: Record<string, string> = {
 };
 
 export default function UniversityNavigator({ language, onLinkNationalMajor }: UniversityNavigatorProps) {
+
+  const { user } = useSession();
+  const { canCreatePrerequisiteLinks } = useEntitlements(user).entitlements;
+  const nav = useUniversityNavigator();
 
   const getUniversityName = (u: any) => {
     if (!u) return '';
@@ -1307,7 +1314,13 @@ export default function UniversityNavigator({ language, onLinkNationalMajor }: U
             <CreditBento language={language} />
 
             {/* Prerequisite Flow Timeline */}
-            <PrerequisiteFlow language={language} />
+            <FrostedGlass
+              isEntitled={canCreatePrerequisiteLinks}
+              blurAmount="light"
+              upgradeMessage="Upgrade to explore complete prerequisite pathways"
+            >
+              <PrerequisiteFlow language={language} />
+            </FrostedGlass>
           </div>
         </div>
       </div>

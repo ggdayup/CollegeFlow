@@ -1,0 +1,720 @@
+[      39ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[   71042ms] [ERROR] Failed to load resource: the server responded with a status of 400 (Bad Request) @ http://localhost:38030/api/student/profile:0
+[   97234ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:38030/@vite/client:963
+[   97235ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[   98237ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[   99239ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  100240ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  101243ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  102245ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  103246ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  104248ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  105249ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  106252ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  107255ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  108258ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  109260ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  110261ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  111262ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  112264ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  113266ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  114268ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  115270ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  116273ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  117278ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  118283ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  119287ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  120289ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  121294ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  122300ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  123303ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  124311ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  125315ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  126322ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  127326ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  128337ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  129349ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  130359ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  131365ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  132375ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  133386ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  134394ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  135409ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  136429ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  137470ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  138494ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  139512ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  140524ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  141542ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  142607ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  143668ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  144722ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  145802ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  146850ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  147985ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  149092ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  150201ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  151237ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  152348ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  153533ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  154636ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  155813ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  157111ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  158428ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  159890ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  161492ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  162801ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  164417ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  165929ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  167570ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  171212ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  173297ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  176000ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  178918ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  184703ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  189780ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  194830ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  199171ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  203460ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  208227ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  212911ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  218020ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  220741ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  223235ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  227406ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  231679ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  237515ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  239663ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  242537ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  244572ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  248314ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  250591ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  253230ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  259111ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  264594ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  269433ms] [ERROR] WebSocket connection to 'ws://localhost:38030/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:38030/@vite/client:1034
+[  276925ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[  276955ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:38030/api/auth/me:0
+[  276959ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:38030/api/auth/me:0
+[  276959ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:38030/api/auth/me:0
+[  276961ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:38030/api/auth/me:0
+[  277060ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[  286811ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[  286928ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[  324899ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[  325018ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[  327776ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[  327776ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[  327894ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[  327958ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[  327958ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[  335782ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[  335782ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[  344679ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[  344679ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 2085857ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 2085857ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3227154ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 3227271ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3227271ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3231300ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 3231339ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 3231349ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 3239823ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 3243516ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 3243572ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3243572ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3250999ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 3251055ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3251055ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3254600ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 3254640ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 3254650ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 3260625ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 3618047ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 3618095ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 3618106ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 3951193ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 3953194ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 3953251ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 3953251ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 5101165ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:38030/src/App.tsx?t=1779956271037:0
+[ 5101165ms] [ERROR] [vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:38030/@vite/client:881
+[ 5718925ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 5721534ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 5721569ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 5721580ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 5723434ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 5725314ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 5736016ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 5736016ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 5771762ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 5771763ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 5791009ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5791014ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5791022ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5791027ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5798271ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5798275ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5798279ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5798283ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5803205ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 5803205ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 5804638ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5804643ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5804646ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5804650ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 5880336ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 5880383ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 5880394ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 5882435ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 5962869ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6024871ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6024874ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6024883ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6024887ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6108304ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6108344ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6108354ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6110296ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 6116664ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/sign-in/email:0
+[ 6126128ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/sign-in/email:0
+[ 6252398ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/sign-in/email:0
+[ 6253990ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/sign-in/email:0
+[ 6276493ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6285589ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6285624ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6285634ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6298630ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 6333118ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6333161ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6333161ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6453267ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6453324ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6453324ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6457814ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6457859ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6457859ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6459680ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6459722ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6459722ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6462086ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6462127ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6462127ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6467161ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6467200ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/favicon.ico:0
+[ 6467206ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6467206ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6500293ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6500293ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6539939ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6539939ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6565677ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6565677ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6572464ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6572526ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6572526ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6601440ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6601486ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6601486ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6602380ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6602420ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6602421ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6604093ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6604126ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/favicon.ico:0
+[ 6604133ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6604133ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6628187ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6628245ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6628255ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6630064ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 6632179ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6633213ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6633213ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6636879ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6637888ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6637889ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6639185ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6639222ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6639223ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6640943ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6640985ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6640985ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6642405ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6642442ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/favicon.ico:0
+[ 6642446ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 6642446ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 6845354ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6845416ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6845426ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 6846600ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 6858197ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 6865631ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 6879565ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 6883767ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 6897154ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 6897154ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 6901105ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6901113ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6901125ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6901130ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6907695ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 6907695ms] [WARNING] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width. @ http://localhost:38030/node_modules/.vite/deps/recharts.js?v=8e21dbac:9120
+[ 6911269ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6911273ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6911276ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 6911280ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 7195451ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 7250228ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 7273200ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 7276273ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 7321312ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 7863196ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 7870044ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 7870055ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 7870061ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 7870068ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:38030/api/comparison/list:0
+[ 7892794ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 7892835ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 7892848ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 7894403ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 7896170ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 8171850ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 8171898ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 8171910ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 8174105ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 8175724ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 8345206ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 8420417ms] TypeError: setSearchResultsQuery is not a function
+    at http://localhost:38030/src/App.tsx?t=1779959589757:268:7
+    at Object.react_stack_bottom_frame (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:18565:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at commitHookEffectListMount (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:9409:163)
+    at commitHookPassiveMountEffects (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:9463:60)
+    at commitPassiveMountOnFiber (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11038:29)
+    at recursivelyTraversePassiveMountEffects (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11008:13)
+    at commitPassiveMountOnFiber (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11199:13)
+    at recursivelyTraversePassiveMountEffects (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11008:13)
+    at commitPassiveMountOnFiber (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11199:13)
+[ 8420414ms] [WARNING] %s
+
+%s
+ An error occurred in the <LoggedInDashboard> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 8667181ms] TypeError: Cannot read properties of undefined (reading 'length')
+    at UniversityDetailPage (http://localhost:38030/src/pages/UniversityDetailPage.tsx:167:21)
+    at Object.react_stack_bottom_frame (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:18507:20)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5652:24)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+[ 8667181ms] [WARNING] %s
+
+%s
+ An error occurred in the <UniversityDetailPage> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 8673400ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 8989622ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 8999324ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 8999366ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 8999379ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 9003309ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 9009902ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 9010940ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 9010941ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 9033107ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 9033149ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 9033149ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 9069808ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 9071397ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 9072434ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 9072434ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963
+[ 9083451ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 9083489ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 9083502ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:38030/api/auth/me:0
+[ 9085711ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:38030/login:0
+[ 9109332ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:20100
+[ 9109384ms] Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+    at finishRenderingHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5695:17)
+    at renderWithHooks (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:5673:9)
+    at updateFunctionComponent (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:7473:21)
+    at beginWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:8523:20)
+    at runWithFiberInDEV (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:995:72)
+    at performUnitOfWork (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12559:98)
+    at workLoopSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12422:43)
+    at renderRootSync (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:12406:13)
+    at performWorkOnRoot (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:11825:37)
+    at performWorkOnRootViaSchedulerTask (http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:13503:9)
+[ 9109384ms] [WARNING] %s
+
+%s
+ An error occurred in the <AppContent> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:38030/node_modules/.vite/deps/react-dom_client.js?v=8e21dbac:6963

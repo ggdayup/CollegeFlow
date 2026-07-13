@@ -1,0 +1,20 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - img [ref=e7]
+    - heading "Welcome to College Majors DB" [level=1] [ref=e10]
+    - paragraph [ref=e11]: Tell us about yourself to get started
+  - generic [ref=e57]:
+    - button "Change role" [ref=e58] [cursor=pointer]:
+      - img [ref=e59]
+      - text: Change role
+    - generic [ref=e61]:
+      - img [ref=e62]
+      - generic [ref=e65]: Counselor
+    - generic [ref=e66]:
+      - generic [ref=e67]: Specialty / Area *
+      - textbox "e.g. STEM Career Counseling" [ref=e68]
+    - generic [ref=e69]:
+      - button "Continue to Dashboard" [ref=e70] [cursor=pointer]:
+        - text: Continue to Dashboard
+        - img [ref=e71]
+      - button "Skip for Now" [ref=e73] [cursor=pointer]

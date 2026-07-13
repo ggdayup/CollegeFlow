@@ -1,0 +1,15 @@
+- generic [ref=e356]:
+  - img [ref=e358]
+  - img [ref=e362]
+  - generic [ref=e365]:
+    - heading "Check your email" [level=1] [ref=e366]
+    - paragraph [ref=e367]: We sent a verification link to
+    - paragraph [ref=e368]: t***6@example.com
+    - paragraph [ref=e369]: Click the link in the email to verify your account. The link expires after 24 hours.
+  - generic [ref=e370]:
+    - button "Resend verification email" [ref=e371] [cursor=pointer]:
+      - img [ref=e372]
+      - text: Resend verification email
+    - button "Not your email? Sign in with a different account" [ref=e377] [cursor=pointer]
+  - link "Return to home" [ref=e379] [cursor=pointer]:
+    - /url: /

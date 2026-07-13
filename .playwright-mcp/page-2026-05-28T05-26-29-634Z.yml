@@ -1,0 +1,201 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - generic [ref=e13]: 本科专业数据库
+            - generic [ref=e14]: 152 MAJORS
+          - heading "高校毕业生薪资与行业人才供卷分析系统" [level=1] [ref=e15]
+      - generic [ref=e16]:
+        - button "简体中文" [ref=e17] [cursor=pointer]:
+          - img [ref=e18]
+          - generic [ref=e21]: 简体中文
+        - generic [ref=e22]:
+          - generic [ref=e23]: 访客模式
+          - link "登录账号" [ref=e24] [cursor=pointer]:
+            - /url: /login
+  - main [ref=e25]:
+    - generic [ref=e26]:
+      - generic [ref=e28]:
+        - generic [ref=e31]: 已更新：2026 全美毕业生起薪与职场回报数据库
+        - heading "高校毕业生薪资与行业人才供求透视 MajorAnalytics 智能学术与职场分析系统" [level=1] [ref=e32]:
+          - text: 高校毕业生薪资与行业人才供求透视
+          - generic [ref=e33]: MajorAnalytics 智能学术与职场分析系统
+        - paragraph [ref=e34]: 基于全球毕业生追踪报告与多层级权威模型，为新一代学者、高中升学者及高校规划者提供高保真的投资回报（ROI）与课程学分拓扑透视。
+        - generic [ref=e35]:
+          - generic:
+            - img
+          - textbox "搜索大学专业、标杆院校或职业方向..." [ref=e36]
+          - button "立即探索" [ref=e38] [cursor=pointer]
+        - generic [ref=e39]:
+          - generic [ref=e40] [cursor=pointer]:
+            - paragraph [ref=e42]: 数据库容量
+            - generic [ref=e43]:
+              - generic [ref=e44]: "152"
+              - generic [ref=e45]: 本科专业
+          - generic [ref=e46] [cursor=pointer]:
+            - paragraph [ref=e48]: 标杆名校
+            - generic [ref=e49]:
+              - generic [ref=e50]: 200+
+              - generic [ref=e51]: 美/全球名校
+          - generic [ref=e52] [cursor=pointer]:
+            - paragraph [ref=e54]: 增长最剧烈
+            - generic [ref=e55]:
+              - generic [ref=e56]: +159%
+              - generic [ref=e57]: CS & 数理
+          - generic [ref=e58] [cursor=pointer]:
+            - paragraph [ref=e60]: 起步天花板
+            - generic [ref=e61]:
+              - generic [ref=e62]: $146k
+              - generic [ref=e63]: 石油工程
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - heading "核心智能分析看板" [level=2] [ref=e67]
+          - paragraph [ref=e68]: 全维度交叉互联的统计图表，助您打通“学术路径 ➔ 院校选择 ➔ 课程规划 ➔ 职场薪资回报”的完整链路。
+        - generic [ref=e69]:
+          - generic [ref=e70] [cursor=pointer]:
+            - generic [ref=e71]:
+              - generic [ref=e72]:
+                - img [ref=e73]
+                - heading "全美专业近况透视" [level=3] [ref=e76]
+              - paragraph [ref=e77]: 多维度热力筛选及起薪对比，直观展示 8 大门类、16 大细分方向的 152 个专业的近期毕业生及黄金成熟期薪资中位数。
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - generic [ref=e81]: 学科方向
+                - generic [ref=e82]: 起薪/成熟期
+              - generic [ref=e83]:
+                - generic [ref=e84]: CS & Math
+                - generic [ref=e85]: $78k / $124k
+              - generic [ref=e86]:
+                - generic [ref=e87]: Petroleum Eng
+                - generic [ref=e88]: $97k / $146k
+              - generic [ref=e89]:
+                - generic [ref=e90]: Business Comms
+                - generic [ref=e91]: $54k / $94k
+          - generic [ref=e93] [cursor=pointer]:
+            - generic [ref=e94]:
+              - img [ref=e95]
+              - heading "标杆名校专业地图" [level=3] [ref=e100]
+            - paragraph [ref=e101]: 以 UMich (密歇根大学安娜堡分校) 和 Rice (莱斯大学) 为标杆，绘制高校内设学术部门与毕业生流向关系网。
+            - generic [ref=e102]:
+              - img [ref=e104]
+              - img [ref=e109]
+              - generic [ref=e113]: UMICH
+              - generic [ref=e114]: RICE
+          - generic [ref=e116] [cursor=pointer]:
+            - generic [ref=e117]:
+              - img [ref=e118]
+              - heading "专业 ROI 回报曲线" [level=3] [ref=e120]
+            - paragraph [ref=e121]: 40年职场生命周期的收入折线，支持生活成本(Cost-of-Living)调整，量化大学投资学费的黄金回收期。
+            - generic [ref=e122]:
+              - generic [ref=e128]: $146k
+              - img
+          - generic [ref=e129] [cursor=pointer]:
+            - generic [ref=e130]:
+              - generic [ref=e131]:
+                - img [ref=e132]
+                - heading "专业核心主修课程流" [level=3] [ref=e135]
+              - paragraph [ref=e136]: 节点化展示专业毕业必修课程序列及学分要求。支持卡片拖拽与连线动态渲染，清晰梳理核心先修课与毕业阻碍。
+            - generic [ref=e137]:
+              - generic [ref=e138]:
+                - generic [ref=e139]: 核心基础
+                - generic [ref=e140]: CS 101
+                - generic [ref=e141]: Data Structures
+              - generic [ref=e142]:
+                - generic [ref=e143]: 进阶选修
+                - generic [ref=e144]: Machine Learning
+                - generic [ref=e145]: Drop Here
+      - generic [ref=e147]:
+        - heading "毕业生职场洞察与预警" [level=2] [ref=e148]
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - img [ref=e152]
+            - heading "薪资之冠 (Peak Earners)" [level=4] [ref=e158]
+            - paragraph [ref=e159]: 石油工程、药学及数理计算机展现了无与伦比的投资回报率。石油工程在黄金成熟期以 $146,000 中位数年薪冠绝本科。
+            - button "查看回报折线" [ref=e160] [cursor=pointer]:
+              - generic [ref=e161]: 查看回报折线
+              - img [ref=e162]
+          - generic [ref=e164]:
+            - img [ref=e166]
+            - heading "收入预警 (Caution Zones)" [level=4] [ref=e168]
+            - paragraph [ref=e169]: 学前教育和咨询心理学起薪偏低且面临成熟期瓶颈，中位数仅为 $51,000 左右，建议搭配高增长性副修。
+            - button "筛选低回报学科" [ref=e170] [cursor=pointer]:
+              - generic [ref=e171]: 筛选低回报学科
+              - img [ref=e172]
+          - generic [ref=e174]:
+            - img [ref=e176]
+            - heading "人才供给转移 (Talent Shifts)" [level=4] [ref=e179]
+            - paragraph [ref=e180]: 学位产出数据揭示了剧烈的供给转移：计算与数理部门产出在14年间暴增 +159%，而古典人文艺术类招生规模萎缩 -33%。
+            - button "查看供求趋势" [ref=e181] [cursor=pointer]:
+              - generic [ref=e182]: 查看供求趋势
+              - img [ref=e183]
+      - generic [ref=e186]:
+        - generic [ref=e187]:
+          - heading "数据订阅服务方案" [level=2] [ref=e188]
+          - paragraph [ref=e189]: 选择契合您规划需求的数据颗粒度，开启精细决策。
+        - generic [ref=e190]:
+          - generic [ref=e191]:
+            - heading "标准免费版" [level=3] [ref=e192]
+            - generic [ref=e193]: $0/mo
+            - paragraph [ref=e194]: 适合学生探索基础数据
+            - list [ref=e195]:
+              - listitem [ref=e196]:
+                - img [ref=e197]
+                - generic [ref=e200]: 1 次学校对比
+              - listitem [ref=e201]:
+                - img [ref=e202]
+                - generic [ref=e205]: Top 50 美国院校基础数据
+              - listitem [ref=e206]:
+                - img [ref=e207]
+                - generic [ref=e210]: 薪资与录取率概览
+              - listitem [ref=e211]:
+                - img [ref=e212]
+                - generic [ref=e215]: PDF 报告生成
+              - listitem [ref=e216]:
+                - img [ref=e217]
+                - generic [ref=e220]: 完整 ROI 分析
+            - button "开始使用" [ref=e221] [cursor=pointer]
+          - generic [ref=e222]:
+            - generic [ref=e223]: 最受欢迎
+            - heading "专业版" [level=3] [ref=e224]
+            - generic [ref=e225]: $19/mo
+            - paragraph [ref=e226]: 无限对比，完整数据，品牌报告
+            - list [ref=e227]:
+              - listitem [ref=e228]:
+                - img [ref=e229]
+                - generic [ref=e232]: 无限学校与专业对比
+              - listitem [ref=e233]:
+                - img [ref=e234]
+                - generic [ref=e237]: 完整薪资、录取、成本数据
+              - listitem [ref=e238]:
+                - img [ref=e239]
+                - generic [ref=e242]: 40年 ROI 分析与课程流
+              - listitem [ref=e243]:
+                - img [ref=e244]
+                - generic [ref=e247]: 品牌化 PDF 报告
+            - button "升级到 Pro" [ref=e248] [cursor=pointer]
+          - generic [ref=e249]:
+            - heading "顾问版" [level=3] [ref=e250]
+            - generic [ref=e251]: $49/mo
+            - paragraph [ref=e252]: 为升学顾问打造的家庭会议工具
+            - list [ref=e253]:
+              - listitem [ref=e254]:
+                - img [ref=e255]
+                - generic [ref=e258]: 最多 50 名学生管理
+              - listitem [ref=e259]:
+                - img [ref=e260]
+                - generic [ref=e263]: 学生邀请与进度追踪
+              - listitem [ref=e264]:
+                - img [ref=e265]
+                - generic [ref=e268]: 品牌化对比报告
+              - listitem [ref=e269]:
+                - img [ref=e270]
+                - generic [ref=e273]: Pro 版全部功能
+            - button "升级到 Counselor" [ref=e274] [cursor=pointer]
+    - generic [ref=e276]:
+      - img [ref=e278]
+      - heading "🔑 登录解锁完整多维分析大厅" [level=3] [ref=e281]
+      - paragraph [ref=e282]: 我们的全美专业透视、标杆院校地图（UMich / Rice）、学分课程依赖流及折线收益 ROI 工具仅限注册用户使用。您可以一键登录体验完整版！
+      - button "一键登录体验" [ref=e283] [cursor=pointer]

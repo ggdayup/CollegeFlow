@@ -175,6 +175,7 @@ export default function OnboardingPage() {
         body: JSON.stringify(body),
       });
       navigate('/');
+      window.location.reload();
     } catch {
       // ignore
     } finally {
@@ -199,13 +200,6 @@ export default function OnboardingPage() {
     }
     if (selectedRole === 'COUNSELOR' && !counselorSpecialty.trim()) {
       setError('Specialty is required');
-      return;
-    }
-
-    // For STUDENT role, go directly to insight
-    if (selectedRole === 'STUDENT' && step === 'form') {
-      setStep('insight');
-      setSubmitting(false);
       return;
     }
 
@@ -247,8 +241,12 @@ export default function OnboardingPage() {
         return;
       }
 
-      navigate('/');
-      window.location.reload();
+      if (selectedRole === 'STUDENT') {
+        setStep('insight');
+      } else {
+        navigate('/');
+        window.location.reload();
+      }
     } catch {
       setError('Network error. Please try again.');
     } finally {
@@ -498,14 +496,20 @@ export default function OnboardingPage() {
                 </div>
                 <div className="space-y-3">
                   <button
-                    onClick={() => navigate('/dashboard/student/profile')}
+                    onClick={() => {
+                      navigate('/dashboard/student/profile');
+                      window.location.reload();
+                    }}
                     className="w-full py-3 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:border-blue-300 hover:text-blue-700 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <GraduationCap className="w-4 h-4" />
                     Complete Your Academic Profile
                   </button>
                   <button
-                    onClick={() => navigate('/')}
+                    onClick={() => {
+                      navigate('/');
+                      window.location.reload();
+                    }}
                     className="w-full py-3 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     Start Exploring <ArrowRight className="w-4 h-4" />

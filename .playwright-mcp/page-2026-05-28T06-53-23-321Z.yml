@@ -1,0 +1,23 @@
+- generic [ref=e30]:
+  - generic [ref=e31]:
+    - img [ref=e33]
+    - heading "Welcome to College Majors DB" [level=1] [ref=e36]
+    - paragraph [ref=e37]: Tell us about yourself to get started
+  - generic [ref=e83]:
+    - button "Change role" [ref=e84] [cursor=pointer]:
+      - img [ref=e85]
+      - text: Change role
+    - generic [ref=e87]:
+      - img [ref=e88]
+      - generic [ref=e91]: Student
+    - generic [ref=e92]:
+      - generic [ref=e93]: School Name *
+      - textbox "e.g. University of Michigan" [ref=e94]
+    - generic [ref=e95]:
+      - generic [ref=e96]: Graduation Year (optional)
+      - spinbutton [ref=e97]
+    - generic [ref=e98]:
+      - 'button "Next: Set Up Your Profile" [ref=e99] [cursor=pointer]':
+        - text: "Next: Set Up Your Profile"
+        - img [ref=e100]
+      - button "Skip for Now" [ref=e102] [cursor=pointer]

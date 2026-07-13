@@ -1887,8 +1887,21 @@ app.post('/api/counselor/invite', requireSession, requireCounselor, async (req, 
       return res.status(400).json({ error: 'VALIDATION_ERROR', details: parse.error.errors });
     }
 
-    const { user } = req as express.Request & { user: { id: string } };
+    const { user } = req as express.Request & { user: { id: string; role: string } };
     const { email } = parse.data;
+
+    const currentStudentCount = await prisma.studentWorkspace.count({
+      where: { counselorId: user.id },
+    });
+    const maxStudents = getMaxStudentsForRole(user.role);
+    if (currentStudentCount >= maxStudents) {
+      return res.status(403).json({
+        error: 'STUDENT_LIMIT_EXCEEDED',
+        current: currentStudentCount,
+        limit: maxStudents,
+        upgradeTo: 'COUNSELOR',
+      });
+    }
 
     // Ensure counselor has an invite code
     let counselor = await prisma.user.findUnique({ where: { id: user.id }, select: { counselorInviteCode: true } });
@@ -1989,8 +2002,11 @@ app.get('/api/counselor/students', requireSession, requireCounselor, async (req,
     const students = workspaces.map((w) => ({
       workspaceId: w.id,
       email: w.inviteEmail,
+      name: w.student?.name || null,
       inviteAccepted: w.inviteAccepted,
       profileComplete: w.decisionProfile !== null && w.decisionProfile.gpa !== null,
+      gpa: w.decisionProfile?.gpa || null,
+      satScore: w.decisionProfile?.satScore || null,
       lastComparisonAt: w.comparisonSessions.length > 0
         ? w.comparisonSessions[w.comparisonSessions.length - 1].createdAt
         : null,
@@ -1999,6 +2015,55 @@ app.get('/api/counselor/students', requireSession, requireCounselor, async (req,
     res.json({ students });
   } catch (e: unknown) {
     console.error('[BFF] Error listing students:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ─── Counselor: Get Student Workspace Details ───
+
+app.get('/api/counselor/student/:workspaceId', requireSession, requireCounselor, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string } };
+    const { workspaceId } = req.params;
+
+    const workspace = await prisma.studentWorkspace.findUnique({
+      where: { id: workspaceId },
+      include: {
+        student: { select: { id: true, name: true, email: true } },
+        decisionProfile: { include: { weights: true } },
+        comparisonSessions: {
+          select: { id: true, name: true, createdAt: true },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+    });
+
+    if (!workspace || workspace.counselorId !== user.id) {
+      return res.status(403).json({ error: 'FORBIDDEN' });
+    }
+
+    let savedItems: any[] = [];
+    if (workspace.studentId) {
+      savedItems = await prisma.savedItem.findMany({
+        where: { userId: workspace.studentId },
+        orderBy: { createdAt: 'desc' },
+      });
+    }
+
+    res.json({
+      workspace: {
+        id: workspace.id,
+        inviteEmail: workspace.inviteEmail,
+        inviteAccepted: workspace.inviteAccepted,
+        createdAt: workspace.createdAt,
+        student: workspace.student,
+        decisionProfile: workspace.decisionProfile,
+        comparisonSessions: workspace.comparisonSessions,
+        savedItems,
+      },
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error getting student workspace details:', e);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -2240,6 +2305,35 @@ function getTierLimits(role: string) {
   return limits[role] ?? limits.FREE;
 }
 
+function getMaxStudentsForRole(role: string): number {
+  const maxStudents: Record<string, number> = {
+    FREE: 3,
+    PRO: Infinity,
+    COUNSELOR: 50,
+    ADMIN: Infinity,
+  };
+  return maxStudents[role] ?? 3;
+}
+
+app.get('/api/counselor/workspace/limits', requireSession, requireCounselor, async (req, res) => {
+  try {
+    const { user } = req as express.Request & { user: { id: string; role: string } };
+    const currentStudents = await prisma.studentWorkspace.count({
+      where: { counselorId: user.id },
+    });
+    const maxStudents = getMaxStudentsForRole(user.role);
+    res.json({
+      currentStudents,
+      maxStudents: maxStudents === Infinity ? -1 : maxStudents,
+      tier: user.role,
+      canInviteMore: currentStudents < maxStudents,
+    });
+  } catch (e: unknown) {
+    console.error('[BFF] Error fetching workspace limits:', e);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('/api/comparison', requireSession, async (req, res) => {
   try {
     const { user } = req as express.Request & { user: { id: string; role: string; userType: string } };
@@ -2375,6 +2469,11 @@ app.get('/api/comparison/:sessionId', requireSession, async (req, res) => {
           return 'missing';
         };
 
+        const getVerificationId = (keys: string[]) => {
+          const metric = metrics.find(m => keys.includes(m.metricKey) && hasValue(m.valueNumeric));
+          return metric?.verificationId || null;
+        };
+
         // Admissions lens
         const admissions = {
           acceptanceRate: getVal('ACCEPT_RATE'),
@@ -2384,6 +2483,7 @@ app.get('/api/comparison/:sessionId', requireSession, async (req, res) => {
           act25th: getVal('ACT_25TH'),
           act75th: getVal('ACT_75TH'),
           confidence: confidence(['ACCEPT_RATE', 'SAT_25TH', 'SAT_75TH']),
+          verificationId: getVerificationId(['ACCEPT_RATE', 'SAT_25TH', 'SAT_75TH']),
         };
 
         // Outcomes lens
@@ -2392,6 +2492,7 @@ app.get('/api/comparison/:sessionId', requireSession, async (req, res) => {
           medianDebt: getVal('MEDIAN_DEBT'),
           gradRate: getVal('GRAD_RATE'),
           confidence: confidence(['MEDIAN_EARNINGS_2YR', 'MEDIAN_DEBT', 'GRAD_RATE']),
+          verificationId: getVerificationId(['MEDIAN_EARNINGS_2YR', 'MEDIAN_DEBT', 'GRAD_RATE']),
         };
 
         // Cost lens
@@ -2408,6 +2509,7 @@ app.get('/api/comparison/:sessionId', requireSession, async (req, res) => {
           roomBoard,
           totalCost,
           confidence: confidence(['TUITION_OUT_STATE', 'ROOM_BOARD']),
+          verificationId: getVerificationId(['TUITION_OUT_STATE', 'ROOM_BOARD']),
         };
 
         // Fit lens (rule-based scoring)

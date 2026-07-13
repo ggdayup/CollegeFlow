@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Search, BookOpen, School, BarChart3, Lock, TrendingUp, Users, Vote } from 'lucide-react';
 import { motion } from 'motion/react';
 import { searchSeedData, SearchResultMajor, SearchResultUniversity, SearchResultComparison } from '../utils/searchSeed';
+import { universities } from '../data/universitiesData';
 
 interface SearchResultsPageProps {
   query: string;
@@ -16,6 +17,7 @@ interface SearchResultsPageProps {
   onTriggerAuth: () => void;
   onNavigateToMajor: (majorId: string) => void;
   onNavigateToUniversity: (universityId: string) => void;
+  studentContext?: { gpa: number | null; satScore: number | null } | null;
 }
 
 const t = (zh: string, en: string, language: 'zh' | 'zht' | 'en'): string => {
@@ -32,6 +34,7 @@ export default function SearchResultsPage({
   onTriggerAuth,
   onNavigateToMajor,
   onNavigateToUniversity,
+  studentContext = null,
 }: SearchResultsPageProps) {
   const [results, setResults] = useState<ReturnType<typeof searchSeedData> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -93,7 +96,15 @@ export default function SearchResultsPage({
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {results!.universities.map((u) => (
-                <UniversityCard key={u.id} uni={u} isLoggedIn={isLoggedIn} language={language} onNavigate={onNavigateToUniversity} onTriggerAuth={onTriggerAuth} />
+                <UniversityCard 
+                  key={u.id} 
+                  uni={u} 
+                  isLoggedIn={isLoggedIn} 
+                  language={language} 
+                  onNavigate={onNavigateToUniversity} 
+                  onTriggerAuth={onTriggerAuth} 
+                  studentContext={studentContext}
+                />
               ))}
             </div>
           </section>
@@ -134,15 +145,52 @@ export default function SearchResultsPage({
   );
 }
 
-function UniversityCard({ uni, isLoggedIn, language, onNavigate, onTriggerAuth }: {
+function UniversityCard({ uni, isLoggedIn, language, onNavigate, onTriggerAuth, studentContext }: {
   uni: SearchResultUniversity;
   isLoggedIn: boolean;
   language: 'zh' | 'zht' | 'en';
   onNavigate: (id: string) => void;
   onTriggerAuth: () => void;
+  studentContext?: { gpa: number | null; satScore: number | null } | null;
 }) {
   const tr = (zh: string, en: string) => t(zh, en, language);
   const name = language === 'en' ? uni.nameEn : uni.nameZh;
+
+  // Compute Reach/Match/Safety badge if logged in and studentContext has GPA
+  const matchCategory = (() => {
+    if (!isLoggedIn || !studentContext || studentContext.gpa === null) return null;
+    
+    // Find the original university to get US News Rank
+    const fullUni = universities.find((u) => u.id === uni.id);
+    const rank = fullUni?.usNewsRank || 50;
+
+    let targetGpa = 3.9;
+    let targetSat = 1500;
+
+    if (rank <= 10) {
+      targetGpa = 3.96;
+      targetSat = 1540;
+    } else if (rank <= 25) {
+      targetGpa = 3.9;
+      targetSat = 1480;
+    } else if (rank <= 50) {
+      targetGpa = 3.75;
+      targetSat = 1380;
+    } else {
+      targetGpa = 3.5;
+      targetSat = 1250;
+    }
+
+    const sat = studentContext.satScore || 1400; // fallback if sat score is null
+
+    if (studentContext.gpa >= targetGpa + 0.05 && sat >= targetSat + 40 && rank > 15) {
+      return 'Safety';
+    } else if (studentContext.gpa >= targetGpa - 0.1 && sat >= targetSat - 60) {
+      return 'Match';
+    } else {
+      return 'Reach';
+    }
+  })();
 
   return (
     <div
@@ -155,9 +203,29 @@ function UniversityCard({ uni, isLoggedIn, language, onNavigate, onTriggerAuth }
       }}
       className={`relative bg-white rounded-xl border p-4 transition-all hover:shadow-md ${isLoggedIn ? 'border-slate-200 hover:border-blue-400 cursor-pointer' : 'border-slate-200 cursor-pointer'}`}
     >
-      <h3 className="font-bold text-slate-900 text-sm">{name}</h3>
-      <p className="text-xs text-slate-500 mt-1">{uni.shortNameEn}</p>
-      <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-slate-900 text-sm truncate">{name}</h3>
+          <p className="text-xs text-slate-500 mt-1">{uni.shortNameEn}</p>
+        </div>
+        {matchCategory && (
+          <span className={`px-2 py-0.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wide border shrink-0 ${
+            matchCategory === 'Safety'
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-250'
+              : matchCategory === 'Match'
+                ? 'bg-blue-50 text-blue-700 border-blue-250'
+                : 'bg-amber-50 text-amber-700 border-amber-250'
+          }`}>
+            {matchCategory === 'Safety' 
+              ? tr('安全档', 'Safety')
+              : matchCategory === 'Match'
+                ? tr('匹配档', 'Match')
+                : tr('冲刺档', 'Reach')
+            }
+          </span>
+        )}
+      </div>
+      <div className="flex items-center gap-3 mt-3 text-xs text-slate-400">
         <span className="flex items-center gap-1"><School className="w-3 h-3" /> {uni.schoolCount} {tr('学院', 'schools')}</span>
         <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" /> {uni.majorCount} {tr('专业', 'majors')}</span>
       </div>

@@ -3,7 +3,7 @@
 ## Project Source Of Truth
 - Plane is the only task tracker for this project. For complex tasks (e.g., new features, refactoring, multi-file architectural changes), list project issues and move the matched issue to `In Progress` before planning or coding; if none exists, create one in `In Progress`. For simple, trivial tasks (e.g., single-line edits, configuration tweaks, typos, simple UI text adjustments), creating or moving a Plane issue is NOT required.
 - Plane metadata: workspace `sheenvita`, project `Collage Major`, project ID `15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
-- Plane state IDs: `Backlog` `e51c56b6-8ef9-4b10-baaf-37b05bc94925`, `Todo` `16406b06-6ecc-4701-b8fc-0e807f5b9e4c`, `In Progress` `c7701ec6-17bc-4b40-a72f-2970f9f6cdc9e`, `Done` `aa17c124-ecbb-4e70-bfde-7c607685f9f3`, `Cancelled` `08e8c222-091a-4597-9fd0-9969ceb12e5a`.
+- Plane state IDs: `Backlog` `e51c56b6-8ef9-4b10-baaf-37b05bc94925`, `Todo` `16406b06-6ecc-4701-b8fc-0e807f5b9e4c`, `In Progress` `c7701ec6-17bc-4b40-a72f-2970f96cdc9e`, `Done` `aa17c124-ecbb-4e70-bfde-7c607685f9f3`, `Cancelled` `08e8c222-091a-4597-9fd0-9969ceb12e5a`.
 - Plane CLI: `node /Users/ggdayup/.agents/skills/plane-api/scripts/plane-api.js list-issues sheenvita 15c381fa-d6ad-4f10-8c47-2b04a3a342b5`.
 - For Plane create/update payloads containing HTML or nested JSON, write a temporary JSON file, pass its path to the CLI, then delete the temp file. The CLI wraps responses as `{ success, data }`; extract issue fields from `data`. Issue lists are paginated under `data.results`.
 - At task completion, transition the Plane issue to `Done` and include modified files, key decisions, and verification results in `description_html`.
@@ -167,6 +167,12 @@ data/cds/             ← Common Data Set ingestion pipeline
 - If Gemini or another LLM parser is exhausted or rate-limited, trigger deterministic regex/heuristic parsing for course requirements and prerequisites.
 - For database-driven localization, query the DB for all unique lookup names and complete the dictionary for records that exist only in PostgreSQL.
 - When static university data changes, re-run `npx prisma db seed` if the UI is served from BFF/PostgreSQL-blended endpoints.
+
+## Testing And E2E Pitfalls
+
+- Playwright tests should use robust port probing (e.g., trying default Vite dev port `38030` first and falling back to `3000`) to remain adaptive across local environments.
+- To prevent Playwright scroll timeouts/interceptions when clicking elements under a `sticky top-0` header or under dynamic visual lock overlays (blur layers), use `force=True` on `.click()` to directly dispatch the event.
+
 
 ## Update Rules
 

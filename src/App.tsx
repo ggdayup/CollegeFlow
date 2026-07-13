@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { broadFields, detailedFields, majors } from './data/majorsData';
 import AnalyticsCharts from './components/AnalyticsCharts';
@@ -27,6 +27,8 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import JoinPage from './pages/JoinPage';
 import CounselorDashboardPage from './pages/CounselorDashboardPage';
+import CounselorStudentDetailPage from './pages/CounselorStudentDetailPage';
+import CounselorToolsPage from './pages/CounselorToolsPage';
 import StudentProfilePage from './pages/StudentProfilePage';
 import ComparisonPage from './pages/ComparisonPage';
 import UniversityDetailPage from './pages/UniversityDetailPage';
@@ -35,6 +37,7 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import StudentDashboardPage from './pages/StudentDashboardPage';
 import PaywallModal from './components/PaywallModal';
 import Sidebar from './components/Sidebar';
+import LoggedInSearchView from './components/LoggedInSearchView';
 import {
   Cpu,
   TrendingUp,
@@ -106,6 +109,304 @@ function AdminPage({ language }: { language: 'zh' | 'zht' | 'en' }) {
 }
 
 /**
+ * Logged-in dashboard with sidebar navigation and route-based views.
+ * Redirects to /dashboard/student if the user lands on / or unknown paths.
+ */
+function LoggedInDashboard({
+  language,
+  user,
+  activeView,
+  setActiveView,
+  selectedBroadField,
+  selectedDetailedField,
+  handleSelectBroadField,
+  handleSelectDetailedField,
+  searchQuery,
+  setSearchQuery,
+  resetAllFieldFilters,
+  filteredMajorsCount,
+  onLinkNationalMajor,
+  onNavigate,
+  searchResultsQuery,
+  setSearchResultsQuery,
+}: {
+  language: 'zh' | 'zht' | 'en';
+  user: ReturnType<typeof useSession>['user'];
+  activeView: string;
+  setActiveView: (v: 'national' | 'benchmark' | 'ipeds-admin') => void;
+  selectedBroadField: string | null;
+  selectedDetailedField: string | null;
+  handleSelectBroadField: (id: string | null) => void;
+  handleSelectDetailedField: (id: string | null) => void;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  resetAllFieldFilters: () => void;
+  filteredMajorsCount: number;
+  onLinkNationalMajor: (id: string) => void;
+  onNavigate: (path: string) => void;
+  searchResultsQuery: string | null;
+  setSearchResultsQuery: React.Dispatch<React.SetStateAction<string | null>>;
+}) {
+  const location = useLocation();
+  const path = location.pathname;
+
+  // States for student profile and counselor student impersonation
+  const [studentProfile, setStudentProfile] = useState<{ gpa: number | null; satScore: number | null } | null>(null);
+  const [impersonatedStudent, setImpersonatedStudent] = useState<any>(null);
+
+  // Fetch student profile if the logged in user is a STUDENT
+  useEffect(() => {
+    if (user?.userType === 'STUDENT') {
+      const fetchProfile = async () => {
+        try {
+          const res = await fetch('/api/student/profile', { credentials: 'include' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.profile) {
+              setStudentProfile({
+                gpa: data.profile.gpa,
+                satScore: data.profile.satScore,
+              });
+            }
+          }
+        } catch (err) {
+          console.error('Failed to load student profile for search matching', err);
+        }
+      };
+      fetchProfile();
+    }
+  }, [user]);
+
+  // Reset search results view whenever navigating back to root explore/home paths
+  useEffect(() => {
+    if (path === '/dashboard/student' || path === '/dashboard/counselor' || path === '/dashboard/parent') {
+      setSearchResultsQuery(null);
+    }
+  }, [path, setSearchResultsQuery]);
+
+  // Calculate active student context for admissions matching
+  const studentContext = useMemo(() => {
+    const isCounselor = user?.userType === 'COUNSELOR' || user?.role === 'COUNSELOR';
+    if (isCounselor) {
+      return impersonatedStudent ? { gpa: impersonatedStudent.gpa, satScore: impersonatedStudent.satScore } : null;
+    }
+    return studentProfile;
+  }, [user, impersonatedStudent, studentProfile]);
+
+  // Redirect unknown paths to /dashboard/student or /dashboard/counselor
+  const dashboardPaths = [
+    '/dashboard/student',
+    '/dashboard/student/overview',
+    '/dashboard/student/explore',
+    '/dashboard/student/profile',
+    '/dashboard/student/compare',
+    '/dashboard/student/results/',
+    '/dashboard/student/saved',
+    '/dashboard/counselor',
+    '/dashboard/counselor/students',
+    '/dashboard/counselor/student/',
+    '/dashboard/counselor/tools',
+    '/dashboard/parent',
+    '/dashboard/parent/schools',
+    '/settings',
+    '/profile',
+    '/university/',
+  ];
+  const isDashboardPath = dashboardPaths.some((dp) => path === dp || path.startsWith(dp));
+  if (!isDashboardPath) {
+    const isCounselor = user?.userType === 'COUNSELOR' || user?.role === 'COUNSELOR';
+    const isParent = user?.userType === 'PARENT';
+    if (isCounselor) {
+      return <Navigate to="/dashboard/counselor" replace />;
+    }
+    if (isParent) {
+      return <Navigate to="/dashboard/parent" replace />;
+    }
+    return <Navigate to="/dashboard/student" replace />;
+  }
+
+  return (
+    <div className="flex">
+      {/* Sidebar navigation */}
+      <Sidebar
+        language={language}
+        onNavigateToSettings={() => onNavigate('/settings')}
+      />
+
+      {/* Main content area */}
+      <div className="flex-1 min-h-screen bg-slate-50 px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
+        {searchResultsQuery ? (
+          <SearchResultsPage
+            query={searchResultsQuery}
+            isLoggedIn={true}
+            language={language}
+            onBack={() => setSearchResultsQuery(null)}
+            onTriggerAuth={() => {}}
+            onNavigateToMajor={(majorId) => setSearchResultsQuery(majorId)}
+            onNavigateToUniversity={(universityId) => onNavigate(`/university/${universityId}`)}
+            studentContext={studentContext}
+          />
+        ) : (user?.userType === 'COUNSELOR' || user?.role === 'COUNSELOR') ? (
+          path.startsWith('/dashboard/counselor/student/') ? (
+            <CounselorStudentDetailPage />
+          ) : path === '/dashboard/counselor/tools' ? (
+            <CounselorToolsPage />
+          ) : path === '/dashboard/counselor/students' ? (
+            <CounselorDashboardPage />
+          ) : (
+            <LoggedInSearchView
+              language={language}
+              user={user}
+              impersonatedStudent={impersonatedStudent}
+              setImpersonatedStudent={setImpersonatedStudent}
+              onSearch={setSearchResultsQuery}
+            />
+          )
+        ) : (user?.userType === 'PARENT') ? (
+          path === '/dashboard/parent/schools' ? (
+            <StudentDashboardPage
+              language={language}
+              onNavigateToExplore={() => onNavigate('/dashboard/student/explore')}
+              onNavigateToCompare={() => onNavigate('/dashboard/student/compare')}
+            />
+          ) : (
+            <LoggedInSearchView
+              language={language}
+              user={user}
+              impersonatedStudent={null}
+              setImpersonatedStudent={() => {}}
+              onSearch={setSearchResultsQuery}
+            />
+          )
+        ) : (
+          // Student
+          path === '/dashboard/student/profile' ? (
+            <StudentProfilePage />
+          ) : path === '/dashboard/student/compare' || path.startsWith('/dashboard/student/results/') ? (
+            <ComparisonPage />
+          ) : path === '/dashboard/student/explore' ? (
+            <ExploreView
+              language={language}
+              activeView={activeView}
+              setActiveView={setActiveView}
+              selectedBroadField={selectedBroadField}
+              selectedDetailedField={selectedDetailedField}
+              handleSelectBroadField={handleSelectBroadField}
+              handleSelectDetailedField={handleSelectDetailedField}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              resetAllFieldFilters={resetAllFieldFilters}
+              filteredMajorsCount={filteredMajorsCount}
+              onLinkNationalMajor={onLinkNationalMajor}
+            />
+          ) : path === '/dashboard/student/overview' ? (
+            <StudentDashboardPage
+              language={language}
+              onNavigateToExplore={() => onNavigate('/dashboard/student/explore')}
+              onNavigateToCompare={() => onNavigate('/dashboard/student/compare')}
+            />
+          ) : (
+            <LoggedInSearchView
+              language={language}
+              user={user}
+              impersonatedStudent={null}
+              setImpersonatedStudent={() => {}}
+              onSearch={setSearchResultsQuery}
+            />
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Explore view — national majors + benchmark universities tab switcher.
+ */
+function ExploreView({
+  language,
+  activeView,
+  setActiveView,
+  selectedBroadField,
+  selectedDetailedField,
+  handleSelectBroadField,
+  handleSelectDetailedField,
+  searchQuery,
+  setSearchQuery,
+  resetAllFieldFilters,
+  filteredMajorsCount,
+  onLinkNationalMajor,
+}: {
+  language: 'zh' | 'zht' | 'en';
+  activeView: string;
+  setActiveView: (v: 'national' | 'benchmark' | 'ipeds-admin') => void;
+  selectedBroadField: string | null;
+  selectedDetailedField: string | null;
+  handleSelectBroadField: (id: string | null) => void;
+  handleSelectDetailedField: (id: string | null) => void;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  resetAllFieldFilters: () => void;
+  filteredMajorsCount: number;
+  onLinkNationalMajor: (id: string) => void;
+}) {
+  return (
+    <div className="space-y-10 max-w-5xl">
+      <div className="flex border border-slate-200 bg-white/85 p-1.5 rounded-2xl max-w-2xl mx-auto shadow-xs gap-1.5">
+        <button
+          onClick={() => setActiveView('national')}
+          className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            activeView === 'national'
+              ? 'bg-blue-600 text-white shadow-md'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <Compass className="w-4 h-4 shrink-0" />
+          <span>{language === 'zh' ? '全美专业近况透视' : 'National Career Outlook'}</span>
+        </button>
+        <button
+          onClick={() => setActiveView('benchmark')}
+          className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            activeView === 'benchmark'
+              ? 'bg-slate-950 text-white shadow-md'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+          }`}
+        >
+          <School className={`w-4 h-4 shrink-0 transition-colors ${activeView === 'benchmark' ? 'text-amber-400 fill-amber-400' : 'text-slate-400'}`} />
+          <span>{language === 'zh' ? '标杆院校专业地图' : 'Benchmark Universities'}</span>
+        </button>
+      </div>
+      <AnimatePresence mode="wait">
+        {activeView === 'benchmark' ? (
+          <motion.div key="benchmark" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.2 }}>
+            <UniversityNavigator language={language} onLinkNationalMajor={onLinkNationalMajor} />
+          </motion.div>
+        ) : (
+          <motion.div key="national" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.2 }}>
+            <div id="broad-fields-heading" />
+            <MajorsDirectory
+              language={language}
+              selectedBroadFieldId={selectedBroadField}
+              selectedDetailedFieldId={selectedDetailedField}
+              onSelectBroadField={handleSelectBroadField}
+              onSelectDetailedField={handleSelectDetailedField}
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+            />
+            <AnalyticsCharts
+              language={language}
+              selectedFieldId={selectedDetailedField}
+              onSelectField={handleSelectDetailedField}
+            />
+            <ROICharts language={language} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/**
  * Inner app component that has access to router context.
  * Receives session and entitlements from above.
  */
@@ -131,6 +432,14 @@ function AppContent({
   const [searchResultsQuery, setSearchResultsQuery] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const filteredMajorsCount = useMemo(() => {
+    return majors.filter(m => {
+      if (selectedBroadField && m.broadFieldId !== selectedBroadField) return false;
+      if (selectedDetailedField && m.detailedFieldId !== selectedDetailedField) return false;
+      return true;
+    }).length;
+  }, [selectedBroadField, selectedDetailedField]);
 
   // Email verification guard: redirect unverified logged-in users to /verify-email
   // demo@college.edu is a bypass (handled server-side)
@@ -202,14 +511,6 @@ function AppContent({
     setSelectedBroadField(null);
     setSelectedDetailedField(null);
   };
-
-  const filteredMajorsCount = useMemo(() => {
-    return majors.filter(m => {
-      if (selectedBroadField && m.broadFieldId !== selectedBroadField) return false;
-      if (selectedDetailedField && m.detailedFieldId !== selectedDetailedField) return false;
-      return true;
-    }).length;
-  }, [selectedBroadField, selectedDetailedField]);
 
   // TODO: demo@college.edu bypass — remove after full session migration
   const handleDemoLogin = () => {
@@ -302,100 +603,24 @@ function AppContent({
             />
           )
         ) : (
-          <>
-            <div className="flex">
-              {/* Sidebar navigation */}
-              <Sidebar
-                language={language}
-                onNavigateToSettings={() => navigate('/settings')}
-              />
-
-              {/* Main content area */}
-              <main className="flex-1 min-h-screen bg-slate-50 px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
-                {(() => {
-                  const path = location.pathname;
-
-                  // Student profile
-                  if (path === '/dashboard/student/profile') {
-                    return <StudentProfilePage />;
-                  }
-
-                  // Compare tool
-                  if (path === '/dashboard/student/compare' || path.startsWith('/dashboard/student/results/')) {
-                    return <ComparisonPage />;
-                  }
-
-                  // Explore tab — national view (majors)
-                  if (path === '/dashboard/student/explore') {
-                    return (
-                      <div className="space-y-10 max-w-5xl">
-                        <div id="interactive-dashboard-anchor" className="pt-4 border-t border-slate-200" />
-                        <div className="flex border border-slate-200 bg-white/85 p-1.5 rounded-2xl max-w-2xl mx-auto shadow-xs gap-1.5">
-                          <button
-                            onClick={() => setActiveView('national')}
-                            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                              activeView === 'national'
-                                ? 'bg-blue-600 text-white shadow-md'
-                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                            }`}
-                          >
-                            <Compass className="w-4 h-4 shrink-0" />
-                            <span>{language === 'zh' ? '全美专业近况透视' : 'National Career Outlook'}</span>
-                          </button>
-                          <button
-                            onClick={() => setActiveView('benchmark')}
-                            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                              activeView === 'benchmark'
-                                ? 'bg-slate-950 text-white shadow-md'
-                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                            }`}
-                          >
-                            <School className={`w-4 h-4 shrink-0 transition-colors ${activeView === 'benchmark' ? 'text-amber-400 fill-amber-400' : 'text-slate-400'}`} />
-                            <span>{language === 'zh' ? '标杆院校专业地图' : 'Benchmark Universities'}</span>
-                          </button>
-                        </div>
-                        <AnimatePresence mode="wait">
-                          {activeView === 'benchmark' ? (
-                            <motion.div key="benchmark" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.2 }}>
-                              <UniversityNavigator language={language} onLinkNationalMajor={handleLinkNationalMajor} />
-                            </motion.div>
-                          ) : (
-                            <motion.div key="national" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.2 }}>
-                              <div id="broad-fields-heading" />
-                              <MajorsDirectory
-                                language={language}
-                                selectedBroadFieldId={selectedBroadField}
-                                selectedDetailedFieldId={selectedDetailedField}
-                                onSelectBroadField={handleSelectBroadField}
-                                onSelectDetailedField={handleSelectDetailedField}
-                                searchQuery={searchQuery}
-                                onSearchQueryChange={setSearchQuery}
-                              />
-                              <AnalyticsCharts
-                                language={language}
-                                selectedFieldId={selectedDetailedField}
-                                onSelectField={handleSelectDetailedField}
-                              />
-                              <ROICharts language={language} />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    );
-                  }
-
-                  // Default: Personal Dashboard
-                  return (
-                    <StudentDashboardPage
-                      language={language}
-                      onNavigateToExplore={() => navigate('/dashboard/student/explore')}
-                      onNavigateToCompare={() => navigate('/dashboard/student/compare')}
-                    />
-                  );
-                })()}
-              </main>
-            </div>
-          </>
+          <LoggedInDashboard
+            language={language}
+            user={user}
+            activeView={activeView}
+            setActiveView={setActiveView}
+            selectedBroadField={selectedBroadField}
+            selectedDetailedField={selectedDetailedField}
+            handleSelectBroadField={handleSelectBroadField}
+            handleSelectDetailedField={handleSelectDetailedField}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            resetAllFieldFilters={resetAllFieldFilters}
+            filteredMajorsCount={filteredMajorsCount}
+            onLinkNationalMajor={handleLinkNationalMajor}
+            onNavigate={navigate}
+            searchResultsQuery={searchResultsQuery}
+            setSearchResultsQuery={setSearchResultsQuery}
+          />
         )}
 
       </main>
@@ -428,12 +653,8 @@ export default function App() {
         <Route path="/university/:universityId" element={<UniversityDetailPage />} />
         <Route path="/subscription" element={<SubscriptionPage />} />
 
-        {/* MVP: Counselor & Student routes */}
-        <Route path="/dashboard/counselor" element={<CounselorDashboardPage />} />
-        <Route path="/dashboard/counselor/student/:workspaceId" element={<CounselorDashboardPage />} />
-        <Route path="/dashboard/student/profile" element={<StudentProfilePage />} />
-        <Route path="/dashboard/student/compare" element={<ComparisonPage />} />
-        <Route path="/dashboard/student/results/:sessionId" element={<ComparisonPage />} />
+        {/* MVP: Counselor & Student routes — handled by LoggedInDashboard in AppContent */}
+        {/* /dashboard/* routes removed; sidebar-based routing now handled inside AppContent */}
 
         {/* Admin-only routes */}
         <Route

@@ -29,6 +29,7 @@ data/ipeds/
 # IDE and AI assistant tool directories
 .agents/
 .claude/
+.workbuddy/
 .codebuddy/
 .qoder/
 .qwen/
